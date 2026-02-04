@@ -1,5 +1,3 @@
-"use client";
-
 import { usePathname } from "next/navigation";
 import DropDownLink from "./DropDownLink";
 import { NavigationNavBar } from "./ItemNavigation";

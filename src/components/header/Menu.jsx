@@ -1,5 +1,3 @@
-"use client";
-
 import { motion, MotionConfig } from "framer-motion";
 
 const Menu = ({ active, setActive }) => {

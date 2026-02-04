@@ -1,5 +1,3 @@
-"use client";
-
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { Linkedin, Github, Mail } from "lucide-react";
