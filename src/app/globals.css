@@ -1,26 +1,322 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+	color-scheme: light;
+	--canvas: #f5f7fb;
+	--surface: #ffffff;
+	--surface-muted: rgba(255, 255, 255, 0.9);
+	--surface-card: #f8fafc;
+	--border: #e2e8f0;
+	--border-strong: #cbd5f5;
+	--text: #0f172a;
+	--muted: #64748b;
+	--accent: #2563eb;
+	--scrollbar-track: rgba(15, 23, 42, 0.08);
+	--scrollbar-thumb: rgba(15, 23, 42, 0.4);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root.dark {
+	color-scheme: dark;
+	--canvas: #020617;
+	--surface: #0f172a;
+	--surface-muted: rgba(15, 23, 42, 0.85);
+	--surface-card: #111b2e;
+	--border: #1f2937;
+	--border-strong: #475569;
+	--text: #f8fafc;
+	--muted: #94a3b8;
+	--accent: #60a5fa;
+	--scrollbar-track: rgba(248, 250, 252, 0.15);
+	--scrollbar-thumb: rgba(248, 250, 252, 0.45);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+	margin: 0;
+	min-height: 100vh;
+	background-color: var(--canvas);
+	color: var(--text);
+	scrollbar-width: thin;
+	scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
+
+body::-webkit-scrollbar {
+	width: 12px;
+	height: 12px;
+	background-color: var(--scrollbar-track);
+}
+
+body::-webkit-scrollbar-thumb {
+	background-color: var(--scrollbar-thumb);
+	border-radius: 999px;
+	border: 3px solid transparent;
+	background-clip: padding-box;
+}
+
+.surface {
+	background-color: var(--surface);
+}
+
+.surface-card {
+	background-color: var(--surface-card);
+}
+
+.surface-glass {
+	background-color: var(--surface-muted);
+	backdrop-filter: blur(14px);
+}
+
+.border-soft {
+	border-color: var(--border);
+}
+
+.border-strong {
+	border-color: var(--border-strong);
+}
+
+.text-muted-link,
+.text-link-muted {
+	color: var(--muted);
+}
+
+.text-link-active {
+	color: var(--text);
+}
+
+.text-accent {
+	color: var(--accent);
+}
+
+.text-muted-link:hover,
+.text-link-muted:hover,
+.text-link-active:hover {
+	color: var(--muted);
+}
+
+.dropdown-link {
+	display: block;
+	border-radius: 1rem;
+	padding: 0.25rem 0.75rem;
+	transition: background-color 0.2s ease;
+}
+
+.dropdown-link:hover {
+	background-color: var(--surface-card);
+}
+
+.icon-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.25rem;
+	height: 1.25rem;
+	border-radius: 999px;
+	/* border: 1px solid var(--border); */
+	background-color: var(--surface);
+	color: var(--muted);
+	transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.icon-button:hover {
+	background-color: var(--surface-card);
+	color: var(--accent);
+	border-color: var(--accent);
+}
+
+.icon-button:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 2px var(--accent);
+}
+
+.theme-toggle {
+	color: var(--text);
+}
+
+.menu-border {
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	border: 1px solid var(--border);
+	pointer-events: none;
+	transition: border-color 0.2s ease;
+}
+
+.menu {
+	height: 100vh;
+	width: min(280px, 100%);
+	background-color: var(--surface);
+	border-left: 1px solid var(--border);
+	box-shadow: -10px 0 40px rgba(2, 6, 23, 0.4);
+	color: var(--text);
+	position: fixed;
+	top: 0;
+	right: 0;
+	z-index: 60;
+	overflow: hidden;
+}
+
+.menu .body {
+	box-sizing: border-box;
+	padding: 0 2.5rem 2.5rem;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.menu .body .nav {
+	margin-top: 6rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+	font-size: 1.3rem;
+}
+
+.menu .body .nav .header h2 {
+	font-size: 1.4rem;
+	letter-spacing: 0.2em;
+	text-transform: uppercase;
+	color: var(--text);
+}
+
+.menu .body .nav .header p {
+	color: var(--muted);
+	font-size: 0.85rem;
+	margin-top: 0.25rem;
+}
+
+.menu .body .nav .link-content {
+	width: 100%;
+	display: flex;
+	gap: 0.65rem;
+	align-items: center;
+	text-decoration: none;
+	color: inherit;
+	font-weight: 500;
+	transition: color 0.2s ease;
+}
+
+.menu .body .nav .link-content:hover {
+	color: var(--text);
+}
+
+.menu .footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 0.75rem;
+	font-size: 0.85rem;
+	color: var(--muted);
+}
+
+.menu .footer a {
+	color: inherit;
+	transition: color 0.2s ease;
+}
+
+.menu .footer a:hover {
+	color: var(--accent);
+}
+
+.link {
+	position: relative;
+	display: flex;
+	align-items: center;
+	/* padding-left: 1.6rem; */
+	color: var(--muted);
+	transition: color 0.2s ease;
+}
+
+.link:hover {
+	color: var(--text);
+}
+
+.link .indicator {
+	width: 8px;
+	height: 8px;
+	background-color: var(--muted);
+	border-radius: 999px;
+	position: absolute;
+	left: 0.35rem;
+	top: 50%;
+	transform: translateY(-50%);
+	opacity: 0.4;
+	transition: background-color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+}
+
+.link .link-icon {
+	width: 1.15rem;
+	height: 1.15rem;
+	opacity: 0.75;
+	transition: transform 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+
+.link .link-label {
+	letter-spacing: 0.02em;
+}
+
+.link-active {
+	color: var(--accent);
+}
+
+.link-active .link-content {
+	font-weight: 600;
+}
+
+.link-active .indicator {
+	background-color: var(--accent);
+	opacity: 1;
+	transform: translateY(-50%) scale(1.4);
+}
+
+.link-active .link-icon {
+	opacity: 1;
+	color: var(--accent);
+	transform: translateX(2px) scale(1.05);
+}
+
+.svgCurve {
+	position: absolute;
+	top: 0;
+	left: -220px;
+	width: 260px;
+	height: 100%;
+	fill: var(--surface);
+	z-index: 45;
+}
+
+.hero-title {
+	white-space: normal;
+}
+
+.hero-title span:nth-child(3) {
+	display: inline-block;
+}
+
+@media (max-width: 590px) {
+	.hero-title span:nth-child(3) {
+		display: none;
+	}
+	.hero-title span:nth-child(4)::before {
+		content: '';
+		display: block;
+		margin: 0.1rem 0 0.35rem;
+	}
+}
+
+/* Footer responsive: stack and center below 450px, force span to new line */
+@media (max-width: 450px) {
+	.footer-responsive {
+		flex-direction: column !important;
+		align-items: center !important;
+		justify-content: center !important;
+		gap: 0.5rem !important;
+	}
+	.footer-text {
+		text-align: center !important;
+	}
+	.footer-text span {
+		display: block;
+		margin-top: 0.25rem;
+	}
+}
+
