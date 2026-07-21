@@ -21,16 +21,16 @@ export default function ProjectsGrid() {
       : PROJECTS.filter((p) => p.category === selectedCategory);
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-8 sm:space-y-12">
       {/* Category Tabs */}
-      <div className="flex flex-wrap items-center justify-center gap-3">
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
         {PROJECT_CATEGORIES.map((cat) => {
           const isActive = selectedCategory === cat.id;
           return (
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 cursor-pointer ${
+              className={`px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-[0.35rem] text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${
                 isActive
                   ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/20 scale-105"
                   : "surface-glass border border-soft text-muted hover:text-foreground hover:border-gray-400"
@@ -42,14 +42,20 @@ export default function ProjectsGrid() {
         })}
       </div>
 
-      {/* Grid */}
-      <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <AnimatePresence mode="popLayout">
+      {/* Grid container with smooth transition per category */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={selectedCategory}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0, transition: { duration: 0.15 } }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8"
+        >
           {filteredProjects.map((project, index) => (
             <ProjectCard key={project.id} project={project} index={index} />
           ))}
-        </AnimatePresence>
-      </motion.div>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

@@ -25,12 +25,12 @@ export default function EducationCard({ edu, index, cardRef }) {
 
       {/* Card */}
       <div
-        className={`w-full text-left rounded-2xl border ${colors.border} surface-card p-4 sm:p-5 transition-all duration-300`}
+        className={`w-full text-left rounded-[0.35rem] border ${colors.border} surface-card p-4 sm:p-5 transition-all duration-300`}
       >
         <div className="flex items-start gap-4">
           {/* Logo / Initials */}
           <div
-            className="hidden sm:flex shrink-0 h-16 w-16 rounded-xl items-center justify-center font-bold text-lg surface-glass border border-soft text-foreground"
+            className="hidden sm:flex shrink-0 h-16 w-16 rounded-[0.35rem] items-center justify-center p-2 bg-white border border-soft shadow-xs"
             aria-hidden="true"
           >
             {edu.logo ? (
@@ -39,10 +39,10 @@ export default function EducationCard({ edu, index, cardRef }) {
                 alt={`${edu.institution} logo`}
                 width={60}
                 height={60}
-                className="object-contain rounded-xl"
+                className="object-contain w-full h-full"
               />
             ) : (
-              <span>
+              <span className="font-bold text-lg text-slate-800">
                 {(edu.institution || edu.title)
                   .split(" ")
                   .map((w) => w[0])
@@ -61,7 +61,7 @@ export default function EducationCard({ edu, index, cardRef }) {
               </h3>
               {edu.status && (
                 <span
-                  className={`shrink-0 text-[0.6rem] sm:text-[0.65rem] font-bold px-2.5 py-0.5 rounded-full border uppercase tracking-wider ${colors.badge}`}
+                  className={`shrink-0 text-[0.6rem] sm:text-[0.65rem] font-bold px-2.5 py-0.5 rounded-[0.35rem] border uppercase tracking-wider ${colors.badge}`}
                 >
                   {edu.status}
                 </span>

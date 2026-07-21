@@ -98,7 +98,7 @@ body::-webkit-scrollbar-thumb {
 
 .dropdown-link {
 	display: block;
-	border-radius: 1rem;
+	border-radius: 0.35rem;
 	padding: 0.25rem 0.75rem;
 	transition: background-color 0.2s ease;
 }
@@ -113,7 +113,7 @@ body::-webkit-scrollbar-thumb {
 	justify-content: center;
 	width: 1.25rem;
 	height: 1.25rem;
-	border-radius: 999px;
+	border-radius: 0.35rem;
 	/* border: 1px solid var(--border); */
 	background-color: var(--surface);
 	color: var(--muted);

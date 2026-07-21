@@ -34,14 +34,14 @@ export default function ExperienceCard({
       <button
         type="button"
         onClick={onToggle}
-        className={`w-full text-left rounded-2xl border ${colors.border} surface-card p-4 sm:p-5 transition-all duration-300 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500`}
+        className={`w-full text-left rounded-[0.35rem] border ${colors.border} surface-card p-4 sm:p-5 transition-all duration-300 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500`}
         aria-expanded={isExpanded}
       >
         {/* Header row with logo */}
         <div className="flex items-start gap-4">
           {/* Company logo / initials */}
           <div
-            className={`hidden sm:flex shrink-0 h-16 w-16 rounded-xl items-center justify-center font-bold text-lg ${colors.logoBg}`}
+            className="hidden sm:flex shrink-0 h-16 w-16 rounded-[0.35rem] items-center justify-center p-2 bg-white border border-soft shadow-xs"
             aria-hidden="true"
           >
             {exp.initials ? (
@@ -50,10 +50,10 @@ export default function ExperienceCard({
                 alt={`${exp.company} logo`}
                 width={60}
                 height={60}
-                className="object-contain rounded-xl"
+                className="object-contain w-full h-full"
               />
             ) : (
-              <span>
+              <span className={`font-bold text-lg ${colors.heading}`}>
                 {exp.company
                   .split(" ")
                   .map((w) => w[0])
@@ -81,7 +81,7 @@ export default function ExperienceCard({
               {/* Duration badge & Chevron */}
               <div className="flex items-center gap-1.5 sm:gap-3 shrink-0 pt-0.5">
                 <span
-                  className={`hidden sm:inline-block text-[0.65rem] font-bold px-2.5 py-0.5 rounded-full border uppercase tracking-wider ${colors.badge}`}
+                  className={`hidden sm:inline-block text-[0.65rem] font-bold px-2.5 py-0.5 rounded-[0.35rem] border uppercase tracking-wider ${colors.badge}`}
                 >
                   {displayDuration}
                 </span>
@@ -103,7 +103,7 @@ export default function ExperienceCard({
               {exp.mainSkills.map((skill) => (
                 <span
                   key={skill}
-                  className={`text-[0.65rem] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md border ${colors.badge}`}
+                  className={`text-[0.65rem] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-[0.35rem] border ${colors.badge}`}
                 >
                   {skill}
                 </span>
@@ -143,7 +143,7 @@ export default function ExperienceCard({
                     {exp.skills.map((skill) => (
                       <span
                         key={skill}
-                        className={`text-xs px-2.5 py-1 rounded-lg border font-medium transition-all ${colors.skillBg} ${colors.skillText} ${colors.skillBorder}`}
+                        className={`text-xs px-2.5 py-1 rounded-[0.35rem] border font-medium transition-all ${colors.skillBg} ${colors.skillText} ${colors.skillBorder}`}
                       >
                         {skill}
                       </span>

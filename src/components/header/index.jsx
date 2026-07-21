@@ -15,11 +15,11 @@ const Header = () => {
   const closeMenu = () => setActive(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-soft surface-glass backdrop-blur rounded-b-xl">
+    <header className="sticky top-0 z-50 border-b border-soft surface-glass backdrop-blur rounded-b-[0.35rem]">
       <div className="relative mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link
           href="/"
-          className="inline-flex p-1 items-center justify-center rounded-full border-2 border-gray-200 bg-[#f8fafc] text-xl font-semibold tracking-tight text-[#0f172a] shadow-sm transition-colors duration-200 hover:border-[#0f172a] hover:bg-[#0f172a] hover:text-[#f8fafc] dark:border-gray-700 dark:bg-[#0f172a] dark:text-[#f8fafc] dark:hover:border-[#f8fafc] dark:hover:bg-[#f8fafc] dark:hover:text-[#0f172a]"
+          className="inline-flex p-1 items-center justify-center rounded-[0.35rem] border-2 border-gray-200 bg-[#f8fafc] text-xl font-semibold tracking-tight text-[#0f172a] shadow-sm transition-colors duration-200 hover:border-[#0f172a] hover:bg-[#0f172a] hover:text-[#f8fafc] dark:border-gray-700 dark:bg-[#0f172a] dark:text-[#f8fafc] dark:hover:border-[#f8fafc] dark:hover:bg-[#f8fafc] dark:hover:text-[#0f172a]"
         >
           GB
         </Link>

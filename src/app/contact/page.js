@@ -8,29 +8,26 @@ export const metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="pb-12 pt-4 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto space-y-12">
-      {/* Header */}
-      <section className="text-center space-y-4 max-w-3xl mx-auto">
-        <p className="text-xl sm:text-2xl font-bold uppercase tracking-[0.3em] text-foreground">
-          Contacto
+    <section id="contacto" className="py-4 sm:py-12 px-1 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+      {/* Encabezado */}
+      <header className="text-center mb-6 sm:mb-12">
+        <p className="text-xs sm:text-sm font-bold tracking-[0.2em] text-indigo-600 dark:text-indigo-400 mb-2 sm:mb-3 uppercase">
+          CONTACTO
         </p>
-        <h1 className="text-3xl font-extrabold sm:text-4xl md:text-5xl text-foreground text-balance">
-          ¿Tienes una idea o proyecto? <span className="text-indigo-600">Hablemos</span>.
+        <h1 className="text-2xl sm:text-4xl font-extrabold text-foreground text-balance">
+          ¿Tienes una idea o proyecto? <span className="text-indigo-600 dark:text-indigo-400">Hablemos.</span>
         </h1>
-        <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
+        <p className="mt-3 sm:mt-4 text-muted max-w-2xl mx-auto leading-relaxed text-pretty text-xs sm:text-base">
           Estoy disponible para colaborar en proyectos desafiantes, integrarme a equipos de desarrollo o construir soluciones a medida.
         </p>
-      </section>
+      </header>
 
-      {/* Main Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        <div className="lg:col-span-7">
-          <ContactForm />
-        </div>
-        <div className="lg:col-span-5">
-          <ContactInfo />
-        </div>
+      {/* Grid principal */}
+      <div className="grid gap-5 sm:gap-6 lg:grid-cols-2 items-stretch">
+        <ContactForm />
+        <ContactInfo />
       </div>
-    </main>
+    </section>
   );
 }
+
