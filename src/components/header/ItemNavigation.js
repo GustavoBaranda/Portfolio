@@ -9,8 +9,8 @@ export const ProjectsDropdown = [
 export const NavigationNavBar = [
   { id: 1, text: "Home", href: "/", icon: Home },
   { id: 2, text: "Sobre mí", href: "/about", icon: UserRound },
-  { id: 3, text: "Experiencia", href: "/experience", icon: BriefcaseBusiness },
-  { id: 4, text: "Educación", href: "/education", icon: GraduationCap },
+  // { id: 3, text: "Experiencia", href: "/experience", icon: BriefcaseBusiness },
+  // { id: 4, text: "Educación", href: "/education", icon: GraduationCap },
   // { id: 5, text: "Skills", href: "/skills" },
   { id: 6, text: "Proyectos", href: "/projects", dropdownItems: ProjectsDropdown, icon: Layers },
   { id: 7, text: "Contacto", href: "/contact", icon: Mail },

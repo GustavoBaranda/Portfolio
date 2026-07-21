@@ -37,7 +37,7 @@ const Header = () => {
           <ThemeToggle />
           <>
             <a
-              href="https://github.com/Sobocles"
+              href="https://github.com/GustavoBaranda"
               target="_blank"
               rel="noopener noreferrer"
               className="transition-colors hover:opacity-100! opacity-70!"
@@ -54,9 +54,9 @@ const Header = () => {
             </a>
             <a
               href="mailto:baranda.gustavo@gmail.com"
+              aria-label="Enviar correo a Gustavo"
+              className="transition-colors opacity-70 hover:opacity-100"
               target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors hover:opacity-100! opacity-70!"
             >
               <Mail className="w-5 h-5" />
             </a>
