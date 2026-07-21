@@ -6,9 +6,8 @@ import Link from "next/link";
 import BurgerMenuMobile from "./BurgerMenuMobile";
 import ItemMenu from "./ItemMenu";
 import Menu from "./Menu";
-import { Github, Linkedin, Mail } from 'lucide-react'
-import ThemeToggle from "../utils/ThemeToggle";
-
+import ThemeToggle from "@/components/common/ThemeToggle";
+import SocialLinks from "@/components/common/SocialLinks";
 
 const Header = () => {
   const [active, setActive] = useState(false);
@@ -35,32 +34,7 @@ const Header = () => {
 
         <div className="hidden md:flex items-center gap-3">
           <ThemeToggle />
-          <>
-            <a
-              href="https://github.com/GustavoBaranda"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors hover:opacity-100! opacity-70!"
-            >
-              <Github className="w-5 h-5" />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/gustavobaranda/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors hover:opacity-100! opacity-70!"
-            >
-              <Linkedin className="w-5 h-5" />
-            </a>
-            <a
-              href="mailto:baranda.gustavo@gmail.com"
-              aria-label="Enviar correo a Gustavo"
-              className="transition-colors opacity-70 hover:opacity-100"
-              target="_blank"
-            >
-              <Mail className="w-5 h-5" />
-            </a>
-          </>
+          <SocialLinks className="flex items-center gap-3" />
         </div>
       </div>
 

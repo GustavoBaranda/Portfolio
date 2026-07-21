@@ -1,13 +1,10 @@
-"use client"
-
 import AnimatedText from '@/components/utils/AnimatedText'
 import TransitionEffect from '@/components/hero/TransitionEffect'
 import { FillButton } from "@/components/hero/fill-button";
 import { ArrowRight, Mail } from "lucide-react";
 import TiltImage from '@/components/hero/TiltImage'
 
-export default function Hero() {
-
+export default function HomePage() {
   return (
     <>
       <TransitionEffect />
@@ -15,13 +12,13 @@ export default function Hero() {
         <div className="pt-0">
           <div className="flex flex-col md:flex-row items-center justify-center w-full">
             <div className="w-full md:w-1/2 sm:w-full">
-                  <TiltImage
-                    src="/images/logo.svg"
-                    alt="logo"
-                    width={400}
-                    height={280}
-                    className="w-full h-auto md:inline-block md:w-full lg:inline-block"
-                  />
+              <TiltImage
+                src="/images/logo.svg"
+                alt="Logo Gustavo Baranda"
+                width={400}
+                height={280}
+                className="w-full h-auto md:inline-block md:w-full lg:inline-block"
+              />
             </div>
             <div className="w-full md:w-1/2 sm:w-full flex flex-col items-center md:items-start self-center text-center md:text-left">
               
@@ -88,8 +85,8 @@ export default function Hero() {
               </div>
             </div>
           </div>
-        </div> 
-       </main>       
+        </div>
+      </main>
     </>
-  )
+  );
 }

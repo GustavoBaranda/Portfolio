@@ -1,5 +1,5 @@
 import { usePathname } from "next/navigation";
-import DropDownLink from "./DropDownLink";
+import Link from "next/link";
 import { NavigationNavBar } from "./ItemNavigation";
 
 const ItemMenu = () => {
@@ -13,17 +13,16 @@ const ItemMenu = () => {
           const isActive = base === item.href;
           return (
             <li key={item.id}>
-              <DropDownLink
+              <Link
                 href={item.href}
-                dropdownItems={item.dropdownItems}
                 className={
                   isActive
-                    ? "text-link-active font-semibold"
-                    : "text-link-muted hover:text-link-active hover:font-semibold transition"
+                    ? "text-link-active font-semibold transition-colors"
+                    : "text-link-muted hover:text-link-active hover:font-semibold transition-colors"
                 }
               >
                 {item.text}
-              </DropDownLink>
+              </Link>
             </li>
           );
         })}

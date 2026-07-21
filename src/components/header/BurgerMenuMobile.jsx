@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { Linkedin, Github, Mail } from "lucide-react";
+import Link from "next/link";
 import { menuSlide, slide } from "./Animation";
 import ItemNavigationMobile from "./ItemNavigationMobile";
 import SvgCurve from "./SvgCurve";
 import { NavigationNavBar } from "./ItemNavigation";
-import Link from "next/link";
-import ThemeToggle from "../utils/ThemeToggle"; 
+import ThemeToggle from "@/components/common/ThemeToggle";
+import { SOCIAL_LINKS } from "@/components/common/SocialLinks";
 
 const normalizePath = (path) => {
   if (!path) return "/";
@@ -27,23 +27,6 @@ const BurgerMenuMobile = ({ updateMenu }) => {
     animate: "enter",
     exit: "exit",
   };
-  const footerIcons = [
-    {
-      href: "https://github.com/GustavoBaranda",
-      label: "GitHub",
-      Icon: Github,
-    },
-    {
-      href: "https://www.linkedin.com/in/gustavobaranda/",
-      label: "LinkedIn",
-      Icon: Linkedin,
-    },
-    {
-      href: "mailto:baranda.gustavo@gmail.com",
-      label: "Email",
-      Icon: Mail,
-    },
-  ];
 
   return (
     <motion.div
@@ -79,7 +62,7 @@ const BurgerMenuMobile = ({ updateMenu }) => {
           <motion.div {...slideMotionProps} custom={footerStartIndex}>
             <ThemeToggle />
           </motion.div>
-          {footerIcons.map(({ href, label, Icon }, index) => (
+          {SOCIAL_LINKS.map(({ href, label, Icon }, index) => (
             <motion.a
               key={href}
               {...slideMotionProps}
