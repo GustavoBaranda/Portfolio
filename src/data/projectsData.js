@@ -35,7 +35,7 @@ export const PROJECTS = [
     description:
       "Diseño y desarrollo de pipelines de extracción, transformación y carga (ETL) sincronizando bases de datos Oracle, SQLite y archivos Excel. Integración con Active Directory corporativo (SSO/LDAP) y control de acceso basado en roles (RBAC).",
     image: "/images/solar_banco.png",
-    tags: ["Python", "Django", "Oracle", "ETL", "Pandas", "Active Directory", "SQL"],
+    tags: ["Python", "Django", "Oracle", "SQL", "ETL", "Active Directory", "Pandas",],
     featured: true,
     githubUrl: null,
     demoUrl: null,
