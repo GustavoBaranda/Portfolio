@@ -4,11 +4,12 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { COLOR_MAP, cardVariants } from "@/data/aboutData";
 
-export default function EducationCard({ edu, index }) {
+export default function EducationCard({ edu, index, cardRef }) {
   const colors = COLOR_MAP[edu.color] || COLOR_MAP.syspro;
 
   return (
     <motion.div
+      ref={cardRef}
       custom={index}
       variants={cardVariants}
       initial="hidden"
@@ -18,18 +19,18 @@ export default function EducationCard({ edu, index }) {
     >
       {/* Timeline dot */}
       <div
-        className={`hidden sm:block sm:absolute sm:left-5 top-7 h-4 w-4 rounded-full ${colors.dot} ring-4 ${colors.ring} ring-offset-2 ring-offset-background z-10`}
+        className={`hidden sm:block sm:absolute sm:left-5 top-7 h-4 w-4 rounded-full ${colors.dot} ring-4 ${colors.ring} ring-offset-2 ring-offset-background z-20`}
         aria-hidden="true"
       />
 
       {/* Card */}
       <div
-        className={`w-full text-left rounded-2xl border ${colors.border} bg-card p-5 sm:p-2 transition-all duration-300`}
+        className={`w-full text-left rounded-2xl border ${colors.border} surface-card p-4 sm:p-5 transition-all duration-300`}
       >
         <div className="flex items-start gap-4">
           {/* Logo / Initials */}
           <div
-            className="hidden sm:flex shrink-0 h-16 w-16 rounded-xl items-center justify-center font-bold text-lg bg-muted text-foreground"
+            className="hidden sm:flex shrink-0 h-16 w-16 rounded-xl items-center justify-center font-bold text-lg surface-glass border border-soft text-foreground"
             aria-hidden="true"
           >
             {edu.logo ? (
@@ -51,52 +52,29 @@ export default function EducationCard({ edu, index }) {
             )}
           </div>
 
-          <div className="flex-1 min-w-0">
-            <h3 className={`text-lg sm:text-xl font-bold ${colors.heading}`}>
-              {edu.title}
-            </h3>
-            <div className="flex justify-between items-center">
-              <div className="text-sm text-muted-foreground">
-                {edu.institution}
-              </div>
-
-              <div className="hidden sm:flex self-center items-center shrink-0">
+          {/* Details */}
+          <div className="space-y-2 flex-1 min-w-0">
+            {/* Header row: Title + Status Tag */}
+            <div className="flex items-start justify-between gap-3">
+              <h3 className={`text-base sm:text-xl font-bold leading-snug ${colors.heading} flex-1 min-w-0`}>
+                {edu.title}
+              </h3>
+              {edu.status && (
                 <span
-                  className={`text-[0.6rem] px-2 py-0.5 rounded-md bg-dark text-foreground font-dark border uppercase tracking-wider ${colors.badge}`}
+                  className={`shrink-0 text-[0.6rem] sm:text-[0.65rem] font-bold px-2.5 py-0.5 rounded-full border uppercase tracking-wider ${colors.badge}`}
                 >
                   {edu.status}
                 </span>
-              </div>
+              )}
             </div>
 
-            <div className="flex mt-3 flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1.5 italic">
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
-                  />
-                </svg>
-                {edu.period}
-              </span>
-              {edu.location && (
-                <span className="flex items-center gap-1.5 italic">
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
-                    />
-                  </svg>
-                  {edu.location}
-                </span>
-              )}
+            <p className="text-xs sm:text-sm font-semibold text-foreground">
+              {edu.institution}
+            </p>
+
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-foreground/80 font-medium italic pt-0.5">
+              <span>🗓️ {edu.period}</span>
+              {edu.location && <span>📍 {edu.location}</span>}
             </div>
           </div>
         </div>
