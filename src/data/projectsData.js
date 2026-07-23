@@ -67,7 +67,7 @@ export const PROJECTS = [
     summary:
       "Aplicación web en ReactJS para comercialización de jugos naturales con catálogo interactivo y sincronización de pedidos en Firebase.",
     description:
-      "Desarrollado como proyecto seleccionado en el top 10 de Coderhouse tras quedar en el top 10 del curso de React.js. Presenta catálogo dinámico de productos, carrito de compras, integración en tiempo real con Firebase Firestore y diseño responsive avanzado con Sass.",
+      "Desarrollado como proyecto seleccionado en el top 10 de Coderhouse tras quedar en el top 10 del curso de React.js. Presenta catálogo dinámico de productos, integración en tiempo real con Firebase Firestore y diseño responsive avanzado con Sass.",
     image: "/images/las_verde.png",
     tags: ["React.js", "Firebase", "JavaScript", "React Router", "Sass"],
     featured: false,

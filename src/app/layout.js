@@ -30,6 +30,11 @@ export const metadata = {
   keywords: ['Full Stack Developer', 'Python', 'Django', 'React', 'APIs', 'Argentina', 'Software Engineer'],
   authors: [{ name: 'Gustavo Baranda' }],
   creator: 'Gustavo Baranda',
+  icons: {
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
   openGraph: {
     title: 'Gustavo Baranda | Full Stack Developer',
     description: 'Transformo ideas en soluciones digitales con código y diseño.',
