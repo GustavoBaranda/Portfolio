@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, CheckCircle2, Loader2 } from "lucide-react";
+import { Send, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -12,7 +12,8 @@ export default function ContactForm() {
     message: "",
   });
 
-  const [status, setStatus] = useState("idle");
+  const [status, setStatus] = useState("idle"); // idle | loading | success | error
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -26,17 +27,28 @@ export default function ContactForm() {
     if (!formData.name || !formData.email || !formData.message) return;
 
     setStatus("loading");
+    setErrorMessage("");
 
     try {
-      const mailtoLink = `mailto:baranda.gustavo@gmail.com?subject=${encodeURIComponent(
-        formData.subject || `Contacto de ${formData.name}`
-      )}&body=${encodeURIComponent(
-        `Nombre: ${formData.name}\nEmail: ${formData.email}\n\nMensaje:\n${formData.message}`
-      )}`;
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-      window.location.href = mailtoLink;
-      setStatus("success");
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setStatus("success");
+      } else {
+        setErrorMessage(data.error || "Ocurrió un error al enviar el mensaje.");
+        setStatus("error");
+      }
     } catch (err) {
+      console.error(err);
+      setErrorMessage("No se pudo conectar con el servidor. Inténtalo de nuevo.");
       setStatus("error");
     }
   };
@@ -56,10 +68,10 @@ export default function ContactForm() {
                 <CheckCircle2 className="w-10 h-10 sm:w-12 sm:h-12" />
               </div>
               <h4 className="text-lg sm:text-xl font-bold text-foreground">
-                ¡Cliente de correo abierto!
+                ¡Mensaje enviado con éxito!
               </h4>
               <p className="text-xs sm:text-sm text-muted max-w-sm mx-auto">
-                Se ha preparado tu mensaje para enviarlo directamente a baranda.gustavo@gmail.com.
+                Gracias por escribirme. Tu mensaje ha sido enviado directamente a mi correo y te responderé lo antes posible.
               </p>
               <button
                 onClick={() => {
@@ -73,6 +85,13 @@ export default function ContactForm() {
             </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-5">
+              {status === "error" && (
+                <div className="flex items-start gap-2.5 p-3 rounded-[0.35rem] bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-xs sm:text-sm">
+                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                  <span>{errorMessage}</span>
+                </div>
+              )}
+
               <div className="grid gap-4 sm:grid-cols-2 sm:gap-5">
                 <div className="flex flex-col gap-1.5 sm:gap-2">
                   <label
@@ -157,7 +176,7 @@ export default function ContactForm() {
                 {status === "loading" ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Procesando...</span>
+                    <span>Enviando correo...</span>
                   </>
                 ) : (
                   <>
