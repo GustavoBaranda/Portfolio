@@ -2,7 +2,7 @@ export const PROJECT_CATEGORIES = [
   { id: "all", label: "Todos los Proyectos" },
   { id: "full-stack", label: "Full Stack" },
   { id: "apis", label: "APIs y Microservicios" },
-  { id: "opensource", label: "Open Source / Freelance" },
+  { id: "opensource", label: "Freelance & Open Source" },
 ];
 
 export const PROJECTS = [
@@ -51,7 +51,7 @@ export const PROJECTS = [
       "Sistema de gestión de pacientes, administración de pruebas médicas, informes clínicos y generación dinámica de reportes en PDF.",
     description:
       "Plataforma completa desarrollada en Laravel y MySQL con interfaz dinámica mediante Yajra DataTables y AJAX. Permite la carga, almacenamiento seguro y visualización de informes médicos digitales con control de roles por servidor.",
-    image: "/images/fundacion_maldonado.png",
+    image: "/images/fundacion_maldonado_preview.png",
     tags: ["Laravel", "PHP", "MySQL", "Blade", "Yajra DataTables", "JavaScript", "Tailwind CSS"],
     featured: false,
     githubUrl: null,
@@ -61,14 +61,14 @@ export const PROJECTS = [
     id: "las-verde-ecommerce",
     title: "E-Commerce & Catálogo Interactivo 'Las Verde'",
     category: "opensource",
-    categoryLabel: "Open Source / Freelance",
+    categoryLabel: "Freelance",
     company: "Las Verde",
     period: "2022 — 2023",
     summary:
       "Aplicación web en ReactJS para comercialización de jugos naturales con catálogo interactivo y sincronización de pedidos en Firebase.",
     description:
       "Desarrollado como proyecto seleccionado en el top 10 de Coderhouse tras quedar en el top 10 del curso de React.js. Presenta catálogo dinámico de productos, integración en tiempo real con Firebase Firestore y diseño responsive avanzado con Sass.",
-    image: "/images/las_verde.png",
+    image: "/images/las_verde_preview.png",
     tags: ["React.js", "Firebase", "JavaScript", "React Router", "Sass"],
     featured: false,
     githubUrl: "https://github.com/GustavoBaranda/Las-verde",
@@ -78,7 +78,7 @@ export const PROJECTS = [
     id: "maternal-descubriendo",
     title: "Sitio Web Institucional Jardín Maternal Descubriendo",
     category: "opensource",
-    categoryLabel: "Open Source / Freelance",
+    categoryLabel: "Freelance",
     company: "Descubriendo",
     period: "2022",
     summary:
@@ -91,4 +91,22 @@ export const PROJECTS = [
     githubUrl: "https://github.com/GustavoBaranda/Descubrimiento-Jardin-Maternal",
     demoUrl: "https://jardinmaternaldescubriendo.vercel.app/",
   },
+  {
+    id: "portfolio-personal",
+    title: "Portfolio Web Profesional & Design System",
+    category: "opensource",
+    categoryLabel: "Open Source",
+    company: "Proyecto Personal",
+    period: "2025 — Presente",
+    summary:
+      "Sitio web personal desarrollado con Next.js 16 App Router, Tailwind CSS v4, animaciones con Framer Motion e integración de API de contacto.",
+    description:
+      "Plataforma web construida con React 19 y Next.js App Router para la presentación de experiencia profesional y proyectos. Incorpora arquitectura limpia, sistema de temas dinámico (Dark/Light mode), microinteracciones avanzadas con Framer Motion e integración de Nodemailer API en Next.js Server Routes.",
+    image: "/images/opengraph.png",
+    tags: ["Next.js", "React 19", "Tailwind CSS", "Framer Motion", "Nodemailer", "JavaScript"],
+    featured: false,
+    githubUrl: "https://github.com/GustavoBaranda/portfolio",
+    demoUrl: "https://gustavobaranda.vercel.app/",
+  },
 ];
+

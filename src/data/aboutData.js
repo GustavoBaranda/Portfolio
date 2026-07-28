@@ -105,7 +105,7 @@ export const EXPERIENCES = [
     id: 4,
     role: "Front-end Developer React",
     company: "Las Verde",
-    initials: "/images/las_verde.png",
+    initials: "/images/las_verde1.png",
     type: "Freelance",
     period: "dic. 2022 - mar. 2023",
     duration: "4 meses",
