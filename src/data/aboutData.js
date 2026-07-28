@@ -121,7 +121,7 @@ export const EXPERIENCES = [
       "GitHub",
     ],
     color: "lasverde",
-    url: "https://lasverde.com.ar/",
+    url: "https://lasverde.vercel.app/",
     modalidad: "Remoto",
   },
   {
@@ -143,7 +143,7 @@ export const EXPERIENCES = [
       "GitHub",
     ],
     color: "blue",
-    url: "https://maternaldescubrimiento.vercel.app/",
+    url: "https://jardinmaternaldescubriendo.vercel.app/",
     modalidad: "Remoto",
   },
 ];

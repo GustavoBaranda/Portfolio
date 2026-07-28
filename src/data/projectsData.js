@@ -71,8 +71,8 @@ export const PROJECTS = [
     image: "/images/las_verde.png",
     tags: ["React.js", "Firebase", "JavaScript", "React Router", "Sass"],
     featured: false,
-    githubUrl: "https://github.com/GustavoBaranda",
-    demoUrl: "https://lasverde.com.ar/",
+    githubUrl: "https://github.com/GustavoBaranda/Las-verde",
+    demoUrl: "https://lasverde.vercel.app/",
   },
   {
     id: "maternal-descubriendo",
@@ -88,7 +88,7 @@ export const PROJECTS = [
     image: "/images/descubriendo_jardin.svg",
     tags: ["HTML5", "CSS3", "JavaScript", "UX/UI", "Responsive Design"],
     featured: false,
-    githubUrl: "https://github.com/GustavoBaranda",
-    demoUrl: "https://maternaldescubrimiento.vercel.app/",
+    githubUrl: "https://github.com/GustavoBaranda/Descubrimiento-Jardin-Maternal",
+    demoUrl: "https://jardinmaternaldescubriendo.vercel.app/",
   },
 ];
