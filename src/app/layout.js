@@ -73,8 +73,7 @@ export const metadata = {
 const themeScript = `(() => {
   try {
     const stored = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const theme = stored ?? (prefersDark ? "dark" : "light");
+    const theme = stored ?? "light";
     const root = document.documentElement;
     root.classList.toggle("dark", theme === "dark");
     root.setAttribute("data-theme", theme);
