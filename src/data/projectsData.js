@@ -8,7 +8,7 @@ export const PROJECT_CATEGORIES = [
 export const PROJECTS = [
   {
     id: "syspro-logistica",
-    title: "Plataforma de Logística & Depósitos Fiscales (Turnero & Depofis)",
+    title: "Plataforma de Logística & Depósitos Fiscales",
     category: "full-stack",
     categoryLabel: "Full Stack",
     company: "SysPro Consulting",
@@ -25,7 +25,7 @@ export const PROJECTS = [
   },
   {
     id: "solar-banco-etl",
-    title: "Motor Backend de Riesgos, LCR & Brechas de Liquidez",
+    title: "Plataforma de Riesgos & Liquidez (LCR / VaR)",
     category: "full-stack",
     categoryLabel: "Full Stack",
     company: "Solar Banco",
@@ -42,7 +42,7 @@ export const PROJECTS = [
   },
   {
     id: "fundacion-medicina",
-    title: "Plataforma Web de Gestión en Medicina Laboral",
+    title: "Plataforma de Medicina Laboral & Visor DICOM",
     category: "full-stack",
     categoryLabel: "Full Stack",
     company: "Fundación Maldonado",
@@ -59,7 +59,7 @@ export const PROJECTS = [
   },
   {
     id: "las-verde-ecommerce",
-    title: "E-Commerce & Catálogo Interactivo 'Las Verde'",
+    title: "E-Commerce & Catálogo Interactivo",
     category: "opensource",
     categoryLabel: "Freelance",
     company: "Las Verde",
@@ -76,7 +76,7 @@ export const PROJECTS = [
   },
   {
     id: "maternal-descubriendo",
-    title: "Sitio Web Institucional Jardín Maternal Descubriendo",
+    title: "Sitio Web Institucional Jardín Maternal",
     category: "opensource",
     categoryLabel: "Freelance",
     company: "Descubriendo",
@@ -93,7 +93,7 @@ export const PROJECTS = [
   },
   {
     id: "portfolio-personal",
-    title: "Portfolio Web Profesional & Design System",
+    title: "Portfolio Web Personal & Design System",
     category: "opensource",
     categoryLabel: "Open Source",
     company: "Proyecto Personal",
