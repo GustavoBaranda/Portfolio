@@ -26,8 +26,8 @@ export const PROJECTS = [
   {
     id: "solar-banco-etl",
     title: "Motor Backend de Riesgos, LCR & Brechas de Liquidez",
-    category: "apis",
-    categoryLabel: "APIs y Microservicios",
+    category: "full-stack",
+    categoryLabel: "Full Stack",
     company: "Solar Banco",
     period: "2024 — 2025",
     summary:
