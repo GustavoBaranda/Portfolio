@@ -48,11 +48,11 @@ export const PROJECTS = [
     company: "Fundación Maldonado",
     period: "2025",
     summary:
-      "Sistema de gestión de pacientes, administración de pruebas médicas, informes clínicos y generación dinámica de reportes en PDF.",
+      "Sistema de gestión de pacientes, visor interactivo de imágenes médicas DICOM, administración de estudios clínicos y reportes en PDF.",
     description:
-      "Plataforma completa desarrollada en Laravel y MySQL con interfaz dinámica mediante Yajra DataTables y AJAX. Permite la carga, almacenamiento seguro y visualización de informes médicos digitales con control de roles por servidor.",
+      "Plataforma médica desarrollada en Laravel 12 y MySQL con interfaz dinámica mediante Yajra DataTables y AJAX. Incorpora visor interactivo de estudios (resonancias y tomografías) con controles de zoom y rotación, gestión de pacientes/médicos y control de acceso multinivel por roles (Admin, Colaborador, Paciente).",
     image: "/images/fundacion_maldonado_preview.png",
-    tags: ["Laravel", "PHP", "MySQL", "Blade", "Yajra DataTables", "JavaScript", "Tailwind CSS"],
+    tags: ["Laravel 12", "PHP", "MySQL", "Visor DICOM", "Yajra DataTables", "JavaScript", "Tailwind CSS"],
     featured: false,
     githubUrl: null,
     demoUrl: null,
