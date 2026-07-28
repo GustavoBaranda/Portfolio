@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import path from "path";
+import fs from "fs";
 
 export async function POST(req) {
   try {
@@ -9,6 +11,15 @@ export async function POST(req) {
     if (!name || !email || !message) {
       return NextResponse.json(
         { error: "Todos los campos obligatorios deben ser completados." },
+        { status: 400 }
+      );
+    }
+
+    // Validar formato de correo electrónico
+    const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!EMAIL_REGEX.test(email.trim())) {
+      return NextResponse.json(
+        { error: "Por favor proporciona un correo electrónico válido." },
         { status: 400 }
       );
     }
@@ -37,8 +48,8 @@ export async function POST(req) {
     });
 
     const mailSubject = subject && subject.trim() !== "" 
-      ? `📬 [Contacto Web] ${subject}`
-      : `📬 Nuevo mensaje de ${name}`;
+      ? `[Contacto] ${subject}`
+      : `Nuevo mensaje de ${name}`;
 
     const formattedDate = new Date().toLocaleDateString("es-ES", {
       weekday: "long",
@@ -49,13 +60,28 @@ export async function POST(req) {
       minute: "2-digit",
     });
 
-    // Configurar opciones del correo con diseño HTML Premium
+    // Verificar si existe el archivo de logo oficial en src/assets/logo.svg
+    const logoPath = path.join(process.cwd(), "src", "assets", "logo.svg");
+    const hasLogo = fs.existsSync(logoPath);
+
+    const attachments = hasLogo
+      ? [
+          {
+            filename: "logo.svg",
+            path: logoPath,
+            cid: "gusdev_logo",
+          },
+        ]
+      : [];
+
+    // Configurar opciones del correo con el Logo SVG Oficial a la derecha
     const mailOptions = {
-      from: `"Portfolio Contacto" <${emailUser}>`,
+      from: `"GusDev Contacto" <${emailUser}>`,
       to: emailUser,
       replyTo: email,
       subject: mailSubject,
       text: `Nombre: ${name}\nEmail: ${email}\nAsunto: ${subject || "Sin asunto"}\n\nMensaje:\n${message}`,
+      attachments: attachments,
       html: `
         <!DOCTYPE html>
         <html>
@@ -63,24 +89,37 @@ export async function POST(req) {
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
         </head>
-        <body style="margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; -webkit-font-smoothing: antialiased;">
-          <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f1f5f9; padding: 40px 10px;">
+        <body style="margin: 0; padding: 0; background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
+          <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f8fafc; padding: 40px 12px;">
             <tr>
               <td align="center">
-                <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04); border: 1px solid #e2e8f0;">
+                <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 580px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
                   
-                  <!-- HEADER -->
+                  <!-- HEADER SOBRIO CON LOGO SVG OFICIAL A LA DERECHA -->
                   <tr>
-                    <td style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); padding: 36px 32px; text-align: left;">
-                      <div style="display: inline-block; background-color: rgba(255, 255, 255, 0.2); padding: 4px 12px; border-radius: 20px; color: #ffffff; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;">
-                        GusDev Portfolio
-                      </div>
-                      <h1 style="color: #ffffff; font-size: 24px; font-weight: 800; margin: 0 0 6px 0; letter-spacing: -0.5px;">
-                        ¡Nuevo mensaje de contacto! 📩
-                      </h1>
-                      <p style="color: #e0e7ff; font-size: 14px; margin: 0; opacity: 0.95;">
-                        Has recibido una nueva consulta desde tu sitio web.
-                      </p>
+                    <td style="background-color: #0f172a; padding: 28px 32px; border-bottom: 3px solid #4f46e5;">
+                      <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                          <!-- COLUMNA IZQUIERDA: TÍTULOS -->
+                          <td align="left" style="vertical-align: middle;">
+                            <span style="color: #94a3b8; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">
+                              GUSDEV · PORTFOLIO
+                            </span>
+                            <h1 style="color: #ffffff; font-size: 20px; font-weight: 700; margin: 6px 0 0 0; letter-spacing: -0.3px;">
+                              Nuevo Mensaje de Contacto
+                            </h1>
+                          </td>
+                          
+                          <!-- COLUMNA DERECHA: LOGO OFICIAL SVG -->
+                          <td align="right" style="vertical-align: middle; width: 48px; padding-left: 16px;">
+                            ${
+                              hasLogo
+                                ? `<img src="cid:gusdev_logo" alt="GusDev Logo" width="48" height="48" style="display: block; width: 48px; height: 48px; object-fit: contain;" />`
+                                : `<div style="width: 44px; height: 44px; background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%); border-radius: 10px; text-align: center; line-height: 44px; color: #ffffff; font-weight: 800;">GD</div>`
+                            }
+                          </td>
+                        </tr>
+                      </table>
                     </td>
                   </tr>
 
@@ -88,29 +127,27 @@ export async function POST(req) {
                   <tr>
                     <td style="padding: 32px;">
                       
-                      <!-- DATOS DEL REMITENTE -->
-                      <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f8fafc; border-radius: 12px; padding: 20px; border: 1px solid #f1f5f9; margin-bottom: 24px;">
+                      <!-- TABLA DE INFORMACIÓN -->
+                      <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 24px;">
                         <tr>
-                          <td style="padding-bottom: 12px;">
-                            <span style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Remitente</span>
-                            <div style="color: #0f172a; font-size: 16px; font-weight: 700; margin-top: 2px;">${name}</div>
+                          <td style="padding-bottom: 16px; border-bottom: 1px solid #f1f5f9;">
+                            <span style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; display: block; margin-bottom: 4px;">Remitente</span>
+                            <span style="color: #0f172a; font-size: 15px; font-weight: 600;">${name}</span>
                           </td>
                         </tr>
                         <tr>
-                          <td style="padding-bottom: 12px;">
-                            <span style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Correo Electrónico</span>
-                            <div style="margin-top: 2px;">
-                              <a href="mailto:${email}" style="color: #4f46e5; font-size: 15px; font-weight: 600; text-decoration: none;">${email}</a>
-                            </div>
+                          <td style="padding: 16px 0; border-bottom: 1px solid #f1f5f9;">
+                            <span style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; display: block; margin-bottom: 4px;">Correo Electrónico</span>
+                            <a href="mailto:${email}" style="color: #4f46e5; font-size: 15px; font-weight: 600; text-decoration: none;">${email}</a>
                           </td>
                         </tr>
                         ${
                           subject
                             ? `
                         <tr>
-                          <td>
-                            <span style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Asunto</span>
-                            <div style="color: #334155; font-size: 14px; font-weight: 600; margin-top: 2px;">${subject}</div>
+                          <td style="padding: 16px 0; border-bottom: 1px solid #f1f5f9;">
+                            <span style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; display: block; margin-bottom: 4px;">Asunto</span>
+                            <span style="color: #334155; font-size: 14px; font-weight: 500;">${subject}</span>
                           </td>
                         </tr>
                         `
@@ -118,18 +155,18 @@ export async function POST(req) {
                         }
                       </table>
 
-                      <!-- CUERPO DEL MENSAJE -->
-                      <div style="margin-bottom: 28px;">
-                        <span style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">Mensaje</span>
-                        <div style="background-color: #faf5ff; border-left: 4px solid #8b5cf6; border-radius: 0 12px 12px 0; padding: 20px; color: #1e1b4b; font-size: 15px; line-height: 1.6; white-space: pre-wrap;">${message}</div>
+                      <!-- BLOQUE DE MENSAJE -->
+                      <div style="margin-bottom: 32px;">
+                        <span style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; display: block; margin-bottom: 8px;">Mensaje</span>
+                        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-left: 3px solid #0f172a; border-radius: 6px; padding: 18px 20px; color: #334155; font-size: 14px; line-height: 1.6; white-space: pre-wrap;">${message}</div>
                       </div>
 
-                      <!-- BOTÓN DE RESPUESTA RÁPIDA -->
+                      <!-- BOTÓN MINIMALISTA -->
                       <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
                         <tr>
-                          <td align="center">
-                            <a href="mailto:${email}" style="display: inline-block; background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%); color: #ffffff; font-size: 14px; font-weight: 700; text-decoration: none; padding: 14px 28px; border-radius: 10px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);">
-                              Responder directamente a ${name}
+                          <td align="left">
+                            <a href="mailto:${email}" style="display: inline-block; background-color: #0f172a; color: #ffffff; font-size: 13px; font-weight: 600; text-decoration: none; padding: 12px 24px; border-radius: 6px; letter-spacing: 0.2px;">
+                              Responder a ${name}
                             </a>
                           </td>
                         </tr>
@@ -138,11 +175,11 @@ export async function POST(req) {
                     </td>
                   </tr>
 
-                  <!-- FOOTER -->
+                  <!-- FOOTER MINIMALISTA -->
                   <tr>
-                    <td style="background-color: #f8fafc; padding: 20px 32px; border-top: 1px solid #f1f5f9; text-align: center;">
+                    <td style="background-color: #fafafa; padding: 16px 32px; border-top: 1px solid #f1f5f9; text-align: center;">
                       <p style="color: #94a3b8; font-size: 12px; margin: 0;">
-                        Mensaje enviado desde tu sitio web <strong style="color: #64748b;">GusDev</strong> · ${formattedDate}
+                        Formulario de contacto · <strong>gusdev.com</strong> · ${formattedDate}
                       </p>
                     </td>
                   </tr>

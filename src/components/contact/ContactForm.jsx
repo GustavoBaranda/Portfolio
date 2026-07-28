@@ -4,6 +4,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
 export default function ContactForm() {
   const [formData, setFormData] = useState({
     name: "",
@@ -14,20 +16,52 @@ export default function ContactForm() {
 
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
   const [errorMessage, setErrorMessage] = useState("");
+  const [emailError, setEmailError] = useState("");
+
+  const validateEmail = (email) => {
+    if (!email) {
+      return "El correo es obligatorio";
+    }
+    if (!EMAIL_REGEX.test(email.trim())) {
+      return "Email inválido (ej. tu@email.com)";
+    }
+    return "";
+  };
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }));
+
+    if (name === "email") {
+      if (emailError) {
+        setEmailError(validateEmail(value));
+      }
+    }
+  };
+
+  const handleEmailBlur = () => {
+    if (formData.email) {
+      setEmailError(validateEmail(formData.email));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) return;
+
+    const err = validateEmail(formData.email);
+    if (err) {
+      setEmailError(err);
+      return;
+    }
+
+    if (!formData.name || !formData.message) return;
 
     setStatus("loading");
     setErrorMessage("");
+    setEmailError("");
 
     try {
       const res = await fetch("/api/contact", {
@@ -77,6 +111,7 @@ export default function ContactForm() {
                 onClick={() => {
                   setStatus("idle");
                   setFormData({ name: "", email: "", subject: "", message: "" });
+                  setEmailError("");
                 }}
                 className="mt-3 sm:mt-4 px-5 sm:px-6 py-2 rounded-[0.35rem] bg-indigo-600 text-white font-semibold text-xs sm:text-sm hover:bg-indigo-700 transition cursor-pointer"
               >
@@ -84,7 +119,7 @@ export default function ContactForm() {
               </button>
             </motion.div>
           ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-5">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-5" noValidate>
               {status === "error" && (
                 <div className="flex items-start gap-2.5 p-3 rounded-[0.35rem] bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-xs sm:text-sm">
                   <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
@@ -125,9 +160,20 @@ export default function ContactForm() {
                     required
                     value={formData.email}
                     onChange={handleChange}
+                    onBlur={handleEmailBlur}
                     placeholder="tu@email.com"
-                    className="rounded-[0.35rem] border border-soft surface px-3.5 py-2.5 text-xs sm:text-sm text-foreground placeholder:text-muted focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20 focus:outline-none"
+                    className={`rounded-[0.35rem] border surface px-3.5 py-2.5 text-xs sm:text-sm text-foreground placeholder:text-muted focus:outline-none transition-colors ${
+                      emailError
+                        ? "border-rose-500/70 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20"
+                        : "border-soft focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20"
+                    }`}
                   />
+                  {emailError && (
+                    <span className="text-[0.7rem] font-medium text-rose-500 dark:text-rose-400 flex items-center gap-1 mt-0.5">
+                      <AlertCircle className="w-3 h-3 shrink-0" />
+                      <span>{emailError}</span>
+                    </span>
+                  )}
                 </div>
               </div>
 
