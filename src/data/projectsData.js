@@ -82,11 +82,11 @@ export const PROJECTS = [
     company: "Descubriendo",
     period: "2022",
     summary:
-      "Plataforma institucional para presentación de servicios educativos, comunicación institucional y diseño UX responsivo.",
+      "Plataforma institucional responsiva con catálogo de propuesta educativa, slider interactivo, FAQ y validación de contacto.",
     description:
-      "Proyecto real asignado por Coderhouse tras quedar en el top 10 del curso de Desarrollo Web. Enfoque prioritario en rendimiento, accesibilidad y experiencia de usuario optimizada en dispositivos móviles.",
+      "Proyecto cliente real asignado por Coderhouse como premio por quedar en el Top 10 del curso de Desarrollo Web. Desarrollado con HTML5 semántico, CSS3/Bootstrap 5 y JavaScript (ES6+). Incluye slider interactivo de instalaciones, validación cliente de formularios, acordeón de preguntas frecuentes e integración con Google Maps y WhatsApp.",
     image: "/images/descubriendo_jardin.svg",
-    tags: ["HTML5", "CSS3", "JavaScript", "UX/UI", "Responsive Design"],
+    tags: ["HTML5", "CSS3", "Bootstrap 5", "JavaScript (ES6+)", "UX/UI", "Responsive Design"],
     featured: false,
     githubUrl: "https://github.com/GustavoBaranda/Descubrimiento-Jardin-Maternal",
     demoUrl: "https://jardinmaternaldescubriendo.vercel.app/",

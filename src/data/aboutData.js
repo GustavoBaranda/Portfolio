@@ -144,9 +144,13 @@ export const EXPERIENCES = [
     duration: "4 meses",
     location: "Buenos Aires, Argentina",
     description:
-      "Desarrollé sitio web institucional para el jardín maternal 'Descubriendo', orientado a brindar información sobre la institución, sus servicios y medios de contacto. Proyecto real otorgado por Coderhouse tras quedar en el top 10 del curso de Desarrollo Web. Diseño responsive con buenas prácticas de UX.",
+      "Desarrollé el sitio web institucional para el jardín maternal 'Descubriendo'. Proyecto real asignado por Coderhouse como premio por quedar en el Top 10 del curso de Desarrollo Web. Implementé maquetación semántica en HTML5, estilos responsivos en CSS3 y Bootstrap 5, sliders dinámicos en JavaScript (ES6+), validación cliente de formularios de contacto e integración de Google Maps API.",
     mainSkills: ["HTML5", "CSS3", "JavaScript"],
     skills: [
+      "HTML5 Semántico",
+      "CSS3 & Flexbox",
+      "Bootstrap 5",
+      "JavaScript (ES6+)",
       "UX/UI",
       "Responsive Design",
       "Git",
