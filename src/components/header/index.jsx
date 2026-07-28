@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import BurgerMenuMobile from "./BurgerMenuMobile";
 import ItemMenu from "./ItemMenu";
@@ -11,6 +11,17 @@ import SocialLinks from "@/components/common/SocialLinks";
 
 const Header = () => {
   const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    if (active) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [active]);
 
   const closeMenu = () => setActive(false);
 
