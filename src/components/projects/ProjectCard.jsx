@@ -85,11 +85,11 @@ export default function ProjectCard({ project, index }) {
 
       <div>
         {/* Tags */}
-        <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-4 pt-4 border-t border-soft">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-4 pt-4 border-t border-soft">
           {project.tags.map((tag) => (
             <span
               key={tag}
-              className="text-[0.65rem] sm:text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-[0.35rem] bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/15"
+              className="inline-flex items-center text-[0.65rem] sm:text-xs font-semibold uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-[0.35rem] bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/15 leading-tight"
             >
               {tag}
             </span>
