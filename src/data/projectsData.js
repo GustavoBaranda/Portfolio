@@ -65,11 +65,11 @@ export const PROJECTS = [
     company: "Las Verde",
     period: "2022 — 2023",
     summary:
-      "Aplicación web en ReactJS para comercialización de jugos naturales con catálogo interactivo y sincronización de pedidos en Firebase.",
+      "Aplicación e-commerce en React.js para fábrica de jugos naturales con catálogo interactivo y sincronización en tiempo real con Firebase Firestore.",
     description:
-      "Desarrollado como proyecto seleccionado en el top 10 de Coderhouse tras quedar en el top 10 del curso de React.js. Presenta catálogo dinámico de productos, integración en tiempo real con Firebase Firestore y diseño responsive avanzado con Sass.",
+      "Proyecto cliente real otorgado por Coderhouse como distinción por quedar seleccionado en el Top 10 del curso de React.js. Incorpora catálogo dinámico de productos e insumos con Firebase Firestore, ruteo SPA con React Router v6, arquitectura de estilos modular en Sass (SCSS) y canal de contacto directo por WhatsApp.",
     image: "/images/las_verde_preview.png",
-    tags: ["React.js", "Firebase", "JavaScript", "React Router", "Sass"],
+    tags: ["React.js", "Firebase Firestore", "React Router v6", "Sass (SCSS)", "JavaScript"],
     featured: false,
     githubUrl: "https://github.com/GustavoBaranda/Las-verde",
     demoUrl: "https://lasverde.vercel.app/",
