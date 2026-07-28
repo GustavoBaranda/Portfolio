@@ -1,10 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { ExternalLink, Github, Layers, ArrowUpRight } from "lucide-react";
+import { ExternalLink, Github, Layers, ArrowUpRight, ChevronDown, ChevronUp } from "lucide-react";
 
 export default function ProjectCard({ project, index }) {
+  const [isExpanded, setIsExpanded] = useState(false);
   const isLeft = index % 2 === 0;
   const initialX = isLeft ? -20 : 20;
 
@@ -50,10 +52,35 @@ export default function ProjectCard({ project, index }) {
           />
         </div>
 
-        {/* Description */}
-        <p className="text-xs sm:text-sm md:text-base text-muted-foreground leading-relaxed my-3 sm:my-4">
-          {project.description}
-        </p>
+        {/* Description / Summary with Read More */}
+        <div className="my-3 sm:my-4">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={isExpanded ? "full" : "summary"}
+              initial={{ opacity: 0.8 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0.8 }}
+              transition={{ duration: 0.2 }}
+              className="text-xs sm:text-sm md:text-base text-muted-foreground leading-relaxed"
+            >
+              {isExpanded ? project.description : project.summary}
+            </motion.p>
+          </AnimatePresence>
+
+          {project.description && project.description !== project.summary && (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 mt-2.5 transition-colors cursor-pointer focus:outline-none"
+            >
+              <span>{isExpanded ? "Ver menos" : "Ver más detalles"}</span>
+              {isExpanded ? (
+                <ChevronUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              ) : (
+                <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              )}
+            </button>
+          )}
+        </div>
       </div>
 
       <div>
