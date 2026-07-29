@@ -1,14 +1,5 @@
 # 🚀 GusDev · Portfolio Profesional
 
-<p>
-  <img align="left" src="https://img.shields.io/badge/Next.js_16-black?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
-  <img align="left" src="https://img.shields.io/badge/React_19-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
-  <img align="left" src="https://img.shields.io/badge/Tailwind_CSS_v4-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
-  <img align="left" src="https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white" alt="Framer Motion" />
-  <img align="left" src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel" />
-</p>
-<br clear="all">
-
 Portfolio web moderno y profesional de **Gustavo Baranda**, Full Stack Developer. Desarrollado con Next.js 16 (App Router), React 19, Tailwind CSS v4 y animaciones interactivas con Framer Motion. Incluye un sistema de contacto integrado mediante API Route de Next.js y Nodemailer.
 
 ---
@@ -25,12 +16,29 @@ Portfolio web moderno y profesional de **Gustavo Baranda**, Full Stack Developer
 
 ## 🛠️ Tecnologías Utilizadas
 
-* **Framework:** [Next.js 16](https://nextjs.org/) (App Router)
-* **Biblioteca UI:** [React 19](https://react.dev/)
-* **Estilos:** [Tailwind CSS v4](https://tailwindcss.com/)
-* **Animaciones:** [Framer Motion](https://www.framer.com/motion/)
-* **Iconos:** [Lucide React](https://lucide.dev/) & [React Icons](https://react-icons.github.io/react-icons/)
-* **Envió de Emails:** [Nodemailer](https://nodemailer.com/)
+### 💻 Frontend
+<p>
+  <img align="left" src="https://img.shields.io/badge/Next.js_16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" />
+  <img align="left" src="https://img.shields.io/badge/React_19-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
+  <img align="left" src="https://img.shields.io/badge/Tailwind_CSS_v4-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
+  <img align="left" src="https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white" alt="Framer Motion" />
+</p>
+<br clear="all">
+
+### ⚙️ Backend & Servicios
+<p>
+  <img align="left" src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" />
+  <img align="left" src="https://img.shields.io/badge/Nodemailer-22B573?style=for-the-badge&logo=nodemailer&logoColor=white" alt="Nodemailer" />
+</p>
+<br clear="all">
+
+### 🚀 Despliegue & Herramientas
+<p>
+  <img align="left" src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel" />
+  <img align="left" src="https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white" alt="ESLint" />
+  <img align="left" src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white" alt="npm" />
+</p>
+<br clear="all">
 
 ---
 
