@@ -60,14 +60,14 @@ export async function POST(req) {
       minute: "2-digit",
     });
 
-    // Verificar si existe el archivo de logo oficial en src/assets/logo.svg
-    const logoPath = path.join(process.cwd(), "src", "assets", "logo.svg");
+    // Verificar si existe el archivo de logo PNG oficial en src/assets/logo.png
+    const logoPath = path.join(process.cwd(), "src", "assets", "logo.png");
     const hasLogo = fs.existsSync(logoPath);
 
     const attachments = hasLogo
       ? [
           {
-            filename: "logo.svg",
+            filename: "logo.png",
             path: logoPath,
             cid: "gusdev_logo",
           },
@@ -179,7 +179,7 @@ export async function POST(req) {
                   <tr>
                     <td style="background-color: #fafafa; padding: 16px 32px; border-top: 1px solid #f1f5f9; text-align: center;">
                       <p style="color: #94a3b8; font-size: 12px; margin: 0;">
-                        Formulario de contacto · <strong>gusdev.com</strong> · ${formattedDate}
+                        Formulario de contacto · <strong>gustavobaranda.com</strong> · ${formattedDate}
                       </p>
                     </td>
                   </tr>
