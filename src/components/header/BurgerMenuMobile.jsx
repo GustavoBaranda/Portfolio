@@ -58,24 +58,27 @@ const BurgerMenuMobile = ({ updateMenu }) => {
             />
           ))}
         </div>
-        <div className="footer border-t border-t-gray-200 pt-6">
+        <div className="footer border-t border-t-gray-200/50 pt-2 pb-1 sm:pb-2 flex-shrink-0 flex items-center justify-center gap-6 sm:gap-8">
           <motion.div {...slideMotionProps} custom={footerStartIndex}>
             <ThemeToggle />
           </motion.div>
-          {SOCIAL_LINKS.map(({ href, label, Icon }, index) => (
-            <motion.a
-              key={href}
-              {...slideMotionProps}
-              custom={footerStartIndex + index + 1}
-              href={href}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={label}
-              className="text-muted-link transition-colors hover:text-accent"
-            >
-              <Icon size={20} />
-            </motion.a>
-          ))}
+          {SOCIAL_LINKS.map(({ href, label, Icon }, index) => {
+            const isMail = href.startsWith("mailto:");
+            return (
+              <motion.a
+                key={href}
+                {...slideMotionProps}
+                custom={footerStartIndex + index + 1}
+                href={href}
+                target={isMail ? undefined : "_blank"}
+                rel={isMail ? undefined : "noreferrer"}
+                aria-label={label}
+                className="text-muted-link transition-colors hover:text-accent"
+              >
+                <Icon size={20} />
+              </motion.a>
+            );
+          })}
         </div>
       </div>
     </motion.div>

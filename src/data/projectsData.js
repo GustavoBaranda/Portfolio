@@ -60,8 +60,8 @@ export const PROJECTS = [
   {
     id: "solar-banco-etl",
     title: "Plataforma de Riesgos & Liquidez (LCR / VaR)",
-    category: "full-stack",
-    categoryLabel: "Full Stack",
+    category: "apis",
+    categoryLabel: "APIs y Microservicios",
     company: "Solar Banco",
     period: "2024 — 2025",
     summary:
@@ -102,7 +102,7 @@ export const PROJECTS = [
       "Plataforma institucional responsiva con catálogo de propuesta educativa, slider interactivo, FAQ y validación de contacto.",
     description:
       "Proyecto cliente real asignado por Coderhouse como premio por quedar en el Top 10 del curso de Desarrollo Web. Desarrollado con HTML5 semántico, CSS3/Bootstrap 5 y JavaScript (ES6+). Incluye slider interactivo de instalaciones, validación cliente de formularios, acordeón de preguntas frecuentes e integración con Google Maps y WhatsApp.",
-    image: "/images/descubriendo_jardin.svg",
+    image: "/images/descubriendo_jardin_preview.png",
     tags: ["HTML5", "CSS3", "Bootstrap 5", "UX/UI", "JavaScript", "Responsive"],
     featured: false,
     githubUrl: "https://github.com/GustavoBaranda/Descubrimiento-Jardin-Maternal",

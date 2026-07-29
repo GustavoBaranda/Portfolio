@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { ExternalLink, Github, Layers, ArrowUpRight, ChevronDown, ChevronUp } from "lucide-react";
+import { ExternalLink, Github, Layers, ArrowUpRight, ChevronDown, ChevronUp, Lock } from "lucide-react";
 
 export default function ProjectCard({ project, index }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -15,8 +15,8 @@ export default function ProjectCard({ project, index }) {
       initial={{ opacity: 0, x: initialX, scale: 0.98 }}
       animate={{ opacity: 1, x: 0, scale: 1 }}
       transition={{
-        duration: 0.35,
-        delay: index * 0.05,
+        duration: 0.5,
+        delay: index * 0.1,
         ease: [0.25, 1, 0.5, 1],
       }}
       className="group relative flex flex-col justify-between rounded-[0.35rem] border border-soft surface-card p-4 sm:p-6 lg:p-8 transition-[border-color,box-shadow] duration-300 hover:border-indigo-500/40 hover:shadow-xl dark:hover:shadow-indigo-950/20"
@@ -31,26 +31,35 @@ export default function ProjectCard({ project, index }) {
           <span className="text-muted text-[0.7rem] sm:text-xs">{project.period}</span>
         </div>
 
-        {/* Title */}
-        <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-snug">
-          {project.title}
-        </h3>
-
-        {/* Company subtitle */}
-        <p className="text-xs sm:text-sm font-semibold text-muted mt-1 mb-3 sm:mb-4">
-          {project.company}
-        </p>
+        {/* Title & Company (with min-height for horizontal alignment) */}
+        <div className="min-h-[5rem] sm:min-h-[5.5rem] flex flex-col justify-start mb-3 sm:mb-4">
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-snug">
+            {project.title}
+          </h3>
+          <p className="text-xs sm:text-sm font-semibold text-muted mt-1">
+            {project.company}
+          </p>
+        </div>
 
         {/* Image Preview / Banner */}
-        <div className="relative w-full h-28 sm:h-36 my-3 sm:my-4 rounded-[0.35rem] overflow-hidden bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/80 flex items-center justify-center p-3 sm:p-4 shadow-xs transition-colors">
-          <Image
-            src={project.image}
-            alt={project.title}
-            width={400}
-            height={200}
-            className="object-contain max-h-full w-auto transition-transform duration-500 group-hover:scale-105 rounded-[0.25rem] dark:brightness-95 dark:contrast-105"
-          />
-        </div>
+        {(() => {
+          const isLogo = project.id === "syspro-logistica" || project.id === "solar-banco-etl";
+          return (
+            <div className="relative w-full h-44 sm:h-52 md:h-56 my-3 sm:my-4 rounded-[0.35rem] overflow-hidden bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 flex items-center justify-center shadow-xs transition-colors">
+              <Image
+                src={project.image}
+                alt={project.title}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+                className={
+                  isLogo
+                    ? "object-contain p-6 sm:p-8 transition-transform duration-500 group-hover:scale-105 dark:brightness-95 dark:contrast-105"
+                    : "object-cover object-top w-full h-full transition-transform duration-500 group-hover:scale-105 dark:brightness-95 dark:contrast-105"
+                }
+              />
+            </div>
+          );
+        })()}
 
         {/* Description / Summary with Read More */}
         <div className="my-3 sm:my-4">
@@ -67,19 +76,18 @@ export default function ProjectCard({ project, index }) {
             </motion.p>
           </AnimatePresence>
 
-          {project.description && project.description !== project.summary && (
-            <button
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 mt-2.5 transition-colors cursor-pointer focus:outline-none"
-            >
-              <span>{isExpanded ? "Ver menos" : "Ver más detalles"}</span>
-              {isExpanded ? (
-                <ChevronUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              ) : (
-                <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              )}
-            </button>
-          )}
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 mt-2 cursor-pointer transition-colors"
+            aria-expanded={isExpanded}
+          >
+            <span>{isExpanded ? "Ver menos" : "Ver más detalles"}</span>
+            {isExpanded ? (
+              <ChevronUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            ) : (
+              <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            )}
+          </button>
         </div>
       </div>
 
@@ -96,8 +104,8 @@ export default function ProjectCard({ project, index }) {
           ))}
         </div>
 
-        {/* Links Footer (se renderiza solo si existen enlaces) */}
-        {(project.demoUrl || project.githubUrl) && (
+        {/* Links Footer or NDA Enterprise Badge */}
+        {project.demoUrl || project.githubUrl ? (
           <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-3 mt-3 border-t border-soft/50">
             {project.demoUrl && (
               <a
@@ -121,6 +129,11 @@ export default function ProjectCard({ project, index }) {
                 <span>Código</span>
               </a>
             )}
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 pt-3 mt-3 border-t border-soft/50 text-xs sm:text-sm font-medium text-muted">
+            <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 opacity-80" />
+            <span>Proyecto de código privado</span>
           </div>
         )}
       </div>

@@ -25,18 +25,21 @@ export default function SocialLinks({
 }) {
   return (
     <div className={className}>
-      {SOCIAL_LINKS.map(({ href, label, Icon }) => (
-        <a
-          key={href}
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={label}
-          className={linkClassName}
-        >
-          <Icon size={iconSize} />
-        </a>
-      ))}
+      {SOCIAL_LINKS.map(({ href, label, Icon }) => {
+        const isMail = href.startsWith("mailto:");
+        return (
+          <a
+            key={href}
+            href={href}
+            target={isMail ? undefined : "_blank"}
+            rel={isMail ? undefined : "noopener noreferrer"}
+            aria-label={label}
+            className={linkClassName}
+          >
+            <Icon size={iconSize} />
+          </a>
+        );
+      })}
     </div>
   );
 }
