@@ -76,7 +76,7 @@ export async function POST(req) {
 
     // Configurar opciones del correo con el Logo SVG Oficial a la derecha
     const mailOptions = {
-      from: `"GusDev Contacto" <${emailUser}>`,
+      from: `"Portfolio GusDev Contacto" <${emailUser}>`,
       to: emailUser,
       replyTo: email,
       subject: mailSubject,

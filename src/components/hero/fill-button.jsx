@@ -13,17 +13,13 @@ export function FillButton({
   variant = "primary",
   motionProps = {},
 }) {
-  const [prefersHover, setPrefersHover] = useState(() => {
-    if (typeof window !== "undefined" && window.matchMedia) {
-      return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-    }
-    return true;
-  });
+  const [prefersHover, setPrefersHover] = useState(true);
 
   useEffect(() => {
     if (typeof window === "undefined" || !window.matchMedia) return;
 
     const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+    setPrefersHover(mediaQuery.matches);
 
     const handleChange = event => setPrefersHover(event.matches);
 
