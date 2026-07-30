@@ -1,7 +1,7 @@
 # 🚀 GusDev · Portfolio Profesional
 
 Portfolio web moderno y profesional de **Gustavo Baranda**, Full Stack Developer. Desarrollado con Next.js 16 (App Router), React 19, Tailwind CSS v4 y animaciones interactivas con Framer Motion. Incluye un sistema de contacto integrado mediante API Route de Next.js y Nodemailer.
-
+ 
 ---
 
 ## ✨ Características Principales
