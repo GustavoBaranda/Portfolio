@@ -1,23 +1,25 @@
 # 🚀 GusDev · Portfolio Profesional
 
-Portfolio web moderno y profesional de **Gustavo Baranda**, Full Stack Developer. Desarrollado con Next.js 16 (App Router), React 19, Tailwind CSS v4 y animaciones interactivas con Framer Motion. Incluye un sistema de contacto integrado mediante API Route de Next.js y Nodemailer.
- 
+Portfolio web moderno y profesional de **Gustavo Baranda**, Full Stack Developer. Desarrollado con **TypeScript**, Next.js 16 (App Router), React 19, Tailwind CSS v4 y animaciones interactivas con Framer Motion. Incluye un sistema de contacto integrado mediante API Route de Next.js y Nodemailer, junto con datos estructurados JSON-LD y mapas de sitio para SEO.
+
 ---
 
 ## ✨ Características Principales
 
+* 📘 **100% TypeScript**: Tipado estricto e interfaces centralizadas en todo el proyecto (`.ts` y `.tsx`).
 * 🎨 **Diseño Moderno & Responsivo**: Interfaz fluida adaptable a dispositivos móviles, tablets y escritorio.
 * 🌓 **Modo Oscuro / Claro**: Detección automática del tema del sistema y persistencia mediante `localStorage`.
-* ✉️ **Formulario de Contacto Funcional**: Envió de mensajes por correo electrónico a través de SMTP (Gmail) utilizando Nodemailer y plantillas HTML personalizadas.
-* 🚀 **SEO & Metadatos Optimizados**: Soporte para OpenGraph, Twitter Cards, estructura semántica y `metadataBase` dinámica.
+* ✉️ **Formulario de Contacto Funcional**: Envío de mensajes por correo electrónico a través de SMTP (Gmail) utilizando Nodemailer y plantillas HTML personalizadas.
+* 🔍 **SEO & Datos Estructurados**: Integración de `sitemap.xml`, `robots.txt`, datos estructurados JSON-LD (`Person` & `WebSite` Schema.org) y metadatos OpenGraph / Twitter Cards.
 * ⚡ **Rendimiento Máximo**: Optimización de fuentes con `next/font/google` (Montserrat) e imágenes SVG integradas.
 
 ---
 
 ## 🛠️ Tecnologías Utilizadas
 
-### 💻 Frontend
+### 💻 Frontend & Lenguajes
 <p>
+  <img align="left" src="https://img.shields.io/badge/TypeScript_5-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
   <img align="left" src="https://img.shields.io/badge/Next.js_16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" />
   <img align="left" src="https://img.shields.io/badge/React_19-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
   <img align="left" src="https://img.shields.io/badge/Tailwind_CSS_v4-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
@@ -46,20 +48,25 @@ Portfolio web moderno y profesional de **Gustavo Baranda**, Full Stack Developer
 
 ```bash
 GusDev/
-├── public/                 # Archivos estáticos e imágenes
+├── public/                 # Archivos estáticos e imágenes (logo.svg, etc.)
 ├── src/
-│   ├── app/                # Next.js App Router (Rutas de la app)
-│   │   ├── about/          # Sección Sobre Mí
+│   ├── app/                # Next.js App Router (Rutas TypeScript)
+│   │   ├── about/          # Sección Sobre Mí (page.tsx)
 │   │   ├── api/            # Rutas de API de Next.js
-│   │   │   └── contact/    # Endpoint POST para el formulario de contacto (Nodemailer)
-│   │   ├── contact/        # Página de Contacto
-│   │   ├── projects/       # Sección de Proyectos
-│   │   ├── globals.css     # Estilos globales y Tailwind CSS
-│   │   └── layout.js       # Layout principal (Header, Footer, Metadata)
+│   │   │   └── contact/    # Endpoint POST para el formulario (route.ts)
+│   │   ├── contact/        # Página de Contacto (page.tsx)
+│   │   ├── projects/       # Sección de Proyectos (page.tsx)
+│   │   ├── globals.css     # Estilos globales y Tailwind CSS v4
+│   │   ├── layout.tsx      # Layout principal, SEO JSON-LD y Metadata
+│   │   ├── page.tsx        # Página de Inicio (HomePage)
+│   │   ├── robots.ts       # Generador dinámico de robots.txt
+│   │   └── sitemap.ts      # Generador dinámico de sitemap.xml
 │   ├── assets/             # Recursos vectoriales y logos
 │   ├── components/         # Componentes UI reutilizables (Header, Footer, etc.)
-│   └── data/               # Datos estáticos (proyectos, habilidades, etc.)
+│   ├── data/               # Datasets tipados (projectsData.ts, aboutData.ts)
+│   └── types/              # Definiciones e interfaces TypeScript (index.ts)
 ├── .env                    # Configuración de variables de entorno
+├── tsconfig.json           # Configuración de TypeScript
 └── package.json
 ```
 
@@ -67,7 +74,7 @@ GusDev/
 
 ## ⚙️ Configuración del Entorno (`.env`)
 
-Crea un archivo `.env.local` en la raíz del proyecto basándote en la siguiente estructura:
+Crea un archivo `.env` o `.env.local` en la raíz del proyecto basándote en la siguiente estructura:
 
 ```env
 # Configuración de correo SMTP (Formulario de contacto)
@@ -86,8 +93,8 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000
 
 1. **Clonar el repositorio:**
    ```bash
-   git clone https://github.com/tu-usuario/gusdev.git
-   cd gusdev
+   git clone https://github.com/GustavoBaranda/Portfolio.git
+   cd Portfolio
    ```
 
 2. **Instalar dependencias:**
@@ -107,7 +114,7 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000
 ## 📦 Comandos Disponibles
 
 * `npm run dev`: Inicia el servidor de desarrollo local.
-* `npm run build`: Compila la aplicación para producción.
+* `npm run build`: Compila la aplicación para producción (verificación de tipos y generación estática).
 * `npm run start`: Inicia el servidor de producción compilado.
 * `npm run lint`: Ejecuta ESLint para verificar la calidad del código.
 
@@ -118,4 +125,5 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000
 Este proyecto es de uso personal y está bajo la licencia [MIT](LICENSE).
 
 ---
-Desarrollado con ❤️ por **[Gustavo Baranda](https://github.com/tu-usuario)**
+
+Desarrollado con ❤️ por **[Gustavo Baranda](https://github.com/GustavoBaranda)**
