@@ -285,8 +285,8 @@ body::-webkit-scrollbar-thumb {
 .svgCurve {
 	position: absolute;
 	top: 0;
-	left: -220px;
-	width: 260px;
+	left: -320px;
+	width: 360px;
 	height: 100%;
 	fill: var(--surface);
 	z-index: 45;

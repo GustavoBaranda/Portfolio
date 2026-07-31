@@ -14,11 +14,11 @@ const SvgCurve = () => {
   const curve = useMemo(() => {
     if (!height) return null;
     const controlPointY = Math.round(height / 2);
-    const bulge = Math.max(Math.round(height * 0.6), 220);
-    const offsetX = 120;
+    const bulge = Math.max(Math.round(height * 0.8), 340);
+    const offsetX = 180;
     const initialPath = `M${offsetX} 0 L${offsetX} ${height} Q-${bulge} ${controlPointY} ${offsetX} 0`;
     const targetPath = `M${offsetX} 0 L${offsetX} ${height} Q${bulge} ${controlPointY} ${offsetX} 0`;
-    const exitPath = `M${offsetX} 0 L${offsetX} ${height} Q-${Math.round(bulge * 1.4)} ${controlPointY} ${offsetX} 0`;
+    const exitPath = `M${offsetX} 0 L${offsetX} ${height} Q-${Math.round(bulge * 1.5)} ${controlPointY} ${offsetX} 0`;
 
     return {
       initial: { d: initialPath },
