@@ -198,7 +198,7 @@ export const EDUCATION: Education[] = [
   {
     id: "edu-1",
     title: "Licenciatura en Ciencias de Datos",
-    institution: "Universidad de la Ciudad de Buenos Aires (UniCABA)",
+    institution: "Universidad de la Ciudad de Buenos Aires (Udelaciudad)",
     period: "Marzo 2026 — Actualidad",
     location: "Ciudad Autónoma de Buenos Aires",
     color: "unicaba",
