@@ -132,7 +132,14 @@ body::-webkit-scrollbar-thumb {
 }
 
 .theme-toggle {
+	color: var(--muted);
+	transition: color 0.2s ease, opacity 0.2s ease;
+	opacity: 0.8;
+}
+
+.theme-toggle:hover {
 	color: var(--text);
+	opacity: 1;
 }
 
 .menu-border {
