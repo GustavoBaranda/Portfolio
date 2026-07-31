@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Sobre mí | Gustavo Baranda - Full Stack Developer",
-    description: "Trayectoria técnica, desarrollo backend en Python/Django, interfaces en React y formación en Ciencia de Datos en UniCABA.",
+    description: "Trayectoria técnica, desarrollo backend en Python/Django, interfaces en React y formación en Ciencia de Datos en Udelaciudad.",
     url: "/about",
   },
 };

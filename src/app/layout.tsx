@@ -130,7 +130,7 @@ const jsonLdPerson = {
     },
     {
       '@type': 'EducationalOrganization',
-      name: 'Universidad de la Ciudad de Buenos Aires (UniCABA)',
+      name: 'Universidad de la Ciudad de Buenos Aires (Udelaciudad)',
     }
   ],
   address: {

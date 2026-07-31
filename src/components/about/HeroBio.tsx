@@ -55,7 +55,7 @@ export default function HeroBio() {
           <span className="font-semibold italic text-foreground">
             {"Licenciatura en Ciencias de Datos"}
           </span>{" "}
-          en la Universidad de la Ciudad (UniCABA). Comencé
+          en la Universidad de la Ciudad de Buenos Aires (Udelaciudad). Comencé
           creando aplicaciones y, con el tiempo, incorporé una mirada
           analítica que hoy guía cómo afronto cada proyecto.
         </motion.p>
