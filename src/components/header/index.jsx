@@ -3,6 +3,7 @@
 import { AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import BurgerMenuMobile from "./BurgerMenuMobile";
 import ItemMenu from "./ItemMenu";
 import Menu from "./Menu";
@@ -30,9 +31,16 @@ const Header = () => {
       <div className="relative mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link
           href="/"
-          className="inline-flex p-1 items-center justify-center rounded-[0.35rem] border-2 border-gray-200 bg-[#f8fafc] text-xl font-semibold tracking-tight text-[#0f172a] shadow-sm transition-colors duration-200 hover:border-[#0f172a] hover:bg-[#0f172a] hover:text-[#f8fafc] dark:border-gray-700 dark:bg-[#0f172a] dark:text-[#f8fafc] dark:hover:border-[#f8fafc] dark:hover:bg-[#f8fafc] dark:hover:text-[#0f172a]"
+          className="group inline-flex p-1.5 items-center justify-center rounded-[0.35rem] border-2 border-gray-200 bg-[#f8fafc] shadow-sm transition-colors duration-200 hover:border-[#0f172a] hover:bg-[#0f172a] dark:border-gray-700 dark:bg-[#0f172a] dark:hover:border-[#f8fafc] dark:hover:bg-[#f8fafc] cursor-pointer"
+          aria-label="Ir al inicio"
         >
-          GB
+          <Image
+            src="/images/logo.svg"
+            alt="Logo Gustavo Baranda"
+            width={24}
+            height={24}
+            className="w-6 h-6 object-contain transition-transform duration-300 group-hover:scale-110"
+          />
         </Link>
 
         <div className="hidden flex-1 justify-center md:flex">
