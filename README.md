@@ -1,12 +1,12 @@
 # 🚀 GusDev · Portfolio Profesional
 
-Portfolio web moderno y profesional de **Gustavo Baranda**, Full Stack Developer. Desarrollado con **TypeScript**, Next.js 16 (App Router), React 19, Tailwind CSS v4 y animaciones interactivas con Framer Motion. Incluye un sistema de contacto integrado mediante API Route de Next.js y Nodemailer, junto con datos estructurados JSON-LD y mapas de sitio para SEO.
+Portfolio web moderno y profesional de **Gustavo Baranda**, Full Stack Developer. Desarrollado con **TypeScript (TSX)**, Next.js 16 (App Router), React 19, Tailwind CSS v4 y animaciones interactivas con Framer Motion. Incluye un sistema de contacto integrado mediante API Route de Next.js y Nodemailer, junto con datos estructurados JSON-LD y mapas de sitio para SEO.
 
 ---
 
 ## ✨ Características Principales
 
-* 📘 **100% TypeScript**: Tipado estricto e interfaces centralizadas en todo el proyecto (`.ts` y `.tsx`).
+* ⚛️ **100% TypeScript & TSX**: Todos los componentes React, páginas App Router y utilidades están construidos exclusivamente con **TypeScript JSX (`.tsx`)** y **TypeScript (`.ts`)**.
 * 🎨 **Diseño Moderno & Responsivo**: Interfaz fluida adaptable a dispositivos móviles, tablets y escritorio.
 * 🌓 **Modo Oscuro / Claro**: Detección automática del tema del sistema y persistencia mediante `localStorage`.
 * ✉️ **Formulario de Contacto Funcional**: Envío de mensajes por correo electrónico a través de SMTP (Gmail) utilizando Nodemailer y plantillas HTML personalizadas.
@@ -20,8 +20,8 @@ Portfolio web moderno y profesional de **Gustavo Baranda**, Full Stack Developer
 ### 💻 Frontend & Lenguajes
 <p>
   <img align="left" src="https://img.shields.io/badge/TypeScript_5-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img align="left" src="https://img.shields.io/badge/React_TSX_19-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React TSX" />
   <img align="left" src="https://img.shields.io/badge/Next.js_16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" />
-  <img align="left" src="https://img.shields.io/badge/React_19-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
   <img align="left" src="https://img.shields.io/badge/Tailwind_CSS_v4-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
   <img align="left" src="https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white" alt="Framer Motion" />
 </p>
@@ -44,27 +44,35 @@ Portfolio web moderno y profesional de **Gustavo Baranda**, Full Stack Developer
 
 ---
 
-## 📁 Estructura del Proyecto
+## 📁 Estructura del Proyecto (`.tsx` & `.ts`)
 
 ```bash
 GusDev/
 ├── public/                 # Archivos estáticos e imágenes (logo.svg, etc.)
 ├── src/
-│   ├── app/                # Next.js App Router (Rutas TypeScript)
+│   ├── app/                # Next.js App Router (Páginas TSX y Rutas TS)
 │   │   ├── about/          # Sección Sobre Mí (page.tsx)
 │   │   ├── api/            # Rutas de API de Next.js
 │   │   │   └── contact/    # Endpoint POST para el formulario (route.ts)
 │   │   ├── contact/        # Página de Contacto (page.tsx)
 │   │   ├── projects/       # Sección de Proyectos (page.tsx)
 │   │   ├── globals.css     # Estilos globales y Tailwind CSS v4
-│   │   ├── layout.tsx      # Layout principal, SEO JSON-LD y Metadata
-│   │   ├── page.tsx        # Página de Inicio (HomePage)
+│   │   ├── layout.tsx      # Layout principal TSX, SEO JSON-LD y Metadata
+│   │   ├── page.tsx        # Página de Inicio TSX (HomePage)
 │   │   ├── robots.ts       # Generador dinámico de robots.txt
 │   │   └── sitemap.ts      # Generador dinámico de sitemap.xml
 │   ├── assets/             # Recursos vectoriales y logos
-│   ├── components/         # Componentes UI reutilizables (Header, Footer, etc.)
-│   ├── data/               # Datasets tipados (projectsData.ts, aboutData.ts)
-│   └── types/              # Definiciones e interfaces TypeScript (index.ts)
+│   ├── components/         # Componentes React TSX reutilizables
+│   │   ├── about/          # HeroBio.tsx, ExperienceSection.tsx, EducationSection.tsx, etc.
+│   │   ├── common/         # ThemeToggle.tsx, SocialLinks.tsx
+│   │   ├── contact/        # ContactForm.tsx, ContactInfo.tsx
+│   │   ├── header/         # index.tsx, BurgerMenuMobile.tsx, Menu.tsx, ItemMenu.tsx, etc.
+│   │   ├── hero/           # TiltImage.tsx, fill-button.tsx, TransitionEffect.tsx
+│   │   ├── projects/       # ProjectsGrid.tsx, ProjectCard.tsx
+│   │   ├── utils/          # AnimatedText.tsx
+│   │   └── footer.tsx      # Footer TSX
+│   ├── data/               # Datasets tipados TS (projectsData.ts, aboutData.ts)
+│   └── types/              # Definiciones e interfaces TypeScript (index.ts, global.d.ts)
 ├── .env                    # Configuración de variables de entorno
 ├── tsconfig.json           # Configuración de TypeScript
 └── package.json
@@ -114,7 +122,7 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000
 ## 📦 Comandos Disponibles
 
 * `npm run dev`: Inicia el servidor de desarrollo local.
-* `npm run build`: Compila la aplicación para producción (verificación de tipos y generación estática).
+* `npm run build`: Compila la aplicación para producción (verificación de tipos TSX y generación estática).
 * `npm run start`: Inicia el servidor de producción compilado.
 * `npm run lint`: Ejecuta ESLint para verificar la calidad del código.
 
