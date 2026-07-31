@@ -1,6 +1,12 @@
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Github, Linkedin, Mail, LucideIcon } from "lucide-react";
 
-export const SOCIAL_LINKS = [
+export interface SocialLinkItem {
+  href: string;
+  label: string;
+  Icon: LucideIcon;
+}
+
+export const SOCIAL_LINKS: SocialLinkItem[] = [
   {
     href: "https://github.com/GustavoBaranda",
     label: "GitHub",
@@ -18,11 +24,17 @@ export const SOCIAL_LINKS = [
   },
 ];
 
+export interface SocialLinksProps {
+  className?: string;
+  linkClassName?: string;
+  iconSize?: number;
+}
+
 export default function SocialLinks({
   className = "flex items-center gap-3",
   linkClassName = "text-muted-link transition-colors hover:text-accent opacity-70 hover:opacity-100",
   iconSize = 20,
-}) {
+}: SocialLinksProps) {
   return (
     <div className={className}>
       {SOCIAL_LINKS.map(({ href, label, Icon }) => {

@@ -1,8 +1,18 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, MotionProps } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, ReactNode } from "react";
+
+export interface FillButtonProps {
+  href: string;
+  children: ReactNode;
+  className?: string;
+  ariaLabel?: string;
+  fillDirection?: "left" | "right" | "bottom" | "top";
+  variant?: "primary" | "ghost";
+  motionProps?: MotionProps;
+}
 
 export function FillButton({
   href,
@@ -12,7 +22,7 @@ export function FillButton({
   fillDirection = "left",
   variant = "primary",
   motionProps = {},
-}) {
+}: FillButtonProps) {
   const [prefersHover, setPrefersHover] = useState(true);
 
   useEffect(() => {
@@ -21,19 +31,15 @@ export function FillButton({
     const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
     setPrefersHover(mediaQuery.matches);
 
-    const handleChange = event => setPrefersHover(event.matches);
+    const handleChange = (event: MediaQueryListEvent) => setPrefersHover(event.matches);
 
     if (mediaQuery.addEventListener) {
       mediaQuery.addEventListener("change", handleChange);
-    } else {
-      mediaQuery.addListener(handleChange);
     }
 
     return () => {
       if (mediaQuery.removeEventListener) {
         mediaQuery.removeEventListener("change", handleChange);
-      } else {
-        mediaQuery.removeListener(handleChange);
       }
     };
   }, []);
@@ -124,13 +130,13 @@ export function FillButton({
     hover:border-gray-400
   `;
 
-  const defaultMotion = {
+  const defaultMotion: MotionProps = {
     initial: { opacity: 0, x: -20, y: 8 },
     animate: { opacity: 1, x: 0, y: 0 },
     transition: { duration: 0.5, ease: "easeOut" },
   };
 
-  const mergedMotion = {
+  const mergedMotion: MotionProps = {
     ...defaultMotion,
     ...motionProps,
     transition: {
@@ -161,4 +167,3 @@ export function FillButton({
     </motion.div>
   );
 }
-

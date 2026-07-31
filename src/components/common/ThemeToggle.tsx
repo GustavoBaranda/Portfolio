@@ -1,8 +1,12 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore, SVGProps } from "react";
 
-export const SunIcon = ({ className, ...rest }) => (
+export interface IconProps extends SVGProps<SVGSVGElement> {
+  className?: string;
+}
+
+export const SunIcon = ({ className = "", ...rest }: IconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -180,7 +184,7 @@ export const SunIcon = ({ className, ...rest }) => (
   </svg>
 );
 
-export const MoonIcon = ({ className, ...rest }) => (
+export const MoonIcon = ({ className = "", ...rest }: IconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -345,7 +349,7 @@ export default function ThemeToggle() {
     () => true
   );
 
-  const [theme, setTheme] = useState(() => {
+  const [theme, setTheme] = useState<string>(() => {
     if (typeof document !== "undefined") {
       return document.documentElement.getAttribute("data-theme") ?? "light";
     }
@@ -363,7 +367,6 @@ export default function ThemeToggle() {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   };
 
-  // Render a placeholder icon during SSR to prevent Hydration Mismatch
   if (isServer) {
     return (
       <button

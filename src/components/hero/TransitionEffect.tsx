@@ -1,8 +1,8 @@
 "use client";
 
-import {motion} from 'framer-motion'
+import { motion } from 'framer-motion';
 
-const TransitionEffect = () => {
+const TransitionEffect: React.FC = () => {
   return (
     <>
       <motion.div className='fixed top-0 bottom-0 right-full w-screen z-30 bg-primary'
@@ -22,7 +22,7 @@ const TransitionEffect = () => {
         transition={{delay:0.4 ,duration:0.8, ease:"easeInOut"}}
       />
     </>
-  )
-}
+  );
+};
 
-export default TransitionEffect
+export default TransitionEffect;

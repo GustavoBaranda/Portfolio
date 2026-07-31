@@ -1,8 +1,18 @@
 "use client";
 
-import { useRef } from 'react'
-import { motion, useMotionValue } from 'framer-motion'
-import Image from 'next/image'
+import { useRef, MouseEvent, PointerEvent, TouchEvent } from 'react';
+import { motion, useMotionValue, Variants } from 'framer-motion';
+import Image from 'next/image';
+
+export interface TiltImageProps {
+  src?: string;
+  alt?: string;
+  width?: number;
+  height?: number;
+  sizes?: string;
+  priority?: boolean;
+  className?: string;
+}
 
 export default function TiltImage({
   src = '/images/logo.svg',
@@ -12,51 +22,51 @@ export default function TiltImage({
   sizes = '(max-width: 768px) 100vw,(max-width: 1200px) 50vw, 50vw',
   priority = true,
   className = '',
-}) {
-  const tiltRef = useRef(null)
-  const rotationX = useMotionValue(0)
-  const rotationY = useMotionValue(0)
-  const translateX = useMotionValue(0)
-  const translateY = useMotionValue(0)
+}: TiltImageProps) {
+  const tiltRef = useRef<HTMLDivElement | null>(null);
+  const rotationX = useMotionValue(0);
+  const rotationY = useMotionValue(0);
+  const translateX = useMotionValue(0);
+  const translateY = useMotionValue(0);
 
-  const maxTilt = 8
-  const maxTranslate = 12
+  const maxTilt = 8;
+  const maxTranslate = 12;
 
-  const applyTiltToMotion = ({ clientX, clientY }) => {
-    const rect = tiltRef.current?.getBoundingClientRect()
-    if (!rect) return
-    const offsetX = (clientX - rect.left - rect.width / 2) / rect.width
-    const offsetY = (clientY - rect.top - rect.height / 2) / rect.height
-    rotationY.set(offsetX * maxTilt)
-    rotationX.set(-offsetY * maxTilt)
-    translateX.set(offsetX * maxTranslate)
-    translateY.set(offsetY * maxTranslate)
-  }
+  const applyTiltToMotion = ({ clientX, clientY }: { clientX: number; clientY: number }) => {
+    const rect = tiltRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const offsetX = (clientX - rect.left - rect.width / 2) / rect.width;
+    const offsetY = (clientY - rect.top - rect.height / 2) / rect.height;
+    rotationY.set(offsetX * maxTilt);
+    rotationX.set(-offsetY * maxTilt);
+    translateX.set(offsetX * maxTranslate);
+    translateY.set(offsetY * maxTranslate);
+  };
 
   const resetTilt = () => {
-    rotationX.set(0)
-    rotationY.set(0)
-    translateX.set(0)
-    translateY.set(0)
-  }
+    rotationX.set(0);
+    rotationY.set(0);
+    translateX.set(0);
+    translateY.set(0);
+  };
 
-  const handleMouseMove = (event) => applyTiltToMotion(event)
+  const handleMouseMove = (event: MouseEvent<HTMLDivElement>) => applyTiltToMotion(event);
 
-  const handlePointerMove = (event) => {
-    if (event.pointerType === 'touch') return
-    applyTiltToMotion(event)
-  }
+  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === 'touch') return;
+    applyTiltToMotion(event);
+  };
 
-  const handleTouchMove = (event) => {
-    const touch = event.touches[0]
-    if (!touch) return
-    applyTiltToMotion(touch)
-  }
+  const handleTouchMove = (event: TouchEvent<HTMLDivElement>) => {
+    const touch = event.touches[0];
+    if (!touch) return;
+    applyTiltToMotion(touch);
+  };
 
-  const imageMotion = {
+  const imageMotion: Variants = {
     initial: { opacity: 0, y: 24, scale: 0.96 },
     animate: { opacity: 1, y: 0, scale: 1 },
-  }
+  };
 
   return (
     <motion.div
@@ -110,5 +120,5 @@ export default function TiltImage({
         </motion.div>
       </motion.div>
     </motion.div>
-  )
+  );
 }
