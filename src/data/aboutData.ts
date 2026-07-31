@@ -10,7 +10,7 @@ export const textReveal = {
 
 export const paragraphReveal = {
   hidden: { opacity: 0, y: 24 },
-  visible: (custom = 0) => ({
+  visible: (custom: number = 0) => ({
     opacity: 1,
     y: 0,
     transition: { duration: 0.6, ease: "easeOut", delay: custom * 0.12 },
@@ -19,15 +19,44 @@ export const paragraphReveal = {
 
 export const cardVariants = {
   hidden: { opacity: 0, y: 32 },
-  visible: (i) => ({
+  visible: (i: number) => ({
     opacity: 1,
     y: 0,
     transition: { duration: 0.5, ease: "easeOut", delay: i * 0.1 },
   }),
 };
 
+/* ───────── interfaces ───────── */
+export interface Experience {
+  id: number;
+  role: string;
+  company: string;
+  initials: string;
+  type: string | null;
+  period: string;
+  duration: string;
+  location: string;
+  description: string;
+  mainSkills: string[];
+  skills: string[];
+  color: string;
+  modalidad: string;
+  url?: string;
+}
+
+export interface Education {
+  id: string;
+  title: string;
+  institution: string;
+  period: string;
+  location: string;
+  color: string;
+  logo: string;
+  status: string;
+}
+
 /* ───────── experience data ───────── */
-export const EXPERIENCES = [
+export const EXPERIENCES: Experience[] = [
   {
     id: 1,
     role: "Full Stack Developer Python",
@@ -163,7 +192,7 @@ export const EXPERIENCES = [
 ];
 
 /* ───────── education data ───────── */
-export const EDUCATION = [
+export const EDUCATION: Education[] = [
   {
     id: "edu-1",
     title: "Licenciatura en Ciencias de Datos",
@@ -217,7 +246,21 @@ export const EDUCATION = [
 ];
 
 /* ───────── color maps ───────── */
-export const COLOR_MAP = {
+export interface ColorScheme {
+  badge: string;
+  dot: string;
+  border: string;
+  ring: string;
+  heading: string;
+  logoBg: string;
+  skillText: string;
+  skillBorder: string;
+  skillBg: string;
+  skillShadow: string;
+  skillRing: string;
+}
+
+export const COLOR_MAP: Record<string, ColorScheme> = {
   syspro: {
     badge: "bg-[#6022A4]/10 text-[#6022A4] dark:bg-[#a855f7]/20 dark:text-[#c084fc] dark:border-[#a855f7]/30",
     dot: "bg-[#6022A4] dark:bg-[#a855f7]",
@@ -337,8 +380,7 @@ export const COLOR_MAP = {
   },
 };
 
-export const MONTH_MAP = {
-  // Nombres completos
+export const MONTH_MAP: Record<string, number> = {
   enero: 0,
   febrero: 1,
   marzo: 2,
@@ -353,7 +395,6 @@ export const MONTH_MAP = {
   noviembre: 10,
   diciembre: 11,
 
-  // Abreviaturas comunes (con o sin punto)
   ene: 0,
   feb: 1,
   mar: 2,
@@ -369,7 +410,7 @@ export const MONTH_MAP = {
   dic: 11,
 };
 
-export function parsePeriodEnd(period) {
+export function parsePeriodEnd(period?: string): Date {
   if (!period) return new Date(0);
   const parts = period.split(/–|—|-/).map((p) => p.trim());
   const end = parts[parts.length - 1].toLowerCase();
@@ -382,7 +423,7 @@ export function parsePeriodEnd(period) {
   return new Date(year, month, 1);
 }
 
-export function calculateDuration(periodStr, defaultDuration) {
+export function calculateDuration(periodStr?: string, defaultDuration: string = ""): string {
   if (!periodStr) return defaultDuration;
 
   const parts = periodStr.split(/–|—|-/).map((p) => p.trim());
@@ -400,7 +441,7 @@ export function calculateDuration(periodStr, defaultDuration) {
   const startMonth = MONTH_MAP[startMonthName] ?? 0;
   const startYear = parseInt(startMatch[2], 10);
 
-  let endYear, endMonth;
+  let endYear: number, endMonth: number;
 
   if (isCurrent) {
     const now = new Date();

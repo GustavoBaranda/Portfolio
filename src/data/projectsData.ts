@@ -1,11 +1,33 @@
-export const PROJECT_CATEGORIES = [
+export interface ProjectCategory {
+  id: string;
+  label: string;
+}
+
+export interface ProjectItem {
+  id: string;
+  title: string;
+  category: string;
+  categoryLabel: string;
+  company: string;
+  period: string;
+  dateSort: string;
+  summary: string;
+  description: string;
+  image: string;
+  tags: string[];
+  featured: boolean;
+  githubUrl: string | null;
+  demoUrl: string | null;
+}
+
+export const PROJECT_CATEGORIES: ProjectCategory[] = [
   { id: "all", label: "Todos los Proyectos" },
   { id: "full-stack", label: "Full Stack" },
   { id: "apis", label: "APIs y Microservicios" },
   { id: "opensource", label: "Freelance & Open Source" },
 ];
 
-export const PROJECTS = [
+export const PROJECTS: ProjectItem[] = [
   {
     id: "syspro-logistica",
     title: "Plataforma de Logística & Depósitos Fiscales",
