@@ -32,7 +32,7 @@ export interface SocialLinksProps {
 
 export default function SocialLinks({
   className = "flex items-center gap-3",
-  linkClassName = "text-muted-link transition-colors hover:text-accent opacity-70 hover:opacity-100",
+  linkClassName = "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors opacity-80 hover:opacity-100",
   iconSize = 20,
 }: SocialLinksProps) {
   return (

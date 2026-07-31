@@ -11,7 +11,7 @@ export default function Footer() {
         <div className="flex items-center gap-2.5 sm:gap-3">
           <Link
             href="/"
-            className="group flex items-center gap-2 transition-opacity hover:opacity-80 cursor-pointer"
+            className="group flex items-center gap-2 transition-opacity hover:opacity-90 cursor-pointer"
             aria-label="Ir al inicio"
           >
             <Image
@@ -21,12 +21,12 @@ export default function Footer() {
               height={26}
               className="w-6 h-6 sm:w-6.5 sm:h-6.5 object-contain transition-transform group-hover:scale-105"
             />
-            <span className="text-xs sm:text-sm font-bold text-foreground group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-none">
+            <span className="text-xs sm:text-sm font-bold text-foreground group-hover:text-slate-900 dark:group-hover:text-slate-100 transition-colors leading-none">
               Gustavo Baranda
             </span>
           </Link>
-          <span className="text-muted text-xs opacity-50 leading-none">·</span>
-          <span className="text-xs text-muted-link leading-none">&copy; {year}</span>
+          <span className="text-slate-400 dark:text-slate-500 text-xs opacity-60 leading-none">·</span>
+          <span className="text-xs text-slate-500 dark:text-slate-400 leading-none">&copy; {year}</span>
         </div>
 
         {/* Redes */}

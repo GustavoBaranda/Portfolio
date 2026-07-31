@@ -79,7 +79,7 @@ const BurgerMenuMobile: React.FC<BurgerMenuMobileProps> = ({ updateMenu }) => {
                 target={isMail ? undefined : "_blank"}
                 rel={isMail ? undefined : "noreferrer"}
                 aria-label={label}
-                className="text-muted-link transition-colors hover:text-accent"
+                className="text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors"
               >
                 <Icon size={20} />
               </motion.a>
