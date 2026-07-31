@@ -3,6 +3,15 @@ import TransitionEffect from '@/components/hero/TransitionEffect';
 import { FillButton } from "@/components/hero/fill-button";
 import { ArrowRight, Mail } from "lucide-react";
 import TiltImage from '@/components/hero/TiltImage';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Gustavo Baranda | Full Stack Developer & Data Science Student',
+  description: 'Portafolio profesional de Gustavo Baranda. Desarrollador Full Stack especializado en Python, Django, React y TypeScript con enfoque en arquitectura limpia y datos.',
+  alternates: {
+    canonical: '/',
+  },
+};
 
 export default function HomePage() {
   return (

@@ -5,7 +5,15 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Proyectos | Gustavo Baranda",
-  description: "Explora mis proyectos de desarrollo Full Stack, APIs REST, pipelines ETL en Python, Django y React.",
+  description: "Portafolio de proyectos destacados de desarrollo Full Stack: plataformas logísticas, motores bancarios ETL en Python/Django, e-commerce React y aplicaciones web.",
+  alternates: {
+    canonical: "/projects",
+  },
+  openGraph: {
+    title: "Proyectos Destacados | Gustavo Baranda",
+    description: "Explora mis soluciones de software: SysPro Turnero & Depofis, Solar Banco ETL, Fundación Maldonado y e-commerce React.",
+    url: "/projects",
+  },
 };
 
 export default function ProjectsPage() {

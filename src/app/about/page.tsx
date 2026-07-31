@@ -5,7 +5,15 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Sobre mí | Gustavo Baranda",
-  description: "Conoce mi trayectoria como desarrollador Full Stack, mi perfil en ciencia de datos, experiencia laboral y educación.",
+  description: "Conoce mi trayectoria profesional como desarrollador Full Stack Python/Django & React, formación en Ciencia de Datos y experiencia laboral en desarrollo de software.",
+  alternates: {
+    canonical: "/about",
+  },
+  openGraph: {
+    title: "Sobre mí | Gustavo Baranda - Full Stack Developer",
+    description: "Trayectoria técnica, desarrollo backend en Python/Django, interfaces en React y formación en Ciencia de Datos en UniCABA.",
+    url: "/about",
+  },
 };
 
 export default function AboutPage() {

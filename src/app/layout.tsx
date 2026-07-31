@@ -19,28 +19,46 @@ const getBaseUrl = (): string => {
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
   }
-  return 'http://localhost:3000';
+  return 'https://gustavobaranda.vercel.app';
 };
 
+const baseUrl = getBaseUrl();
+
 export const metadata: Metadata = {
-  metadataBase: new URL(getBaseUrl()),
+  metadataBase: new URL(baseUrl),
   title: {
-    default: 'Gustavo Baranda | Full Stack Developer',
+    default: 'Gustavo Baranda | Full Stack Developer & Data Science Student',
     template: '%s | Gustavo Baranda',
   },
-  description: 'Full Stack Developer enfocado en construir sistemas robustos con Python, Django y React. Transformo ideas en soluciones digitales con código limpio y diseño intuitivo.',
-  keywords: ['Full Stack Developer', 'Python', 'Django', 'React', 'APIs', 'Argentina', 'Software Engineer'],
-  authors: [{ name: 'Gustavo Baranda' }],
+  description: 'Full Stack Developer enfocado en construir sistemas robustos con Python, Django y React. Estudiante de Licenciatura en Ciencias de Datos (UniCABA).',
+  keywords: [
+    'Full Stack Developer',
+    'Python',
+    'Django',
+    'React',
+    'TypeScript',
+    'Ciencia de Datos',
+    'ETL',
+    'APIs REST',
+    'Software Engineer',
+    'Buenos Aires',
+    'Argentina'
+  ],
+  authors: [{ name: 'Gustavo Baranda', url: baseUrl }],
   creator: 'Gustavo Baranda',
+  publisher: 'Gustavo Baranda',
+  alternates: {
+    canonical: baseUrl,
+  },
   icons: {
     icon: '/icon.svg',
     shortcut: '/icon.svg',
     apple: '/icon.svg',
   },
   openGraph: {
-    title: 'Gustavo Baranda | Full Stack Developer',
-    description: 'Transformo ideas en soluciones digitales con código y diseño.',
-    url: getBaseUrl(),
+    title: 'Gustavo Baranda | Full Stack Developer & Data Science Student',
+    description: 'Transformo ideas en soluciones digitales con código limpio, arquitectura escalable y análisis de datos.',
+    url: baseUrl,
     siteName: 'Gustavo Baranda Portfolio',
     images: [
       {
@@ -84,6 +102,44 @@ const themeScript = `(() => {
   }
 })();`;
 
+const jsonLdPerson = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Gustavo Baranda',
+  jobTitle: 'Full Stack Developer',
+  url: baseUrl,
+  sameAs: [
+    'https://github.com/GustavoBaranda',
+    'https://linkedin.com/in/gustavo-baranda'
+  ],
+  knowsAbout: [
+    'Full Stack Software Development',
+    'Python',
+    'Django',
+    'React.js',
+    'TypeScript',
+    'Node.js',
+    'SQL Server',
+    'Oracle ETL',
+    'Data Science'
+  ],
+  alumniOf: [
+    {
+      '@type': 'EducationalOrganization',
+      name: 'Instituto de Formación Técnica Superior N°29',
+    },
+    {
+      '@type': 'EducationalOrganization',
+      name: 'Universidad de la Ciudad de Buenos Aires (UniCABA)',
+    }
+  ],
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Buenos Aires',
+    addressCountry: 'Argentina'
+  }
+};
+
 export interface RootLayoutProps {
   children: ReactNode;
 }
@@ -93,6 +149,10 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
     <html lang="es" data-theme="light" suppressHydrationWarning>
       <head>
         <Script id="theme-toggle" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdPerson) }}
+        />
       </head>
       <body
         className={`${montserrat.className} antialiased flex min-h-screen flex-col`}

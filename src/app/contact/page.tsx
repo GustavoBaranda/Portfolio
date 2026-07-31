@@ -4,7 +4,15 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Contacto | Gustavo Baranda",
-  description: "Ponte en contacto con Gustavo Baranda para propuestas laborales, desarrollo de software o colaboración en proyectos.",
+  description: "Ponte en contacto con Gustavo Baranda para propuestas laborales, desarrollo de software Full Stack, consultas técnicas o colaboración en proyectos.",
+  alternates: {
+    canonical: "/contact",
+  },
+  openGraph: {
+    title: "Contacto | Gustavo Baranda - Full Stack Developer",
+    description: "Envíame un mensaje directo o por formulario para propuestas de trabajo, desarrollo backend/frontend o consultas.",
+    url: "/contact",
+  },
 };
 
 export default function ContactPage() {
