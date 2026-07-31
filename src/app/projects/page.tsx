@@ -1,8 +1,9 @@
 import ProjectsGrid from "@/components/projects/ProjectsGrid";
 import Link from "next/link";
 import { ArrowRight, Mail } from "lucide-react";
+import { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Proyectos | Gustavo Baranda",
   description: "Explora mis proyectos de desarrollo Full Stack, APIs REST, pipelines ETL en Python, Django y React.",
 };

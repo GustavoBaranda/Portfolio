@@ -1,24 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
+import { ContactFormData, ApiResponse } from "@/types";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 export default function ContactForm() {
-  const [formData, setFormData] = useState({
-    name: "",
+  const [formData, setFormData] = useState<ContactFormData>({
+    nombre: "",
     email: "",
-    subject: "",
-    message: "",
+    asunto: "",
+    mensaje: "",
   });
 
-  const [status, setStatus] = useState("idle"); // idle | loading | success | error
-  const [errorMessage, setErrorMessage] = useState("");
-  const [emailError, setEmailError] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("");
 
-  const validateEmail = (email) => {
+  const validateEmail = (email: string): string => {
     if (!email) {
       return "El correo es obligatorio";
     }
@@ -28,7 +29,7 @@ export default function ContactForm() {
     return "";
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -48,7 +49,7 @@ export default function ContactForm() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const err = validateEmail(formData.email);
@@ -57,7 +58,7 @@ export default function ContactForm() {
       return;
     }
 
-    if (!formData.name || !formData.message) return;
+    if (!formData.nombre || !formData.mensaje) return;
 
     setStatus("loading");
     setErrorMessage("");
@@ -72,7 +73,7 @@ export default function ContactForm() {
         body: JSON.stringify(formData),
       });
 
-      const data = await res.json();
+      const data: ApiResponse = await res.json();
 
       if (res.ok && data.success) {
         setStatus("success");
@@ -110,7 +111,7 @@ export default function ContactForm() {
               <button
                 onClick={() => {
                   setStatus("idle");
-                  setFormData({ name: "", email: "", subject: "", message: "" });
+                  setFormData({ nombre: "", email: "", asunto: "", mensaje: "" });
                   setEmailError("");
                 }}
                 className="mt-3 sm:mt-4 px-5 sm:px-6 py-2 rounded-[0.35rem] bg-indigo-600 text-white font-semibold text-xs sm:text-sm hover:bg-indigo-700 transition cursor-pointer"
@@ -130,17 +131,17 @@ export default function ContactForm() {
               <div className="grid gap-4 sm:grid-cols-2 sm:gap-5">
                 <div className="flex flex-col gap-1.5 sm:gap-2">
                   <label
-                    htmlFor="name"
+                    htmlFor="nombre"
                     className="text-[0.7rem] sm:text-xs font-bold tracking-wide text-muted uppercase"
                   >
                     NOMBRE <span className="text-indigo-600 dark:text-indigo-400">*</span>
                   </label>
                   <input
-                    id="name"
-                    name="name"
+                    id="nombre"
+                    name="nombre"
                     type="text"
                     required
-                    value={formData.name}
+                    value={formData.nombre}
                     onChange={handleChange}
                     placeholder="Tu nombre"
                     className="rounded-[0.35rem] border border-soft surface px-3.5 py-2.5 text-xs sm:text-sm text-foreground placeholder:text-muted focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20 focus:outline-none"
@@ -179,16 +180,16 @@ export default function ContactForm() {
 
               <div className="flex flex-col gap-1.5 sm:gap-2">
                 <label
-                  htmlFor="subject"
+                  htmlFor="asunto"
                   className="text-[0.7rem] sm:text-xs font-bold tracking-wide text-muted uppercase"
                 >
                   ASUNTO
                 </label>
                 <input
-                  id="subject"
-                  name="subject"
+                  id="asunto"
+                  name="asunto"
                   type="text"
-                  value={formData.subject}
+                  value={formData.asunto}
                   onChange={handleChange}
                   placeholder="Ej. Oportunidad laboral / Consulta de proyecto"
                   className="rounded-[0.35rem] border border-soft surface px-3.5 py-2.5 text-xs sm:text-sm text-foreground placeholder:text-muted focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20 focus:outline-none"
@@ -197,17 +198,17 @@ export default function ContactForm() {
 
               <div className="flex flex-col gap-1.5 sm:gap-2">
                 <label
-                  htmlFor="message"
+                  htmlFor="mensaje"
                   className="text-[0.7rem] sm:text-xs font-bold tracking-wide text-muted uppercase"
                 >
                   MENSAJE <span className="text-indigo-600 dark:text-indigo-400">*</span>
                 </label>
                 <textarea
-                  id="message"
-                  name="message"
+                  id="mensaje"
+                  name="mensaje"
                   rows={4}
                   required
-                  value={formData.message}
+                  value={formData.mensaje}
                   onChange={handleChange}
                   placeholder="Cuéntame sobre tu proyecto o propuesta..."
                   className="rounded-[0.35rem] border border-soft surface px-3.5 py-2.5 text-xs sm:text-sm text-foreground placeholder:text-muted resize-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20 focus:outline-none"

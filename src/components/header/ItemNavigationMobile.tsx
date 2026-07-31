@@ -1,8 +1,21 @@
+"use client";
+
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { slide, scale } from "./Animation";
+import { NavigationItem } from "./ItemNavigation";
 
-const ItemNavigationMobile = ({ data, isActive, onClick }) => {
+export interface NavigationMobileItemData extends NavigationItem {
+  index: number;
+}
+
+export interface ItemNavigationMobileProps {
+  data: NavigationMobileItemData;
+  isActive: boolean;
+  onClick?: () => void;
+}
+
+const ItemNavigationMobile: React.FC<ItemNavigationMobileProps> = ({ data, isActive, onClick }) => {
   const { text, href, index, icon: Icon } = data;
 
   const handleClick = () => {
@@ -21,7 +34,6 @@ const ItemNavigationMobile = ({ data, isActive, onClick }) => {
       <motion.div
         variants={scale}
         animate={isActive ? "open" : "closed"}
-        // className="indicator"
       />
       <Link
         href={href}

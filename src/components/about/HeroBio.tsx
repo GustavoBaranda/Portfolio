@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { textReveal, paragraphReveal } from "@/data/aboutData";
 
 export default function HeroBio() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<number>(1);
 
   return (
     <motion.section className="space-y-10 mb-32">

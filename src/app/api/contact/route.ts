@@ -1,25 +1,27 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import path from "path";
 import fs from "fs";
 
-export async function POST(req) {
+export async function POST(req: NextRequest) {
   try {
-    const { name, email, subject, message } = await req.json();
+    const { nombre, name, email, asunto, subject, mensaje, message } = await req.json();
 
-    // Validar campos requeridos
-    if (!name || !email || !message) {
+    const senderName = nombre || name;
+    const senderSubject = asunto || subject;
+    const senderMessage = mensaje || message;
+
+    if (!senderName || !email || !senderMessage) {
       return NextResponse.json(
-        { error: "Todos los campos obligatorios deben ser completados." },
+        { success: false, error: "Todos los campos obligatorios deben ser completados." },
         { status: 400 }
       );
     }
 
-    // Validar formato de correo electrónico
     const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!EMAIL_REGEX.test(email.trim())) {
       return NextResponse.json(
-        { error: "Por favor proporciona un correo electrónico válido." },
+        { success: false, error: "Por favor proporciona un correo electrónico válido." },
         { status: 400 }
       );
     }
@@ -31,6 +33,7 @@ export async function POST(req) {
     if (!emailUser || !emailPass || emailPass === "tu_contraseña_de_aplicacion") {
       return NextResponse.json(
         {
+          success: false,
           error:
             "El servicio de correo no está configurado aún. Por favor verifica tu EMAIL_PASS en el archivo .env",
         },
@@ -38,7 +41,6 @@ export async function POST(req) {
       );
     }
 
-    // Configurar transporte SMTP con Gmail
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -47,9 +49,9 @@ export async function POST(req) {
       },
     });
 
-    const mailSubject = subject && subject.trim() !== "" 
-      ? `[Contacto] ${subject}`
-      : `Nuevo mensaje de ${name}`;
+    const mailSubject = senderSubject && senderSubject.trim() !== "" 
+      ? `[Contacto] ${senderSubject}`
+      : `Nuevo mensaje de ${senderName}`;
 
     const formattedDate = new Date().toLocaleDateString("es-ES", {
       weekday: "long",
@@ -60,7 +62,6 @@ export async function POST(req) {
       minute: "2-digit",
     });
 
-    // Verificar si existe el archivo de logo PNG oficial en src/assets/logo.png
     const logoPath = path.join(process.cwd(), "src", "assets", "logo.png");
     const hasLogo = fs.existsSync(logoPath);
 
@@ -74,13 +75,12 @@ export async function POST(req) {
         ]
       : [];
 
-    // Configurar opciones del correo con el Logo SVG Oficial a la derecha
     const mailOptions = {
       from: `"Portfolio GusDev Contacto" <${emailUser}>`,
       to: emailUser,
       replyTo: email,
       subject: mailSubject,
-      text: `Nombre: ${name}\nEmail: ${email}\nAsunto: ${subject || "Sin asunto"}\n\nMensaje:\n${message}`,
+      text: `Nombre: ${senderName}\nEmail: ${email}\nAsunto: ${senderSubject || "Sin asunto"}\n\nMensaje:\n${senderMessage}`,
       attachments: attachments,
       html: `
         <!DOCTYPE html>
@@ -95,12 +95,10 @@ export async function POST(req) {
               <td align="center">
                 <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 580px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
                   
-                  <!-- HEADER SOBRIO CON LOGO SVG OFICIAL A LA DERECHA -->
                   <tr>
                     <td style="background-color: #0f172a; padding: 28px 32px; border-bottom: 3px solid #4f46e5;">
                       <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
                         <tr>
-                          <!-- COLUMNA IZQUIERDA: TÍTULOS -->
                           <td align="left" style="vertical-align: middle;">
                             <span style="color: #94a3b8; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">
                               GUSDEV · PORTFOLIO
@@ -109,8 +107,6 @@ export async function POST(req) {
                               Nuevo Mensaje de Contacto
                             </h1>
                           </td>
-                          
-                          <!-- COLUMNA DERECHA: LOGO OFICIAL SVG -->
                           <td align="right" style="vertical-align: middle; width: 48px; padding-left: 16px;">
                             ${
                               hasLogo
@@ -123,16 +119,13 @@ export async function POST(req) {
                     </td>
                   </tr>
 
-                  <!-- CONTENIDO -->
                   <tr>
                     <td style="padding: 32px;">
-                      
-                      <!-- TABLA DE INFORMACIÓN -->
                       <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 24px;">
                         <tr>
                           <td style="padding-bottom: 16px; border-bottom: 1px solid #f1f5f9;">
                             <span style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; display: block; margin-bottom: 4px;">Remitente</span>
-                            <span style="color: #0f172a; font-size: 15px; font-weight: 600;">${name}</span>
+                            <span style="color: #0f172a; font-size: 15px; font-weight: 600;">${senderName}</span>
                           </td>
                         </tr>
                         <tr>
@@ -142,12 +135,12 @@ export async function POST(req) {
                           </td>
                         </tr>
                         ${
-                          subject
+                          senderSubject
                             ? `
                         <tr>
                           <td style="padding: 16px 0; border-bottom: 1px solid #f1f5f9;">
                             <span style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; display: block; margin-bottom: 4px;">Asunto</span>
-                            <span style="color: #334155; font-size: 14px; font-weight: 500;">${subject}</span>
+                            <span style="color: #334155; font-size: 14px; font-weight: 500;">${senderSubject}</span>
                           </td>
                         </tr>
                         `
@@ -155,18 +148,16 @@ export async function POST(req) {
                         }
                       </table>
 
-                      <!-- BLOQUE DE MENSAJE -->
                       <div style="margin-bottom: 32px;">
                         <span style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; display: block; margin-bottom: 8px;">Mensaje</span>
-                        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-left: 3px solid #0f172a; border-radius: 6px; padding: 18px 20px; color: #334155; font-size: 14px; line-height: 1.6; white-space: pre-wrap;">${message}</div>
+                        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-left: 3px solid #0f172a; border-radius: 6px; padding: 18px 20px; color: #334155; font-size: 14px; line-height: 1.6; white-space: pre-wrap;">${senderMessage}</div>
                       </div>
 
-                      <!-- BOTÓN MINIMALISTA -->
                       <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
                         <tr>
                           <td align="left">
                             <a href="mailto:${email}" style="display: inline-block; background-color: #0f172a; color: #ffffff; font-size: 13px; font-weight: 600; text-decoration: none; padding: 12px 24px; border-radius: 6px; letter-spacing: 0.2px;">
-                              Responder a ${name}
+                              Responder a ${senderName}
                             </a>
                           </td>
                         </tr>
@@ -175,7 +166,6 @@ export async function POST(req) {
                     </td>
                   </tr>
 
-                  <!-- FOOTER MINIMALISTA -->
                   <tr>
                     <td style="background-color: #fafafa; padding: 16px 32px; border-top: 1px solid #f1f5f9; text-align: center;">
                       <p style="color: #94a3b8; font-size: 12px; margin: 0;">
@@ -193,7 +183,6 @@ export async function POST(req) {
       `,
     };
 
-    // Enviar el correo
     await transporter.sendMail(mailOptions);
 
     return NextResponse.json(
@@ -203,7 +192,7 @@ export async function POST(req) {
   } catch (error) {
     console.error("Error al enviar el correo con Nodemailer:", error);
     return NextResponse.json(
-      { error: "Ocurrió un error al intentar enviar el mensaje." },
+      { success: false, error: "Ocurrió un error al intentar enviar el mensaje." },
       { status: 500 }
     );
   }

@@ -1,8 +1,8 @@
-import AnimatedText from '@/components/utils/AnimatedText'
-import TransitionEffect from '@/components/hero/TransitionEffect'
+import AnimatedText from '@/components/utils/AnimatedText';
+import TransitionEffect from '@/components/hero/TransitionEffect';
 import { FillButton } from "@/components/hero/fill-button";
 import { ArrowRight, Mail } from "lucide-react";
-import TiltImage from '@/components/hero/TiltImage'
+import TiltImage from '@/components/hero/TiltImage';
 
 export default function HomePage() {
   return (

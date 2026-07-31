@@ -1,6 +1,13 @@
+"use client";
+
 import { motion, MotionConfig } from "framer-motion";
 
-const Menu = ({ active, setActive }) => {
+export interface MenuProps {
+  active: boolean;
+  setActive: (active: boolean) => void;
+}
+
+const Menu: React.FC<MenuProps> = ({ active, setActive }) => {
   return (
     <MotionConfig
       transition={{
@@ -12,6 +19,7 @@ const Menu = ({ active, setActive }) => {
         onClick={() => setActive(!active)}
         className={`flex self-center relative h-10 w-10 rounded-full bg-transparent md:hidden text-link-active z-999 ${active ? "border-2! border-gray-200" : ""}`}
         animate={active ? "open" : "closed"}
+        aria-label={active ? "Cerrar menú" : "Abrir menú"}
       >
         <motion.span
           className="absolute z-999 h-0.75 w-5 rounded-full"

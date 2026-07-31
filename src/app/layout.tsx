@@ -3,6 +3,8 @@ import Script from 'next/script';
 import './globals.css';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
+import { Metadata } from 'next';
+import { ReactNode } from 'react';
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -10,7 +12,7 @@ const montserrat = Montserrat({
   display: 'swap',
 });
 
-const getBaseUrl = () => {
+const getBaseUrl = (): string => {
   if (process.env.NEXT_PUBLIC_BASE_URL) {
     return process.env.NEXT_PUBLIC_BASE_URL;
   }
@@ -20,7 +22,7 @@ const getBaseUrl = () => {
   return 'http://localhost:3000';
 };
 
-export const metadata = {
+export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
   title: {
     default: 'Gustavo Baranda | Full Stack Developer',
@@ -82,7 +84,11 @@ const themeScript = `(() => {
   }
 })();`;
 
-const RootLayout = ({ children }) => {
+export interface RootLayoutProps {
+  children: ReactNode;
+}
+
+const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   return (
     <html lang="es" data-theme="light" suppressHydrationWarning>
       <head>

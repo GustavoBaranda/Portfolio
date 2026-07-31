@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -8,12 +10,16 @@ import { NavigationNavBar } from "./ItemNavigation";
 import ThemeToggle from "@/components/common/ThemeToggle";
 import { SOCIAL_LINKS } from "@/components/common/SocialLinks";
 
-const normalizePath = (path) => {
+const normalizePath = (path: string | null) => {
   if (!path) return "/";
   return path === "/" ? "/" : path.replace(/\/+$/, "");
 };
 
-const BurgerMenuMobile = ({ updateMenu }) => {
+export interface BurgerMenuMobileProps {
+  updateMenu: () => void;
+}
+
+const BurgerMenuMobile: React.FC<BurgerMenuMobileProps> = ({ updateMenu }) => {
   const pathname = usePathname();
   const currentPath = normalizePath(pathname);
   const navItemsWithIndex = NavigationNavBar.map((item, index) => ({

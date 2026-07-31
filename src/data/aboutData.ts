@@ -1,5 +1,7 @@
+import { Variants } from "framer-motion";
+
 /* ───────── animation variants ───────── */
-export const textReveal = {
+export const textReveal: Variants = {
   hidden: { opacity: 0, y: 24 },
   visible: {
     opacity: 1,
@@ -8,7 +10,7 @@ export const textReveal = {
   },
 };
 
-export const paragraphReveal = {
+export const paragraphReveal: Variants = {
   hidden: { opacity: 0, y: 24 },
   visible: (custom: number = 0) => ({
     opacity: 1,
@@ -17,7 +19,7 @@ export const paragraphReveal = {
   }),
 };
 
-export const cardVariants = {
+export const cardVariants: Variants = {
   hidden: { opacity: 0, y: 32 },
   visible: (i: number) => ({
     opacity: 1,

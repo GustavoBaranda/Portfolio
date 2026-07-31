@@ -2,7 +2,16 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { COLOR_MAP, cardVariants, calculateDuration } from "@/data/aboutData";
+import { COLOR_MAP, cardVariants, calculateDuration, Experience } from "@/data/aboutData";
+import { RefObject } from "react";
+
+export interface ExperienceCardProps {
+  exp: Experience;
+  index: number;
+  isExpanded: boolean;
+  onToggle: () => void;
+  cardRef?: RefObject<HTMLDivElement | null>;
+}
 
 export default function ExperienceCard({
   exp,
@@ -10,7 +19,7 @@ export default function ExperienceCard({
   isExpanded,
   onToggle,
   cardRef,
-}) {
+}: ExperienceCardProps) {
   const colors = COLOR_MAP[exp.color] || COLOR_MAP.syspro;
   const displayDuration = calculateDuration(exp.period, exp.duration);
 

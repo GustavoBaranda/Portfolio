@@ -6,12 +6,12 @@ import { EXPERIENCES, textReveal } from "@/data/aboutData";
 import ExperienceCard from "./ExperienceCard";
 
 export default function ExperienceSection() {
-  const [expandedId, setExpandedId] = useState(null);
-  const containerRef = useRef(null);
-  const firstCardRef = useRef(null);
-  const lastCardRef = useRef(null);
-  const [lineTop, setLineTop] = useState(36);
-  const [lineHeight, setLineHeight] = useState(0);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const firstCardRef = useRef<HTMLDivElement | null>(null);
+  const lastCardRef = useRef<HTMLDivElement | null>(null);
+  const [lineTop, setLineTop] = useState<number>(36);
+  const [lineHeight, setLineHeight] = useState<number>(0);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -76,7 +76,7 @@ export default function ExperienceSection() {
 
       {/* Timeline */}
       <div className="relative space-y-6" ref={containerRef}>
-        {/* Track line (fondo continuo) */}
+        {/* Track line */}
         {lineHeight > 0 && (
           <div
             className="hidden sm:block absolute left-[1.6875rem] w-0.5 bg-border z-0"
@@ -88,7 +88,7 @@ export default function ExperienceSection() {
           />
         )}
 
-        {/* Animated fill line (relleno progresivo continuo con scroll) */}
+        {/* Animated fill line */}
         {lineHeight > 0 && (
           <motion.div
             className="hidden sm:block absolute left-[1.6875rem] w-0.5 bg-indigo-600 origin-top z-0"
@@ -105,7 +105,7 @@ export default function ExperienceSection() {
         {EXPERIENCES.map((exp, i) => {
           const isFirst = i === 0;
           const isLast = i === EXPERIENCES.length - 1;
-          const ref = isFirst ? firstCardRef : isLast ? lastCardRef : null;
+          const ref = isFirst ? firstCardRef : isLast ? lastCardRef : undefined;
 
           return (
             <ExperienceCard

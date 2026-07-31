@@ -1,8 +1,10 @@
-import { motion } from "framer-motion";
+"use client";
+
+import { motion, Variants } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 
-const SvgCurve = () => {
-  const [height, setHeight] = useState(0);
+const SvgCurve: React.FC = () => {
+  const [height, setHeight] = useState<number>(0);
 
   useEffect(() => {
     const updateHeight = () => setHeight(window.innerHeight);
@@ -11,7 +13,7 @@ const SvgCurve = () => {
     return () => window.removeEventListener("resize", updateHeight);
   }, []);
 
-  const curve = useMemo(() => {
+  const curve = useMemo<Variants | null>(() => {
     if (!height) return null;
     const controlPointY = Math.round(height / 2);
     const bulge = Math.max(Math.round(height * 0.8), 340);

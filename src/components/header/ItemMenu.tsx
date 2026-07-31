@@ -1,9 +1,11 @@
+"use client";
+
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { NavigationNavBar } from "./ItemNavigation";
 
-const ItemMenu = () => {
-  const pathname = usePathname();
+const ItemMenu: React.FC = () => {
+  const pathname = usePathname() || "/";
   const base = `/${pathname.split("/")[1] || ""}`;
 
   return (

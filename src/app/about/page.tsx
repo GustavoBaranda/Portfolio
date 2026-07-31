@@ -1,6 +1,12 @@
 import HeroBio from "@/components/about/HeroBio";
 import ExperienceSection from "@/components/about/ExperienceSection";
 import EducationSection from "@/components/about/EducationSection";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Sobre mí | Gustavo Baranda",
+  description: "Conoce mi trayectoria como desarrollador Full Stack, mi perfil en ciencia de datos, experiencia laboral y educación.",
+};
 
 export default function AboutPage() {
   return (

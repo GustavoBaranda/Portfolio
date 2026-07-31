@@ -7,7 +7,7 @@ import { PROJECTS, PROJECT_CATEGORIES } from "@/data/projectsData";
 import ProjectCard from "./ProjectCard";
 
 export default function ProjectsGrid() {
-  const [selectedCategory, setSelectedCategory] = useState(() => {
+  const [selectedCategory, setSelectedCategory] = useState<string>(() => {
     if (typeof window !== "undefined" && window.location.hash) {
       const hash = window.location.hash.replace("#", "");
       const matched = PROJECT_CATEGORIES.find((cat) => cat.id === hash);
@@ -16,7 +16,6 @@ export default function ProjectsGrid() {
     return "all";
   });
 
-  // Ordenar los proyectos del más reciente al más antiguo
   const sortedProjects = [...PROJECTS].sort((a, b) =>
     b.dateSort.localeCompare(a.dateSort)
   );

@@ -1,7 +1,8 @@
 import ContactForm from "@/components/contact/ContactForm";
 import ContactInfo from "@/components/contact/ContactInfo";
+import { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Contacto | Gustavo Baranda",
   description: "Ponte en contacto con Gustavo Baranda para propuestas laborales, desarrollo de software o colaboración en proyectos.",
 };
@@ -30,4 +31,3 @@ export default function ContactPage() {
     </section>
   );
 }
-

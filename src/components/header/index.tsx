@@ -10,8 +10,8 @@ import Menu from "./Menu";
 import ThemeToggle from "@/components/common/ThemeToggle";
 import SocialLinks from "@/components/common/SocialLinks";
 
-const Header = () => {
-  const [active, setActive] = useState(false);
+const Header: React.FC = () => {
+  const [active, setActive] = useState<boolean>(false);
 
   useEffect(() => {
     if (active) {

@@ -2,9 +2,16 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { COLOR_MAP, cardVariants } from "@/data/aboutData";
+import { COLOR_MAP, cardVariants, Education } from "@/data/aboutData";
+import { RefObject } from "react";
 
-export default function EducationCard({ edu, index, cardRef }) {
+export interface EducationCardProps {
+  edu: Education;
+  index: number;
+  cardRef?: RefObject<HTMLDivElement | null>;
+}
+
+export default function EducationCard({ edu, index, cardRef }: EducationCardProps) {
   const colors = COLOR_MAP[edu.color] || COLOR_MAP.syspro;
 
   return (

@@ -6,11 +6,11 @@ import { EDUCATION, parsePeriodEnd, textReveal } from "@/data/aboutData";
 import EducationCard from "./EducationCard";
 
 export default function EducationSection() {
-  const containerRef = useRef(null);
-  const firstCardRef = useRef(null);
-  const lastCardRef = useRef(null);
-  const [lineTop, setLineTop] = useState(36);
-  const [lineHeight, setLineHeight] = useState(0);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const firstCardRef = useRef<HTMLDivElement | null>(null);
+  const lastCardRef = useRef<HTMLDivElement | null>(null);
+  const [lineTop, setLineTop] = useState<number>(36);
+  const [lineHeight, setLineHeight] = useState<number>(0);
 
   const { scrollYProgress: eduScrollY } = useScroll({
     target: containerRef,
@@ -19,9 +19,9 @@ export default function EducationSection() {
   const eduScaleY = useTransform(eduScrollY, [0, 1], [0, 1]);
 
   const sortedEducation = EDUCATION.slice().sort((a, b) => {
-    const da = parsePeriodEnd(a.period);
-    const db = parsePeriodEnd(b.period);
-    return db - da; // most recent first
+    const da = parsePeriodEnd(a.period).getTime();
+    const db = parsePeriodEnd(b.period).getTime();
+    return db - da;
   });
 
   useEffect(() => {
@@ -79,7 +79,7 @@ export default function EducationSection() {
 
       {/* Timeline */}
       <div className="relative space-y-6" ref={containerRef}>
-        {/* Track line (fondo continuo) */}
+        {/* Track line */}
         {lineHeight > 0 && (
           <div
             className="hidden sm:block absolute left-[1.6875rem] w-0.5 bg-border z-0"
@@ -91,7 +91,7 @@ export default function EducationSection() {
           />
         )}
 
-        {/* Animated fill line (relleno progresivo continuo con scroll) */}
+        {/* Animated fill line */}
         {lineHeight > 0 && (
           <motion.div
             className="hidden sm:block absolute left-[1.6875rem] w-0.5 bg-indigo-600 origin-top z-0"
@@ -108,7 +108,7 @@ export default function EducationSection() {
         {sortedEducation.map((edu, i) => {
           const isFirst = i === 0;
           const isLast = i === sortedEducation.length - 1;
-          const ref = isFirst ? firstCardRef : isLast ? lastCardRef : null;
+          const ref = isFirst ? firstCardRef : isLast ? lastCardRef : undefined;
 
           return (
             <EducationCard

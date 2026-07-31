@@ -3,10 +3,16 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { ExternalLink, Github, Layers, ArrowUpRight, ChevronDown, ChevronUp, Lock } from "lucide-react";
+import { Github, Layers, ArrowUpRight, ChevronDown, ChevronUp, Lock } from "lucide-react";
+import { ProjectItem } from "@/data/projectsData";
 
-export default function ProjectCard({ project, index }) {
-  const [isExpanded, setIsExpanded] = useState(false);
+export interface ProjectCardProps {
+  project: ProjectItem;
+  index: number;
+}
+
+export default function ProjectCard({ project, index }: ProjectCardProps) {
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const isLeft = index % 2 === 0;
   const initialX = isLeft ? -20 : 20;
 
@@ -31,7 +37,7 @@ export default function ProjectCard({ project, index }) {
           <span className="text-muted text-[0.7rem] sm:text-xs">{project.period}</span>
         </div>
 
-        {/* Title & Company (with min-height for horizontal alignment) */}
+        {/* Title & Company */}
         <div className="min-h-[5rem] sm:min-h-[5.5rem] flex flex-col justify-start mb-3 sm:mb-4">
           <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-snug">
             {project.title}
