@@ -37,9 +37,9 @@ const Header = () => {
           <Image
             src="/images/logo.svg"
             alt="Logo Gustavo Baranda"
-            width={44}
-            height={44}
-            className="w-10 h-10 sm:w-11 sm:h-11 object-contain transition-all duration-300 ease-out group-hover:scale-125 dark:invert dark:brightness-125 group-hover:drop-shadow-[0_0_10px_rgba(99,102,241,0.6)]"
+            width={36}
+            height={36}
+            className="w-8 h-8 sm:w-9 sm:h-9 object-contain transition-all duration-300 ease-out group-hover:scale-115 dark:invert dark:brightness-125 group-hover:drop-shadow-[0_0_10px_rgba(99,102,241,0.6)]"
           />
         </Link>
 
