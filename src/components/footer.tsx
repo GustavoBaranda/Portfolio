@@ -19,7 +19,7 @@ export default function Footer() {
               alt="Logo Gustavo Baranda"
               width={26}
               height={26}
-              className="w-6 h-6 sm:w-6.5 sm:h-6.5 object-contain transition-all duration-200 opacity-60 group-hover:opacity-90 dark:invert"
+              className="w-6 h-6 sm:w-6.5 sm:h-6.5 object-contain transition-all duration-200 grayscale brightness-0 opacity-40 group-hover:opacity-70"
             />
             <span className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors leading-none">
               Gustavo Baranda
