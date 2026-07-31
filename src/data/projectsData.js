@@ -13,6 +13,7 @@ export const PROJECTS = [
     categoryLabel: "Full Stack",
     company: "SysPro Consulting",
     period: "2025 — Presente",
+    dateSort: "2025-05",
     summary:
       "Sistema integral para logística de depósitos fiscales con módulo público de turnos (Turnero), monitoreo en tiempo real y gestión empresarial de cargas y contenedores.",
     description:
@@ -24,29 +25,13 @@ export const PROJECTS = [
     demoUrl: null,
   },
   {
-    id: "portfolio-personal",
-    title: "Portfolio Web Personal & Design System",
-    category: "opensource",
-    categoryLabel: "Open Source",
-    company: "Proyecto Personal",
-    period: "2025 — Presente",
-    summary:
-      "Sitio web personal desarrollado con Next.js 16 App Router, Tailwind CSS v4, animaciones con Framer Motion e integración de API de contacto.",
-    description:
-      "Plataforma web construida con React 19 y Next.js App Router para la presentación de experiencia profesional y proyectos. Incorpora arquitectura limpia, sistema de temas dinámico (Dark/Light mode), microinteracciones avanzadas con Framer Motion e integración de Nodemailer API en Next.js Server Routes.",
-    image: "/images/opengraph.png",
-    tags: ["Next.js", "React 19", "Tailwind CSS", "Framer Motion", "Nodemailer", "JavaScript"],
-    featured: false,
-    githubUrl: "https://github.com/GustavoBaranda/portfolio",
-    demoUrl: "https://gustavobaranda.vercel.app/",
-  },
-  {
     id: "fundacion-medicina",
     title: "Plataforma de Medicina Laboral & Visor DICOM",
     category: "full-stack",
     categoryLabel: "Full Stack",
     company: "Fundación Maldonado",
     period: "2025",
+    dateSort: "2025-04",
     summary:
       "Sistema de gestión de pacientes, visor interactivo de imágenes médicas DICOM, administración de estudios clínicos y reportes en PDF.",
     description:
@@ -58,12 +43,31 @@ export const PROJECTS = [
     demoUrl: null,
   },
   {
+    id: "portfolio-personal",
+    title: "Portfolio Web Personal & Design System",
+    category: "opensource",
+    categoryLabel: "Freelance & Open Source",
+    company: "Proyecto Personal",
+    period: "2025 — Presente",
+    dateSort: "2025-01",
+    summary:
+      "Sitio web personal desarrollado con Next.js 16 App Router, Tailwind CSS v4, animaciones con Framer Motion e integración de API de contacto.",
+    description:
+      "Plataforma web construida con React 19 y Next.js App Router para la presentación de experiencia profesional y proyectos. Incorpora arquitectura limpia, sistema de temas dinámico (Dark/Light mode), microinteracciones avanzadas con Framer Motion e integración de Nodemailer API en Next.js Server Routes.",
+    image: "/images/opengraph.png",
+    tags: ["Next.js", "React 19", "Tailwind CSS", "Framer Motion", "Nodemailer", "JavaScript"],
+    featured: false,
+    githubUrl: "https://github.com/GustavoBaranda/portfolio",
+    demoUrl: "https://gustavobaranda.vercel.app/",
+  },
+  {
     id: "solar-banco-etl",
     title: "Plataforma de Riesgos & Liquidez (LCR / VaR)",
     category: "apis",
     categoryLabel: "APIs y Microservicios",
     company: "Solar Banco",
     period: "2024 — 2025",
+    dateSort: "2024-12",
     summary:
       "Motor backend en Django y pipelines ETL para el cálculo dinámico de LCR, VaR de liquidez, calce de plazos y parámetros regulatorios bancarios.",
     description:
@@ -78,9 +82,10 @@ export const PROJECTS = [
     id: "las-verde-ecommerce",
     title: "E-Commerce & Catálogo Interactivo",
     category: "opensource",
-    categoryLabel: "Freelance",
+    categoryLabel: "Freelance & Open Source",
     company: "Las Verde",
     period: "2022 — 2023",
+    dateSort: "2022-06",
     summary:
       "Aplicación e-commerce en React.js para fábrica de jugos naturales con catálogo interactivo y sincronización en tiempo real con Firebase Firestore.",
     description:
@@ -95,9 +100,10 @@ export const PROJECTS = [
     id: "maternal-descubriendo",
     title: "Sitio Web Institucional Jardín Maternal",
     category: "opensource",
-    categoryLabel: "Freelance",
+    categoryLabel: "Freelance & Open Source",
     company: "Descubriendo",
     period: "2022",
+    dateSort: "2022-01",
     summary:
       "Plataforma institucional responsiva con catálogo de propuesta educativa, slider interactivo, FAQ y validación de contacto.",
     description:

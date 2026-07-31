@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FolderSearch, RotateCcw } from "lucide-react";
 import { PROJECTS, PROJECT_CATEGORIES } from "@/data/projectsData";
@@ -16,10 +16,15 @@ export default function ProjectsGrid() {
     return "all";
   });
 
+  // Ordenar los proyectos del más reciente al más antiguo
+  const sortedProjects = [...PROJECTS].sort((a, b) =>
+    b.dateSort.localeCompare(a.dateSort)
+  );
+
   const filteredProjects =
     selectedCategory === "all"
-      ? PROJECTS
-      : PROJECTS.filter((p) => p.category === selectedCategory);
+      ? sortedProjects
+      : sortedProjects.filter((p) => p.category === selectedCategory);
 
   return (
     <div className="space-y-8 sm:space-y-12">

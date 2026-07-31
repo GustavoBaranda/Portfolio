@@ -133,7 +133,7 @@ export default function ContactForm() {
                     htmlFor="name"
                     className="text-[0.7rem] sm:text-xs font-bold tracking-wide text-muted uppercase"
                   >
-                    NOMBRE COMPLETO <span className="text-indigo-600 dark:text-indigo-400">*</span>
+                    NOMBRE <span className="text-indigo-600 dark:text-indigo-400">*</span>
                   </label>
                   <input
                     id="name"

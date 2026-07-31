@@ -1,13 +1,35 @@
+import Link from "next/link";
+import Image from "next/image";
 import SocialLinks from "@/components/common/SocialLinks";
 
 export default function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer className="w-full border-t border-soft surface-glass backdrop-blur rounded-t-xl mt-auto">
-      <div className="max-w-7xl mx-auto px-6 pt-6 pb-16 md:pb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="text-xs sm:text-sm text-muted-link text-center">
-          &copy; {year} — Gustavo Baranda
+      <div className="max-w-7xl mx-auto px-6 py-4 sm:py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+        {/* Logo & Copyright */}
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <Link
+            href="/"
+            className="group flex items-center gap-2 transition-opacity hover:opacity-80 cursor-pointer"
+            aria-label="Ir al inicio"
+          >
+            <Image
+              src="/images/logo.svg"
+              alt="Logo Gustavo Baranda"
+              width={26}
+              height={26}
+              className="w-6 h-6 sm:w-6.5 sm:h-6.5 object-contain transition-transform group-hover:scale-105"
+            />
+            <span className="text-xs sm:text-sm font-bold text-foreground group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-none">
+              Gustavo Baranda
+            </span>
+          </Link>
+          <span className="text-muted text-xs opacity-50 leading-none">·</span>
+          <span className="text-xs text-muted-link leading-none">&copy; {year}</span>
         </div>
+
+        {/* Redes */}
         <SocialLinks className="flex items-center gap-4" />
       </div>
     </footer>

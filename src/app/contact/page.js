@@ -18,7 +18,7 @@ export default function ContactPage() {
           ¿Tienes una idea o proyecto? <span className="text-indigo-600 dark:text-indigo-400">Hablemos.</span>
         </h1>
         <p className="mt-3 sm:mt-4 text-muted max-w-2xl mx-auto leading-relaxed text-pretty text-xs sm:text-base">
-          Estoy disponible para colaborar en proyectos desafiantes, integrarme a equipos de desarrollo o construir soluciones a medida.
+          Envíame un mensaje y me pondré en contacto contigo a la brevedad para conversar sobre tus requerimientos o proyectos.
         </p>
       </header>
 

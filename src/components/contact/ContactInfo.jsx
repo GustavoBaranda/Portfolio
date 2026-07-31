@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail, MapPin, ArrowUpRight, Github, Linkedin } from "lucide-react";
+import { Mail, MapPin, ArrowUpRight } from "lucide-react";
 
 export default function ContactInfo() {
   return (
@@ -16,7 +16,7 @@ export default function ContactInfo() {
         <div>
           <h3 className="text-lg sm:text-xl font-bold text-foreground">Detalles de Contacto</h3>
           <p className="mt-1 text-xs sm:text-sm text-muted leading-relaxed">
-            Puedes escribirme por correo directo o conectar en redes profesionales.
+            Puedes escribirme por correo directo o mediante el formulario de la izquierda.
           </p>
         </div>
 
@@ -47,37 +47,6 @@ export default function ContactInfo() {
               <span className="text-xs sm:text-sm font-semibold text-foreground">Buenos Aires, Argentina</span>
             </span>
           </div>
-        </div>
-      </div>
-
-      <div className="mt-6 pt-5 border-t border-soft text-center sm:text-left">
-        <p className="text-[0.65rem] sm:text-xs font-bold tracking-wide text-muted mb-3 uppercase">CONÉCTATE EN REDES</p>
-        <div className="flex items-center justify-center sm:justify-start gap-3">
-          <a
-            href="https://github.com/GustavoBaranda"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
-            className="flex h-10 w-10 items-center justify-center rounded-[0.35rem] border border-soft text-muted transition-colors hover:border-indigo-500/40 hover:text-indigo-600 dark:hover:text-indigo-400"
-          >
-            <Github className="w-4.5 h-4.5" />
-          </a>
-          <a
-            href="https://www.linkedin.com/in/gustavobaranda/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LinkedIn"
-            className="flex h-10 w-10 items-center justify-center rounded-[0.35rem] border border-soft text-muted transition-colors hover:border-indigo-500/40 hover:text-indigo-600 dark:hover:text-indigo-400"
-          >
-            <Linkedin className="w-4.5 h-4.5" />
-          </a>
-          <a
-            href="mailto:baranda.gustavo@gmail.com"
-            aria-label="Correo"
-            className="flex h-10 w-10 items-center justify-center rounded-[0.35rem] border border-soft text-muted transition-colors hover:border-indigo-500/40 hover:text-indigo-600 dark:hover:text-indigo-400"
-          >
-            <Mail className="w-4.5 h-4.5" />
-          </a>
         </div>
       </div>
     </div>
