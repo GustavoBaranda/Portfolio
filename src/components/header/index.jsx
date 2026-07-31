@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import BurgerMenuMobile from "./BurgerMenuMobile";
@@ -50,7 +50,21 @@ const Header = () => {
       </div>
 
       <AnimatePresence mode="wait">
-        {active && <BurgerMenuMobile updateMenu={closeMenu} />}
+        {active && (
+          <>
+            <motion.div
+              key="mobile-menu-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={closeMenu}
+              className="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-xs cursor-pointer md:hidden"
+              aria-label="Cerrar menú"
+            />
+            <BurgerMenuMobile updateMenu={closeMenu} />
+          </>
+        )}
       </AnimatePresence>
     </header>
   );
