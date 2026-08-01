@@ -62,8 +62,8 @@ export const PROJECTS: ProjectItem[] = [
     image: "/images/gusflow.svg",
     tags: ["Next.js 14", "React 18", "Vercel Postgres", "Vercel Blob", "Tailwind CSS", "Resend", "OAuth & JWT", "Kanban"],
     featured: true,
-    githubUrl: "https://github.com/GustavoBaranda/GusFlow-APP",
-    demoUrl: null,
+    githubUrl: null,
+    demoUrl: "https://gusflow.vercel.app/",
   },
   {
     id: "fundacion-medicina",

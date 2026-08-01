@@ -112,7 +112,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
 
         {/* Links Footer or NDA Enterprise Badge */}
         {project.demoUrl || project.githubUrl ? (
-          <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-3 mt-3 border-t border-soft/50">
+          <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 pt-3 mt-3 border-t border-soft/50">
             {project.demoUrl && (
               <a
                 href={project.demoUrl}
@@ -124,7 +124,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                 <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </a>
             )}
-            {project.githubUrl && (
+            {project.githubUrl ? (
               <a
                 href={project.githubUrl}
                 target="_blank"
@@ -134,6 +134,11 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                 <Github className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 <span>Código</span>
               </a>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-muted opacity-90">
+                <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 opacity-80" />
+                <span>Código a solicitud</span>
+              </span>
             )}
           </div>
         ) : (
