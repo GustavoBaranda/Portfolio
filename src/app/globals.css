@@ -272,7 +272,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .link-active {
-	color: var(--accent);
+	color: var(--text);
 }
 
 .link-active .link-content {
@@ -280,14 +280,14 @@ body::-webkit-scrollbar-thumb {
 }
 
 .link-active .indicator {
-	background-color: var(--accent);
+	background-color: var(--text);
 	opacity: 1;
 	transform: translateY(-50%) scale(1.4);
 }
 
 .link-active .link-icon {
 	opacity: 1;
-	color: var(--accent);
+	color: var(--text);
 	transform: translateX(2px) scale(1.05);
 }
 
