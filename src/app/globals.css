@@ -221,6 +221,8 @@ body::-webkit-scrollbar-thumb {
 	gap: 1.5rem;
 	font-size: 0.85rem;
 	color: var(--muted);
+	padding-top: 1.5rem !important;
+	padding-bottom: 1rem !important;
 }
 
 .menu .footer a {

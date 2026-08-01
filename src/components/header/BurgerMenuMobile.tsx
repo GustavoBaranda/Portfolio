@@ -64,7 +64,7 @@ const BurgerMenuMobile: React.FC<BurgerMenuMobileProps> = ({ updateMenu }) => {
             />
           ))}
         </div>
-        <div className="footer border-t border-t-gray-200/50 pt-2 pb-1 sm:pb-2 flex-shrink-0 flex items-center justify-center gap-6 sm:gap-8">
+        <div className="footer border-t border-soft pt-6 pb-4 flex-shrink-0 flex items-center justify-center gap-6 sm:gap-8">
           <motion.div {...slideMotionProps} custom={footerStartIndex}>
             <ThemeToggle />
           </motion.div>
