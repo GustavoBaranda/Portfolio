@@ -47,6 +47,24 @@ export const PROJECTS: ProjectItem[] = [
     demoUrl: null,
   },
   {
+    id: "gusflow-kanban",
+    title: "GusFlow — Gestor de Tareas & Tablero Kanban",
+    category: "full-stack",
+    categoryLabel: "Full Stack",
+    company: "Proyecto Open Source",
+    period: "2025 — 2026",
+    dateSort: "2025-11",
+    summary:
+      "Plataforma web interactiva de gestión de tareas estilo Kanban con Next.js 14 App Router, Vercel Postgres, Vercel Blob Storage, autenticación JWT/OAuth y envío de emails con Resend.",
+    description:
+      "Aplicación web de gestión de proyectos y productividad personal estilo Kanban construida sobre Next.js 14 (App Router) y React 18. Incorpora tablero dinámico con columnas y prioridades, soporte para formato Markdown, subida de archivos adjuntos a Vercel Blob Storage, autenticación social con Google y GitHub OAuth, verificación por email con Resend y almacenamiento relacional en Vercel Postgres.",
+    image: "/images/gusflow.svg",
+    tags: ["Next.js 14", "React 18", "Vercel Postgres", "Vercel Blob", "Tailwind CSS", "Resend", "OAuth & JWT", "Kanban"],
+    featured: true,
+    githubUrl: "https://github.com/GustavoBaranda/GusFlow-APP",
+    demoUrl: null,
+  },
+  {
     id: "weatherflow-api",
     title: "WeatherFlow API — Servicio RESTful & OpenAPI 3",
     category: "apis",
