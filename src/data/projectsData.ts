@@ -28,6 +28,7 @@ export const PROJECT_CATEGORIES: ProjectCategory[] = [
 ];
 
 export const PROJECTS: ProjectItem[] = [
+  /* ───────────────── 1. FULL STACK (Más reciente al más antiguo) ───────────────── */
   {
     id: "syspro-logistica",
     title: "Plataforma de Logística & Depósitos Fiscales",
@@ -35,7 +36,7 @@ export const PROJECTS: ProjectItem[] = [
     categoryLabel: "Full Stack",
     company: "SysPro Consulting",
     period: "2025 — Presente",
-    dateSort: "2025-05",
+    dateSort: "2025-12",
     summary:
       "Sistema integral para logística de depósitos fiscales con módulo público de turnos (Turnero), monitoreo en tiempo real y gestión empresarial de cargas y contenedores.",
     description:
@@ -65,6 +66,26 @@ export const PROJECTS: ProjectItem[] = [
     demoUrl: null,
   },
   {
+    id: "fundacion-medicina",
+    title: "Plataforma de Medicina Laboral & Visor DICOM",
+    category: "full-stack",
+    categoryLabel: "Full Stack",
+    company: "Fundación Maldonado",
+    period: "2025",
+    dateSort: "2025-04",
+    summary:
+      "Sistema de gestión de pacientes, visor interactivo de imágenes médicas DICOM, administración de estudios clínicos y reportes en PDF.",
+    description:
+      "Plataforma médica desarrollada en Laravel 12 y MySQL con interfaz dinámica mediante Yajra DataTables y AJAX. Incorpora visor interactivo de estudios (resonancias y tomografías) con controles de zoom y rotación, gestión de pacientes/médicos y control de acceso multinivel por roles (Admin, Colaborador, Paciente).",
+    image: "/images/fundacion_maldonado_preview.png",
+    tags: ["Laravel 12", "PHP", "MySQL", "Visor DICOM", "Yajra DataTables", "JavaScript", "Tailwind CSS"],
+    featured: false,
+    githubUrl: null,
+    demoUrl: null,
+  },
+
+  /* ───────────────── 2. APIS Y MICROSERVICIOS (Más reciente al más antiguo) ───────────────── */
+  {
     id: "weatherflow-api",
     title: "WeatherFlow API — Servicio RESTful & OpenAPI 3",
     category: "apis",
@@ -83,23 +104,25 @@ export const PROJECTS: ProjectItem[] = [
     demoUrl: null,
   },
   {
-    id: "fundacion-medicina",
-    title: "Plataforma de Medicina Laboral & Visor DICOM",
-    category: "full-stack",
-    categoryLabel: "Full Stack",
-    company: "Fundación Maldonado",
-    period: "2025",
-    dateSort: "2025-04",
+    id: "solar-banco-etl",
+    title: "Plataforma de Riesgos & Liquidez (LCR / VaR)",
+    category: "apis",
+    categoryLabel: "APIs y Microservicios",
+    company: "Solar Banco",
+    period: "2024 — 2025",
+    dateSort: "2024-12",
     summary:
-      "Sistema de gestión de pacientes, visor interactivo de imágenes médicas DICOM, administración de estudios clínicos y reportes en PDF.",
+      "Motor backend en Django y pipelines ETL para el cálculo dinámico de LCR, VaR de liquidez, calce de plazos y parámetros regulatorios bancarios.",
     description:
-      "Plataforma médica desarrollada en Laravel 12 y MySQL con interfaz dinámica mediante Yajra DataTables y AJAX. Incorpora visor interactivo de estudios (resonancias y tomografías) con controles de zoom y rotación, gestión de pacientes/médicos y control de acceso multinivel por roles (Admin, Colaborador, Paciente).",
-    image: "/images/fundacion_maldonado_preview.png",
-    tags: ["Laravel 12", "PHP", "MySQL", "Visor DICOM", "Yajra DataTables", "JavaScript", "Tailwind CSS"],
-    featured: false,
+      "Diseño y desarrollo de solución backend financiera en Django 5.0 para el cálculo de Ratios de Cobertura de Liquidez (LCR), Valor en Riesgo (VaR de liquidez) y calce de plazos por bandas temporales. Implementación de pipelines ETL automáticos en Python (Pandas, cx_Oracle, OpenPyXL) para ingesta y sincronización entre SQLite, Excel y Data Warehouse en Oracle. Autenticación SSO con Active Directory corporativo (LDAP) y logs de auditoría.",
+    image: "/images/solar_banco.png",
+    tags: ["Python", "Django 5", "Oracle DW", "ETL", "LCR & VaR", "Pandas", "Active Directory"],
+    featured: true,
     githubUrl: null,
     demoUrl: null,
   },
+
+  /* ───────────────── 3. FREELANCE & OPEN SOURCE (Más reciente al más antiguo) ───────────────── */
   {
     id: "portfolio-personal",
     title: "Portfolio Web Personal & Design System (TSX)",
@@ -117,24 +140,6 @@ export const PROJECTS: ProjectItem[] = [
     featured: false,
     githubUrl: "https://github.com/GustavoBaranda/Portfolio",
     demoUrl: "https://gustavobaranda.vercel.app/",
-  },
-  {
-    id: "solar-banco-etl",
-    title: "Plataforma de Riesgos & Liquidez (LCR / VaR)",
-    category: "apis",
-    categoryLabel: "APIs y Microservicios",
-    company: "Solar Banco",
-    period: "2024 — 2025",
-    dateSort: "2024-12",
-    summary:
-      "Motor backend en Django y pipelines ETL para el cálculo dinámico de LCR, VaR de liquidez, calce de plazos y parámetros regulatorios bancarios.",
-    description:
-      "Diseño y desarrollo de solución backend financiera en Django 5.0 para el cálculo de Ratios de Cobertura de Liquidez (LCR), Valor en Riesgo (VaR de liquidez) y calce de plazos por bandas temporales. Implementación de pipelines ETL automáticos en Python (Pandas, cx_Oracle, OpenPyXL) para ingesta y sincronización entre SQLite, Excel y Data Warehouse en Oracle. Autenticación SSO con Active Directory corporativo (LDAP) y logs de auditoría.",
-    image: "/images/solar_banco.png",
-    tags: ["Python", "Django 5", "Oracle DW", "ETL", "LCR & VaR", "Pandas", "Active Directory"],
-    featured: true,
-    githubUrl: null,
-    demoUrl: null,
   },
   {
     id: "las-verde-ecommerce",
