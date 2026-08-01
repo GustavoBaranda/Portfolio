@@ -6,7 +6,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer className="w-full border-t border-soft surface-glass backdrop-blur rounded-t-xl mt-auto">
-      <div className="max-w-7xl mx-auto px-6 pt-6 pb-4 sm:pt-8 sm:pb-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-6 pt-10 pb-4 sm:pt-12 sm:pb-5 flex flex-col sm:flex-row items-center justify-between gap-4">
         {/* Logo & Copyright */}
         <div className="flex items-center gap-2.5 sm:gap-3">
           <Link
