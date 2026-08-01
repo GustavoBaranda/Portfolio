@@ -16,9 +16,20 @@ export default function ProjectsGrid() {
     return "all";
   });
 
-  const sortedProjects = [...PROJECTS].sort((a, b) =>
-    b.dateSort.localeCompare(a.dateSort)
-  );
+  const CATEGORY_ORDER: Record<string, number> = {
+    "full-stack": 1,
+    "apis": 2,
+    "opensource": 3,
+  };
+
+  const sortedProjects = [...PROJECTS].sort((a, b) => {
+    const catA = CATEGORY_ORDER[a.category] || 99;
+    const catB = CATEGORY_ORDER[b.category] || 99;
+    if (catA !== catB) {
+      return catA - catB;
+    }
+    return b.dateSort.localeCompare(a.dateSort);
+  });
 
   const filteredProjects =
     selectedCategory === "all"
