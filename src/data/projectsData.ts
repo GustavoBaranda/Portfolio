@@ -52,7 +52,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "GusFlow — Gestor de Tareas & Tablero Kanban",
     category: "full-stack",
     categoryLabel: "Full Stack",
-    company: "Proyecto Open Source",
+    company: "Proyecto Personal",
     period: "2025 — 2026",
     dateSort: "2025-11",
     summary:
@@ -101,7 +101,7 @@ export const PROJECTS: ProjectItem[] = [
     tags: ["Python 3.10+", "Django 5.0", "Django REST Framework", "OpenAPI 3 / Swagger", "pytest-django", "REST API"],
     featured: true,
     githubUrl: "https://github.com/GustavoBaranda/WeatherFlow-APP",
-    demoUrl: null,
+    demoUrl: "https://weatherflow-api.vercel.app/",
   },
   {
     id: "solar-banco-etl",
