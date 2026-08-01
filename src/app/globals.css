@@ -14,7 +14,7 @@
 	--border-strong: #cbd5f5;
 	--text: #0f172a;
 	--muted: #64748b;
-	--accent: #2563eb;
+	--accent: #4f46e5;
 	--scrollbar-track: rgba(15, 23, 42, 0.08);
 	--scrollbar-thumb: rgba(15, 23, 42, 0.4);
 }
@@ -29,7 +29,7 @@
 	--border-strong: #475569;
 	--text: #f8fafc;
 	--muted: #94a3b8;
-	--accent: #60a5fa;
+	--accent: #818cf8;
 	--scrollbar-track: rgba(248, 250, 252, 0.15);
 	--scrollbar-thumb: rgba(248, 250, 252, 0.45);
 }
