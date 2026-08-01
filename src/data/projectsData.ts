@@ -36,7 +36,7 @@ export const PROJECTS: ProjectItem[] = [
     categoryLabel: "Full Stack",
     company: "SysPro Consulting",
     period: "2025 — Presente",
-    dateSort: "2025-12",
+    dateSort: "9999-99",
     summary:
       "Sistema integral para logística de depósitos fiscales con módulo público de turnos (Turnero), monitoreo en tiempo real y gestión empresarial de cargas y contenedores.",
     description:
