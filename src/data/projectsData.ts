@@ -100,7 +100,7 @@ export const PROJECTS: ProjectItem[] = [
     image: "/images/weatherflow.png",
     tags: ["Python 3.10+", "Django 5.0", "Django REST Framework", "OpenAPI 3 / Swagger", "pytest-django", "REST API"],
     featured: true,
-    githubUrl: "https://github.com/GustavoBaranda/WeatherFlow-APP",
+    githubUrl: "https://github.com/GustavoBaranda/WeatherFlow-API",
     demoUrl: null,
   },
   {
