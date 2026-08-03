@@ -59,7 +59,7 @@ export const PROJECTS: ProjectItem[] = [
       "Plataforma web progresiva (PWA) e interactiva de gestión de tareas estilo Kanban con Next.js 14 App Router, Vercel Postgres, Vercel Blob Storage, autenticación JWT/OAuth y envío de emails con Resend.",
     description:
       "Aplicación web progresiva (PWA) de gestión de proyectos y productividad personal estilo Kanban construida sobre Next.js 14 (App Router) y React 18. Cuenta con soporte de instalación nativa (PWA manifest y Service Worker), tablero dinámico con columnas y prioridades, formato Markdown, subida de archivos adjuntos a Vercel Blob Storage, autenticación social con Google y GitHub OAuth, verificación por email con Resend y almacenamiento relacional en Vercel Postgres.",
-    image: "/images/gusflow.svg",
+    image: "/images/gusflow.png",
     tags: ["PWA", "Next.js 14", "React 18", "Vercel Postgres", "Vercel Blob", "Tailwind CSS", "Resend", "OAuth & JWT", "Kanban"],
     featured: true,
     githubUrl: null,
@@ -97,11 +97,11 @@ export const PROJECTS: ProjectItem[] = [
       "Servicio web RESTful modular desarrollado en Python 3.10+ y Django REST Framework para la gestión de usuarios, preferencias de temperatura y agregación meteorológica con Swagger UI & ReDoc.",
     description:
       "API RESTful de alta calidad construida con Django 5.0+ y Django REST Framework (DRF 3.15+). Cuenta con arquitectura limpia con separación de ViewSets y Serializers en paquetes dedicados, documentación interactiva OpenAPI 3 (Swagger UI y ReDoc vía drf-spectacular), comprobación de salud (/api/health/), suite de pruebas unitarias/integración con pytest-django y variables de entorno dinámicas con python-dotenv.",
-    image: "/images/weatherflow.svg",
+    image: "/images/weatherflow.png",
     tags: ["Python 3.10+", "Django 5.0", "Django REST Framework", "OpenAPI 3 / Swagger", "pytest-django", "REST API"],
     featured: true,
     githubUrl: "https://github.com/GustavoBaranda/WeatherFlow-APP",
-    demoUrl: "https://weatherflow-api.vercel.app/",
+    demoUrl: null,
   },
   {
     id: "solar-banco-etl",
