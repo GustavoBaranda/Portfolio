@@ -48,6 +48,24 @@ export const PROJECTS: ProjectItem[] = [
     demoUrl: null,
   },
   {
+    id: "mhine-home",
+    title: "MHINE HOME — E-Commerce de Fragancias & Decoración",
+    category: "full-stack",
+    categoryLabel: "Full Stack",
+    company: "MHINE HOME",
+    period: "2025 - 2026",
+    dateSort: "2025-04",
+    summary:
+      "Plataforma e-commerce de alto rendimiento para fragancias artesanales y decoración del hogar con Next.js 15, React 19, Prisma ORM, PostgreSQL (Neon), NextAuth v5, Vercel Blob y panel admin en tiempo real.",
+    description:
+      "E-commerce de productos para el hogar construido sobre Next.js 15 App Router y React 19. Cuenta con catálogo interactivo con variantes de fragancias y gramajes, visualizador de imágenes a pantalla completa, carrito deslizable persistente, checkout integrado (WhatsApp/Mercado Pago), autenticación OAuth con Google (NextAuth v5) y panel de administración completo (CRUD de productos/categorías, roles de usuario y reordenamiento en tiempo real de las secciones del landing page). Persistencia en PostgreSQL vía Prisma ORM, subida de imágenes a Vercel Blob y notificaciones por mailing con Nodemailer.",
+    image: "/images/mhine-home.png",
+    tags: ["Next.js 15", "React 19", "Prisma ORM", "PostgreSQL", "NextAuth v5", "Vercel Blob", "Tailwind CSS", "Framer Motion"],
+    featured: true,
+    githubUrl: null,
+    demoUrl: "https://mhine-home.vercel.app",
+  },
+  {
     id: "gusflow-kanban",
     title: "GusFlow — Gestor de Tareas Kanban (PWA)",
     category: "full-stack",
