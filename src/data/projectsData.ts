@@ -157,7 +157,7 @@ export const PROJECTS: ProjectItem[] = [
     tags: ["TypeScript", "React 19 (TSX)", "Next.js 16", "Tailwind CSS v4", "SEO & JSON-LD", "Framer Motion", "Nodemailer"],
     featured: false,
     githubUrl: "https://github.com/GustavoBaranda/Portfolio",
-    demoUrl: "https://gustavobaranda.vercel.app/",
+    demoUrl: "https://gustavobaranda.com",
   },
   {
     id: "las-verde-ecommerce",

@@ -19,17 +19,19 @@ export default function HomePage() {
       <TransitionEffect />
       <main className="flex items-center justify-center text-dark min-h-[calc(100vh-225px)] dark:text-light w-full">
         <div className="pt-0">
-          <div className="flex flex-col md:flex-row items-center justify-center w-full">
-            <div className="w-full md:w-1/2 sm:w-full">
-              <TiltImage
-                src="/images/logo.svg"
-                alt="Logo Gustavo Baranda"
-                width={400}
-                height={280}
-                className="w-full h-auto md:inline-block md:w-full lg:inline-block"
-              />
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 w-full">
+            <div className="w-full md:w-5/12 flex justify-center items-center">
+              <div className="w-full max-w-[220px] sm:max-w-[280px] md:max-w-[320px] lg:max-w-[350px] mx-auto">
+                <TiltImage
+                  src="/images/logo.svg"
+                  alt="Logo Gustavo Baranda"
+                  width={340}
+                  height={240}
+                  className="w-full h-auto object-contain"
+                />
+              </div>
             </div>
-            <div className="w-full md:w-1/2 sm:w-full flex flex-col items-center md:items-start self-center text-center md:text-left">
+            <div className="w-full md:w-7/12 flex flex-col items-center md:items-start self-center text-center md:text-left">
               
               {/* Nombre (H1) */}
               <AnimatedText

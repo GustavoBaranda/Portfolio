@@ -12,17 +12,9 @@ const montserrat = Montserrat({
   display: 'swap',
 });
 
-const getBaseUrl = (): string => {
-  if (process.env.NEXT_PUBLIC_BASE_URL) {
-    return process.env.NEXT_PUBLIC_BASE_URL;
-  }
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
-  }
-  return 'https://gustavobaranda.vercel.app';
-};
+import { getSiteUrl } from '@/config/site';
 
-const baseUrl = getBaseUrl();
+const baseUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -30,7 +22,7 @@ export const metadata: Metadata = {
     default: 'Gustavo Baranda | Full Stack Developer & Data Science Student',
     template: '%s | Gustavo Baranda',
   },
-  description: 'Full Stack Developer enfocado en construir sistemas robustos con Python, Django y React. Estudiante de Licenciatura en Ciencias de Datos (UniCABA).',
+  description: 'Full Stack Developer enfocado en construir sistemas robustos con Python, Django y React. Estudiante de Licenciatura en Ciencias de Datos (Udelaciudad).',
   keywords: [
     'Full Stack Developer',
     'Python',

@@ -9,9 +9,16 @@ import { ProjectItem } from "@/data/projectsData";
 export interface ProjectCardProps {
   project: ProjectItem;
   index: number;
+  selectedTechTag?: string | null;
+  onSelectTechTag?: (tag: string) => void;
 }
 
-export default function ProjectCard({ project, index }: ProjectCardProps) {
+export default function ProjectCard({
+  project,
+  index,
+  selectedTechTag,
+  onSelectTechTag,
+}: ProjectCardProps) {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const isLeft = index % 2 === 0;
   const initialX = isLeft ? -20 : 20;
@@ -25,16 +32,16 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
         delay: index * 0.1,
         ease: [0.25, 1, 0.5, 1],
       }}
-      className="group relative flex flex-col justify-between rounded-[0.35rem] border border-soft surface-card p-4 sm:p-6 lg:p-8 transition-[border-color,box-shadow] duration-300 hover:border-indigo-500/40 hover:shadow-xl dark:hover:shadow-indigo-950/20"
+      className="group relative flex flex-col justify-between rounded-[0.35rem] border border-soft surface-card p-4 sm:p-6 lg:p-8 transition-all duration-300 hover:border-indigo-500/50 hover:shadow-2xl dark:hover:shadow-indigo-950/30 focus-within:ring-2 focus-within:ring-indigo-500/40"
     >
       <div>
         {/* Top bar with company & category */}
         <div className="flex flex-wrap items-center justify-between gap-2 text-[0.7rem] sm:text-xs font-semibold uppercase tracking-wider text-muted mb-3 sm:mb-4">
-          <span className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1 rounded-[0.35rem] bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+          <span className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1 rounded-[0.35rem] bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold">
             <Layers className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
             {project.categoryLabel}
           </span>
-          <span className="text-muted text-[0.7rem] sm:text-xs">{project.period}</span>
+          <span className="text-muted text-[0.7rem] sm:text-xs font-medium">{project.period}</span>
         </div>
 
         {/* Title & Company */}
@@ -84,30 +91,40 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
 
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 mt-2 cursor-pointer transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 mt-2.5 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-[0.25rem] px-1 py-0.5 -ml-1"
             aria-expanded={isExpanded}
           >
             <span>{isExpanded ? "Ver menos" : "Ver más detalles"}</span>
             {isExpanded ? (
-              <ChevronUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <ChevronUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-200" />
             ) : (
-              <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-200" />
             )}
           </button>
         </div>
       </div>
 
       <div>
-        {/* Tags */}
+        {/* Interactive Technology Tags */}
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-4 pt-4 border-t border-soft">
-          {project.tags.map((tag) => (
-            <span
-              key={tag}
-              className="inline-flex items-center text-[0.65rem] sm:text-xs font-semibold uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-[0.35rem] bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/15 leading-tight"
-            >
-              {tag}
-            </span>
-          ))}
+          {project.tags.map((tag) => {
+            const isSelected = selectedTechTag?.toLowerCase() === tag.toLowerCase();
+            return (
+              <button
+                key={tag}
+                type="button"
+                onClick={() => onSelectTechTag?.(tag)}
+                title={`Filtrar proyectos por ${tag}`}
+                className={`inline-flex items-center text-[0.65rem] sm:text-xs font-semibold uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-[0.35rem] leading-tight transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                  isSelected
+                    ? "bg-indigo-600 text-white shadow-xs ring-1 ring-indigo-400"
+                    : "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/15 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-500 dark:hover:text-white hover:scale-105"
+                }`}
+              >
+                {tag}
+              </button>
+            );
+          })}
         </div>
 
         {/* Links Footer or NDA Enterprise Badge */}
@@ -118,10 +135,10 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                 href={project.demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
+                className="group/link inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 rounded-[0.25rem] transition-colors"
               >
-                <span>Ver sitio en vivo</span>
-                <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span className="hover:underline">Ver sitio en vivo</span>
+                <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-200" />
               </a>
             )}
             {project.githubUrl ? (
@@ -129,9 +146,9 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                 href={project.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-muted hover:text-foreground transition-colors"
+                className="group/github inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 rounded-[0.25rem] transition-colors"
               >
-                <Github className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <Github className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/github:scale-110 transition-transform duration-200" />
                 <span>Código</span>
               </a>
             ) : (
