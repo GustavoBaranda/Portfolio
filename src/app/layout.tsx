@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Gustavo Baranda | Full Stack Developer & Data Science Student',
-    description: 'Transformo ideas en soluciones digitales con código limpio, arquitectura escalable y análisis de datos.',
+    description: 'Transformo ideas en soluciones digitales con código limpio, arquitectura escalable y las mejores prácticas de desarrollo web.',
     url: baseUrl,
     siteName: 'Gustavo Baranda Portfolio',
     images: [
