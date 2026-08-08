@@ -54,10 +54,11 @@ export const metadata: Metadata = {
     siteName: 'Gustavo Baranda Portfolio',
     images: [
       {
-        url: '/images/logo.svg',
+        url: `${baseUrl}/images/opengraph.png`,
         width: 1200,
         height: 630,
-        alt: 'Gustavo Baranda - Full Stack Developer',
+        alt: 'Gustavo Baranda - Full Stack Developer & Data Science Student',
+        type: 'image/png',
       },
     ],
     locale: 'es_AR',
@@ -67,7 +68,14 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Gustavo Baranda | Full Stack Developer',
     description: 'Transformo ideas en soluciones digitales con código y diseño.',
-    images: ['/images/logo.svg'],
+    images: [
+      {
+        url: `${baseUrl}/images/opengraph.png`,
+        width: 1200,
+        height: 630,
+        alt: 'Gustavo Baranda - Full Stack Developer',
+      },
+    ],
   },
   robots: {
     index: true,
