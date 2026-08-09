@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Github, Layers, ArrowUpRight, ChevronDown, ChevronUp, Lock } from "lucide-react";
@@ -20,16 +20,33 @@ export default function ProjectCard({
   onSelectTechTag,
 }: ProjectCardProps) {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const isLeft = index % 2 === 0;
-  const initialX = isLeft ? -20 : 20;
+  const [isDesktop, setIsDesktop] = useState(() =>
+    typeof window !== "undefined" ? window.matchMedia("(min-width: 768px)").matches : false
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const onChange = () => setIsDesktop(mediaQuery.matches);
+    onChange();
+    mediaQuery.addEventListener("change", onChange);
+    return () => mediaQuery.removeEventListener("change", onChange);
+  }, []);
+
+  // Mobile: fade-up only. Desktop: subtle side entry (even/odd).
+  const motionInitial = isDesktop
+    ? { opacity: 0, x: index % 2 === 0 ? -20 : 20, scale: 0.98 }
+    : { opacity: 0, y: 14 };
+  const motionAnimate = isDesktop
+    ? { opacity: 1, x: 0, scale: 1 }
+    : { opacity: 1, y: 0 };
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: initialX, scale: 0.98 }}
-      animate={{ opacity: 1, x: 0, scale: 1 }}
+      initial={motionInitial}
+      animate={motionAnimate}
       transition={{
-        duration: 0.5,
-        delay: index * 0.1,
+        duration: isDesktop ? 0.5 : 0.4,
+        delay: Math.min(index * (isDesktop ? 0.1 : 0.05), isDesktop ? 0.8 : 0.25),
         ease: [0.25, 1, 0.5, 1],
       }}
       className="group relative flex flex-col justify-between rounded-[0.35rem] border border-soft surface-card p-4 sm:p-6 lg:p-8 transition-all duration-300 hover:border-indigo-500/50 hover:shadow-2xl dark:hover:shadow-indigo-950/30 focus-within:ring-2 focus-within:ring-indigo-500/40"
@@ -45,7 +62,7 @@ export default function ProjectCard({
         </div>
 
         {/* Title & Company */}
-        <div className="min-h-[5rem] sm:min-h-[5.5rem] flex flex-col justify-start mb-3 sm:mb-4">
+        <div className="min-h-20 sm:min-h-22 flex flex-col justify-start mb-3 sm:mb-4">
           <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-snug">
             {project.title}
           </h3>
@@ -91,7 +108,7 @@ export default function ProjectCard({
 
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 mt-2.5 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-[0.25rem] px-1 py-0.5 -ml-1"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 mt-2.5 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-sm px-1 py-0.5 -ml-1"
             aria-expanded={isExpanded}
           >
             <span>{isExpanded ? "Ver menos" : "Ver más detalles"}</span>
@@ -135,7 +152,7 @@ export default function ProjectCard({
                 href={project.demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group/link inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 rounded-[0.25rem] transition-colors"
+                className="group/link inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 rounded-sm transition-colors"
               >
                 <span className="hover:underline">Ver sitio en vivo</span>
                 <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-200" />
@@ -146,7 +163,7 @@ export default function ProjectCard({
                 href={project.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group/github inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 rounded-[0.25rem] transition-colors"
+                className="group/github inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 rounded-sm transition-colors"
               >
                 <Github className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/github:scale-110 transition-transform duration-200" />
                 <span>Código</span>
