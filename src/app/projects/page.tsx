@@ -1,6 +1,6 @@
 import ProjectsGrid from "@/components/projects/ProjectsGrid";
 import Link from "next/link";
-import { ArrowRight, Mail } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -35,32 +35,28 @@ export default function ProjectsPage() {
       {/* Grid */}
       <ProjectsGrid />
 
-      {/* Bloque CTA Final */}
-      <section className="relative overflow-hidden rounded-[0.35rem] border border-indigo-500/20 surface-card p-8 sm:p-12 text-center shadow-lg">
-        <div className="absolute -right-16 -top-16 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -left-16 -bottom-16 w-64 h-64 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
+      {/* Bloque CTA Final — mismo lenguaje visual que el resto de cards */}
+      <section className="mt-4 sm:mt-8 rounded-[0.35rem] border border-soft surface-card px-6 py-10 sm:px-12 sm:py-14 text-center shadow-sm">
+        <div className="max-w-2xl mx-auto space-y-5 sm:space-y-6">
+          <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-indigo-600 dark:text-indigo-400">
+            Contacto
+          </p>
 
-        <div className="relative z-10 max-w-2xl mx-auto space-y-4 sm:space-y-5">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-xs font-semibold">
-            <Mail className="w-3.5 h-3.5" />
-            <span>¿Trabajamos juntos?</span>
-          </div>
-
-          <h2 className="text-xl sm:text-3xl font-extrabold text-foreground leading-snug">
-            ¿Tienes un proyecto en mente o buscas sumar un desarrollador Full Stack?
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-foreground leading-snug text-balance">
+            ¿Tenés un proyecto o un equipo donde pueda sumar?
           </h2>
 
-          <p className="text-xs sm:text-sm md:text-base text-muted-foreground leading-relaxed">
-            Estoy disponible para integrarme a equipos de desarrollo, construir soluciones web empresariales o asesorarte en la arquitectura de tu plataforma.
+          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+            Disponible para desarrollo full stack, soluciones web o arquitectura.
           </p>
 
           <div className="pt-2">
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2.5 px-6 py-3 rounded-[0.35rem] bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm transition-all duration-200 shadow-md shadow-indigo-600/20 hover:scale-105 cursor-pointer"
+              className="group inline-flex items-center gap-2.5 px-6 sm:px-7 py-3 rounded-[0.35rem] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs sm:text-sm transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 cursor-pointer"
             >
               <span>Conversemos sobre tu proyecto</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" />
             </Link>
           </div>
         </div>
