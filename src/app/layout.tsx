@@ -155,14 +155,16 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         />
       </head>
       <body
-        className={`${montserrat.className} antialiased flex min-h-screen flex-col`}
+        className={`${montserrat.className} antialiased`}
         suppressHydrationWarning
       >
         <Header />
-        <main className="flex-1">
-          <div className="mx-auto w-full max-w-7xl px-6 py-10">{children}</div>
-        </main>
-        <Footer />
+        <div className="site-shell">
+          <main className="flex-1 min-w-0">
+            <div className="mx-auto w-full max-w-7xl px-6 py-10">{children}</div>
+          </main>
+          <Footer />
+        </div>
       </body>
     </html>
   );

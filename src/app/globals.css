@@ -17,6 +17,8 @@
 	--accent: #4f46e5;
 	--scrollbar-track: rgba(15, 23, 42, 0.08);
 	--scrollbar-thumb: rgba(15, 23, 42, 0.4);
+	/* Fixed header height — keep in sync with header padding + logo */
+	--site-header-h: 4.5rem;
 }
 
 :root.dark {
@@ -34,6 +36,8 @@
 	--scrollbar-thumb: rgba(248, 250, 252, 0.45);
 }
 
+/* Avoid overflow-x on html/body — it breaks sticky/fixed header stacking on mobile. */
+
 body {
 	margin: 0;
 	min-height: 100vh;
@@ -41,11 +45,31 @@ body {
 	color: var(--text);
 	scrollbar-width: thin;
 	scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-	overflow-x: clip;
 }
 
-html {
+/* Soft scroll lock when mobile drawer is open (no position:fixed on body) */
+html.menu-open,
+html.menu-open body {
+	overflow: hidden;
+	overscroll-behavior: none;
+}
+
+.site-header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 50;
+	min-height: var(--site-header-h);
+}
+
+.site-shell {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	/* Horizontal clip scoped away from the fixed header */
 	overflow-x: clip;
+	padding-top: var(--site-header-h);
 }
 
 body::-webkit-scrollbar {
@@ -159,18 +183,17 @@ body::-webkit-scrollbar-thumb {
 .menu-backdrop {
 	position: fixed;
 	inset: 0;
-	z-index: 100;
+	z-index: 200;
 	border: 0;
 	padding: 0;
 	margin: 0;
 	cursor: pointer;
 	background-color: rgba(2, 6, 23, 0.45);
 	-webkit-tap-highlight-color: transparent;
-	touch-action: none;
+	/* Don't use touch-action:none — freezes the page under mobile zoom */
 }
 
 .menu {
-	/* inset pins to the visual edges better than 100vh under mobile zoom */
 	position: fixed;
 	top: 0;
 	right: 0;
@@ -182,16 +205,16 @@ body::-webkit-scrollbar-thumb {
 	border-left: 1px solid var(--border);
 	box-shadow: -12px 0 32px rgba(2, 6, 23, 0.18);
 	color: var(--text);
-	z-index: 110;
+	z-index: 210;
 	overflow: hidden;
-	/* Avoid transform creating odd layers with zoom when possible — framer still uses x */
 	-webkit-backface-visibility: hidden;
 	backface-visibility: hidden;
 }
 
 .menu .body {
 	box-sizing: border-box;
-	padding: 0 1.5rem max(1.25rem, env(safe-area-inset-bottom)) 1.5rem;
+	/* Content clears the fixed site header (logo + close) while panel is full height */
+	padding: var(--site-header-h) 1.5rem max(1.25rem, env(safe-area-inset-bottom)) 1.5rem;
 	height: 100%;
 	min-height: 100%;
 	max-height: 100%;
@@ -208,7 +231,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .menu .body .nav {
-	margin-top: 1.75rem;
+	margin-top: 0.5rem;
 	display: flex;
 	flex-direction: column;
 	gap: 0.35rem;

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { COLOR_MAP, cardVariants, calculateDuration, Experience } from "@/data/aboutData";
 import { RefObject } from "react";
@@ -127,57 +127,50 @@ export default function ExperienceCard({
           </div>
         </div>
 
-        {/* Collapsible accordion body */}
-        <AnimatePresence>
-          {isExpanded && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="overflow-hidden"
-            >
-              <div className="pt-5 mt-5 border-t border-soft space-y-4">
-                {/* Description */}
-                <p className="text-sm sm:text-base text-foreground/90 leading-relaxed">
-                  {exp.description}
+        {/* Collapsible accordion body — CSS grid (no framer height:auto = fewer freezes on mobile) */}
+        <div
+          className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
+            isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          }`}
+        >
+          <div className="min-h-0 overflow-hidden">
+            <div className="pt-5 mt-5 border-t border-soft space-y-4">
+              <p className="text-sm sm:text-base text-foreground/90 leading-relaxed">
+                {exp.description}
+              </p>
+
+              <div className="space-y-2">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted">
+                  Tecnologías y Herramientas:
                 </p>
-
-                {/* All skills grid */}
-                <div className="space-y-2">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-muted">
-                    Tecnologías y Herramientas:
-                  </p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {exp.skills.map((skill) => (
-                      <span
-                        key={skill}
-                        className={`text-xs px-2.5 py-1 rounded-[0.35rem] border font-medium transition-all ${colors.skillBg} ${colors.skillText} ${colors.skillBorder}`}
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Optional URL */}
-                {exp.url && (
-                  <div className="pt-2">
-                    <a
-                      href={exp.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`inline-flex items-center gap-1.5 text-xs font-semibold hover:underline ${colors.heading}`}
-                      onClick={(e) => e.stopPropagation()}
+                <div className="flex flex-wrap gap-1.5">
+                  {exp.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className={`text-xs px-2.5 py-1 rounded-[0.35rem] border font-medium transition-all ${colors.skillBg} ${colors.skillText} ${colors.skillBorder}`}
                     >
-                      Ver proyecto ↗
-                    </a>
-                  </div>
-                )}
+                      {skill}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+
+              {exp.url && (
+                <div className="pt-2">
+                  <a
+                    href={exp.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`inline-flex items-center gap-1.5 text-xs font-semibold hover:underline ${colors.heading}`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    Ver proyecto ↗
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </button>
     </motion.div>
   );

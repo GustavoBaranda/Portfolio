@@ -114,39 +114,36 @@ export default function HeroBio() {
           </motion.p>
         </div>
 
-        <AnimatePresence>
-          {step === 2 && (
-            <motion.div
-              key="extra-content"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-              className="overflow-hidden space-y-6"
-            >
-              <motion.p variants={paragraphReveal} custom={0} initial="hidden" animate="visible">
+        <div
+          className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
+            step === 2 ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          }`}
+        >
+          <div className="min-h-0 overflow-hidden space-y-6">
+            <div className={step === 2 ? "pt-0" : ""}>
+              <p>
                 Creo profundamente en el{" "}
                 <span className="font-semibold text-foreground">aprendizaje constante</span>.
                 La tecnología cambia todo el tiempo y eso es parte de lo que hace interesante
                 este rubro; para mí, la curiosidad es una herramienta de trabajo fundamental.
-              </motion.p>
-              <motion.p variants={paragraphReveal} custom={1} initial="hidden" animate="visible">
+              </p>
+              <p className="mt-6">
                 Valoro el{" "}
                 <span className="font-semibold text-foreground">trabajo en equipo</span> y la
                 comunicación clara. Compartir ideas, escuchar otras miradas y construir en
                 conjunto suele llevar a resultados más sólidos y completos que el trabajo
                 aislado.
-              </motion.p>
-              <motion.p variants={paragraphReveal} custom={2} initial="hidden" animate="visible">
+              </p>
+              <p className="mt-6">
                 Busco que exista un{" "}
                 <span className="font-semibold text-foreground">propósito en cada entrega</span>.
                 No me interesa hacer cosas por inercia, sino aportar algo concreto: optimizar
                 un proceso, mejorar una experiencia o resolver un problema real en el cruce
                 entre datos y software.
-              </motion.p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              </p>
+            </div>
+          </div>
+        </div>
 
         <motion.div
           className="pt-4"

@@ -179,37 +179,33 @@ export default function ProjectsGrid() {
         </div>
 
         {/* Collapsible Curated Core Tech Filter Grid */}
-        <AnimatePresence>
-          {isTechFilterOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="overflow-hidden w-full max-w-xl pt-2"
-            >
-              <div className="flex flex-wrap items-center justify-center gap-2 py-2 px-1">
-                {CORE_TECH_FILTERS.map((filter) => {
-                  const isActive =
-                    typeof selectedTech !== "string" && selectedTech?.id === filter.id;
-                  return (
-                    <button
-                      key={filter.id}
-                      onClick={() => handleCoreTechClick(filter)}
-                      className={`px-3 py-1.5 rounded-[0.35rem] text-xs font-semibold transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
-                        isActive
-                          ? "bg-indigo-600 text-white shadow-xs scale-105"
-                          : "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/15 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-500 dark:hover:text-white"
-                      }`}
-                    >
-                      {filter.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <div
+          className={`grid w-full max-w-xl transition-[grid-template-rows] duration-200 ease-in-out ${
+            isTechFilterOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          }`}
+        >
+          <div className="min-h-0 overflow-hidden pt-0">
+            <div className="flex flex-wrap items-center justify-center gap-2 py-2 px-1">
+              {CORE_TECH_FILTERS.map((filter) => {
+                const isActive =
+                  typeof selectedTech !== "string" && selectedTech?.id === filter.id;
+                return (
+                  <button
+                    key={filter.id}
+                    onClick={() => handleCoreTechClick(filter)}
+                    className={`px-3 py-1.5 rounded-[0.35rem] text-xs font-semibold transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                      isActive
+                        ? "bg-indigo-600 text-white shadow-xs scale-105"
+                        : "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/15 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-500 dark:hover:text-white"
+                    }`}
+                  >
+                    {filter.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Grid container or Empty State */}

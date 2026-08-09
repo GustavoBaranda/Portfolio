@@ -23,20 +23,10 @@ const Header: React.FC = () => {
     if (!active) return;
 
     const html = document.documentElement;
-    const body = document.body;
-    const prevHtmlOverflow = html.style.overflow;
-    const prevBodyOverflow = body.style.overflow;
-    const prevOverscroll = html.style.overscrollBehavior;
-
-    // Soft lock only — never body position:fixed (breaks mobile zoom / freezes overlay)
-    html.style.overflow = "hidden";
-    body.style.overflow = "hidden";
-    html.style.overscrollBehavior = "none";
+    html.classList.add("menu-open");
 
     return () => {
-      html.style.overflow = prevHtmlOverflow;
-      body.style.overflow = prevBodyOverflow;
-      html.style.overscrollBehavior = prevOverscroll;
+      html.classList.remove("menu-open");
     };
   }, [active]);
 
@@ -45,11 +35,13 @@ const Header: React.FC = () => {
   return (
     <>
       <header
-        className={`sticky top-0 border-b border-soft surface-glass backdrop-blur rounded-b-[0.35rem] transition-[z-index] ${
-          active ? "z-130" : "z-50"
+        className={`site-header border-b border-soft backdrop-blur ${
+          active
+            ? "z-[220] border-transparent bg-transparent"
+            : "z-50 surface-glass"
         }`}
       >
-        <div className="relative mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        <div className="relative mx-auto flex h-[var(--site-header-h)] max-w-7xl items-center justify-between px-6">
           <Link
             href="/"
             className="group inline-flex items-center justify-center bg-transparent transition-transform cursor-pointer"
@@ -91,7 +83,7 @@ const Header: React.FC = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.25 }}
+                transition={{ duration: 0.2 }}
                 className="menu-backdrop"
                 onClick={closeMenu}
               />
