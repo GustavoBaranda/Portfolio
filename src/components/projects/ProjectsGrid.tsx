@@ -2,9 +2,27 @@
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FolderSearch, RotateCcw, Tag, X } from "lucide-react";
+import { FolderSearch, RotateCcw, Tag, ChevronDown, ChevronUp, X } from "lucide-react";
 import { PROJECTS, PROJECT_CATEGORIES } from "@/data/projectsData";
 import ProjectCard from "./ProjectCard";
+
+// Define curated, high-impact Core Technologies for top UX filtering
+export interface CoreTechFilter {
+  id: string;
+  label: string;
+  aliases: string[]; // matching substrings in project tags
+}
+
+const CORE_TECH_FILTERS: CoreTechFilter[] = [
+  { id: "python", label: "Python", aliases: ["python", "pytest"] },
+  { id: "django", label: "Django", aliases: ["django"] },
+  { id: "react", label: "React", aliases: ["react"] },
+  { id: "nextjs", label: "Next.js", aliases: ["next.js", "next"] },
+  { id: "typescript", label: "TypeScript", aliases: ["typescript", "tsx"] },
+  { id: "sql", label: "SQL & Databases", aliases: ["sql", "postgres", "oracle", "mysql"] },
+  { id: "apis", label: "APIs & ETL", aliases: ["api", "etl", "swagger", "openapi"] },
+  { id: "tailwind", label: "Tailwind CSS", aliases: ["tailwind"] },
+];
 
 export default function ProjectsGrid() {
   const [selectedCategory, setSelectedCategory] = useState<string>(() => {
@@ -16,32 +34,13 @@ export default function ProjectsGrid() {
     return "all";
   });
 
-  const [selectedTechTag, setSelectedTechTag] = useState<string | null>(null);
-
-  // Extract top/popular unique technology tags from projects
-  const popularTechTags = useMemo(() => {
-    const counts: Record<string, number> = {};
-    PROJECTS.forEach((p) => {
-      p.tags.forEach((tag) => {
-        // Normalize tag names for grouping if needed
-        const cleanTag = tag.trim();
-        counts[cleanTag] = (counts[cleanTag] || 0) + 1;
-      });
-    });
-
-    // Prioritize main core tech tags mentioned in requirements & portfolio
-    const priorityList = ["Python", "Django", "React", "Next.js", "SQL Server", "TypeScript", "Tailwind CSS", "Laravel", "PWA"];
-    const allTags = Object.keys(counts);
-
-    return priorityList.filter((t) => allTags.some((at) => at.toLowerCase().includes(t.toLowerCase()))).concat(
-      allTags.filter((at) => !priorityList.some((pt) => at.toLowerCase().includes(pt.toLowerCase())))
-    ).slice(0, 10);
-  }, []);
+  const [selectedTech, setSelectedTech] = useState<CoreTechFilter | string | null>(null);
+  const [isTechFilterOpen, setIsTechFilterOpen] = useState<boolean>(false);
 
   const CATEGORY_ORDER: Record<string, number> = {
     "full-stack": 1,
-    "apis": 2,
-    "opensource": 3,
+    apis: 2,
+    opensource: 3,
   };
 
   const sortedProjects = useMemo(() => {
@@ -58,123 +57,166 @@ export default function ProjectsGrid() {
   const filteredProjects = useMemo(() => {
     return sortedProjects.filter((p) => {
       const matchesCategory = selectedCategory === "all" || p.category === selectedCategory;
-      const matchesTech = !selectedTechTag || p.tags.some((t) => t.toLowerCase().includes(selectedTechTag.toLowerCase()));
-      return matchesCategory && matchesTech;
-    });
-  }, [sortedProjects, selectedCategory, selectedTechTag]);
 
-  const handleTechClick = (tag: string) => {
-    if (selectedTechTag?.toLowerCase() === tag.toLowerCase()) {
-      setSelectedTechTag(null);
+      if (!selectedTech) return matchesCategory;
+
+      const projectTagsLower = p.tags.map((t) => t.toLowerCase());
+
+      if (typeof selectedTech === "string") {
+        // Direct tag click from project card
+        const searchTag = selectedTech.toLowerCase();
+        const matchesDirectTech = projectTagsLower.some((t) => t.includes(searchTag));
+        return matchesCategory && matchesDirectTech;
+      } else {
+        // Core tech filter click
+        const matchesCoreTech = selectedTech.aliases.some((alias) =>
+          projectTagsLower.some((t) => t.includes(alias))
+        );
+        return matchesCategory && matchesCoreTech;
+      }
+    });
+  }, [sortedProjects, selectedCategory, selectedTech]);
+
+  const handleCoreTechClick = (filter: CoreTechFilter) => {
+    if (typeof selectedTech !== "string" && selectedTech?.id === filter.id) {
+      setSelectedTech(null);
     } else {
-      setSelectedTechTag(tag);
+      setSelectedTech(filter);
+    }
+  };
+
+  const handleCardTagClick = (tag: string) => {
+    // Check if tag matches a core tech filter for better UX
+    const matchedCore = CORE_TECH_FILTERS.find((filter) =>
+      filter.aliases.some((alias) => tag.toLowerCase().includes(alias))
+    );
+
+    if (matchedCore) {
+      handleCoreTechClick(matchedCore);
+    } else {
+      if (typeof selectedTech === "string" && selectedTech.toLowerCase() === tag.toLowerCase()) {
+        setSelectedTech(null);
+      } else {
+        setSelectedTech(tag);
+      }
     }
   };
 
   const resetFilters = () => {
     setSelectedCategory("all");
-    setSelectedTechTag(null);
+    setSelectedTech(null);
   };
 
+  const activeTechLabel = typeof selectedTech === "string" ? selectedTech : selectedTech?.label;
+
   return (
-    <div className="space-y-6 sm:space-y-10">
-      {/* Category & Tech Filter Container */}
-      <div className="space-y-4 surface-card border border-soft p-4 sm:p-6 rounded-[0.35rem] shadow-xs">
-        {/* Category Tabs */}
-        <div>
-          <p className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-wider text-muted mb-2 sm:mb-3">
-            Categorías
-          </p>
-          <div className="flex flex-wrap items-center gap-2">
-            {PROJECT_CATEGORIES.map((cat) => {
-              const isActive = selectedCategory === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-[0.35rem] text-xs font-semibold transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
-                    isActive
-                      ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/20 scale-105"
-                      : "surface-glass border border-soft text-muted hover:text-foreground hover:border-gray-400"
-                  }`}
-                >
-                  {cat.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Technology Tag Pills */}
-        <div className="pt-3 border-t border-soft/60">
-          <div className="flex items-center justify-between gap-2 mb-2 sm:mb-3">
-            <p className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-wider text-muted flex items-center gap-1.5">
-              <Tag className="w-3 h-3 text-indigo-500" />
-              <span>Filtrar por tecnología</span>
-            </p>
-            {selectedTechTag && (
+    <div className="space-y-8 sm:space-y-12">
+      {/* Category Tabs & Tech Toggle Header */}
+      <div className="flex flex-col items-center space-y-4">
+        {/* Main Category Tabs */}
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+          {PROJECT_CATEGORIES.map((cat) => {
+            const isActive = selectedCategory === cat.id;
+            return (
               <button
-                onClick={() => setSelectedTechTag(null)}
-                className="inline-flex items-center gap-1 text-xs text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-[0.35rem] text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                  isActive
+                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/20 scale-105"
+                    : "surface-glass border border-soft text-muted hover:text-foreground hover:border-gray-400"
+                }`}
               >
-                <X className="w-3 h-3" />
-                <span>Limpiar tecnología</span>
+                {cat.label}
               </button>
-            )}
-          </div>
-
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-            {popularTechTags.map((tag) => {
-              const isActive = selectedTechTag?.toLowerCase() === tag.toLowerCase();
-              return (
-                <button
-                  key={tag}
-                  onClick={() => handleTechClick(tag)}
-                  className={`px-2.5 py-1 rounded-[0.35rem] text-[0.7rem] sm:text-xs font-semibold transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
-                    isActive
-                      ? "bg-indigo-600 text-white shadow-sm ring-2 ring-indigo-400"
-                      : "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-500 dark:hover:text-white"
-                  }`}
-                >
-                  {tag}
-                </button>
-              );
-            })}
-          </div>
+            );
+          })}
         </div>
 
-        {/* Active Filters Indicator Banner */}
-        {(selectedCategory !== "all" || selectedTechTag) && (
-          <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-soft/60 text-xs text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-foreground">Filtros activos:</span>
-              {selectedCategory !== "all" && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-medium">
-                  {PROJECT_CATEGORIES.find((c) => c.id === selectedCategory)?.label}
-                </span>
-              )}
-              {selectedTechTag && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-medium">
-                  Tecnología: {selectedTechTag}
-                </span>
-              )}
-            </div>
+        {/* Tech Filter Toggle & Active Badge Bar */}
+        <div className="flex flex-wrap items-center justify-center gap-2 pt-1 text-xs">
+          <button
+            onClick={() => setIsTechFilterOpen(!isTechFilterOpen)}
+            className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[0.35rem] border text-xs font-semibold transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+              isTechFilterOpen || selectedTech
+                ? "border-indigo-500/50 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400"
+                : "border-soft surface-glass text-muted hover:text-foreground hover:border-gray-400"
+            }`}
+          >
+            <Tag className="w-3.5 h-3.5" />
+            <span>Filtrar por tecnología</span>
+            {isTechFilterOpen ? (
+              <ChevronUp className="w-3.5 h-3.5" />
+            ) : (
+              <ChevronDown className="w-3.5 h-3.5" />
+            )}
+          </button>
+
+          {/* Active Tag Badge */}
+          {activeTechLabel && (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[0.35rem] bg-indigo-600 text-white text-xs font-semibold shadow-xs">
+              <span>{activeTechLabel}</span>
+              <button
+                onClick={() => setSelectedTech(null)}
+                className="hover:opacity-80 cursor-pointer ml-0.5"
+                title="Quitar filtro de tecnología"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </span>
+          )}
+
+          {/* Reset All Filters if any active */}
+          {(selectedCategory !== "all" || selectedTech) && (
             <button
               onClick={resetFilters}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-slate-200 dark:bg-slate-800 text-foreground hover:bg-indigo-600 hover:text-white transition-colors cursor-pointer text-xs font-medium"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-[0.35rem] text-xs font-medium text-muted hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
             >
               <RotateCcw className="w-3 h-3" />
-              <span>Restablecer todo</span>
+              <span>Restablecer</span>
             </button>
-          </div>
-        )}
+          )}
+        </div>
+
+        {/* Collapsible Curated Core Tech Filter Grid */}
+        <AnimatePresence>
+          {isTechFilterOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+              className="overflow-hidden w-full max-w-xl pt-2"
+            >
+              <div className="flex flex-wrap items-center justify-center gap-2 p-3 sm:p-4 rounded-[0.35rem] surface-glass border border-soft shadow-xs">
+                {CORE_TECH_FILTERS.map((filter) => {
+                  const isActive =
+                    typeof selectedTech !== "string" && selectedTech?.id === filter.id;
+                  return (
+                    <button
+                      key={filter.id}
+                      onClick={() => handleCoreTechClick(filter)}
+                      className={`px-3 py-1.5 rounded-[0.35rem] text-xs font-semibold transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                        isActive
+                          ? "bg-indigo-600 text-white shadow-xs scale-105"
+                          : "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/15 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-500 dark:hover:text-white"
+                      }`}
+                    >
+                      {filter.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Grid container or Empty State */}
       <AnimatePresence mode="wait">
         {filteredProjects.length > 0 ? (
           <motion.div
-            key={`${selectedCategory}-${selectedTechTag || "all-tech"}`}
+            key={`${selectedCategory}-${activeTechLabel || "all-tech"}`}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8, transition: { duration: 0.15 } }}
@@ -185,8 +227,8 @@ export default function ProjectsGrid() {
                 key={project.id}
                 project={project}
                 index={index}
-                selectedTechTag={selectedTechTag}
-                onSelectTechTag={handleTechClick}
+                selectedTechTag={activeTechLabel}
+                onSelectTechTag={handleCardTagClick}
               />
             ))}
           </motion.div>

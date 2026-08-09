@@ -108,7 +108,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "WeatherFlow API — Servicio RESTful & OpenAPI 3",
     category: "apis",
     categoryLabel: "APIs y Microservicios",
-    company: "Proyecto Open Source",
+    company: "Proyecto Personal",
     period: "2026",
     dateSort: "2026-02",
     summary:
@@ -143,7 +143,7 @@ export const PROJECTS: ProjectItem[] = [
   /* ───────────────── 3. FREELANCE & OPEN SOURCE (Más reciente al más antiguo) ───────────────── */
   {
     id: "portfolio-personal",
-    title: "Portfolio Web Personal & Design System (TSX)",
+    title: "Portfolio Web Personal & Design System",
     category: "opensource",
     categoryLabel: "Freelance & Open Source",
     company: "Proyecto Personal",
@@ -182,7 +182,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Sitio Web Institucional Jardín Maternal",
     category: "opensource",
     categoryLabel: "Freelance & Open Source",
-    company: "Descubriendo",
+    company: "Descubriendo Jardin Maternal",
     period: "2022",
     dateSort: "2022-01",
     summary:
