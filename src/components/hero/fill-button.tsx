@@ -114,11 +114,13 @@ export function FillButton({
     `;
 
   const ghostStyles = `
-    text-[var(--text)]
-    dark:hover:text-[var(--muted)]
+    text-[var(--muted)]
+    bg-transparent
+    border border-transparent
+    hover:text-[var(--text)]
+    hover:bg-transparent
     focus-visible:text-[var(--accent)]
-    border
-    hover:border-gray-400
+    focus-visible:border-transparent
   `;
 
   const defaultMotion: MotionProps = {

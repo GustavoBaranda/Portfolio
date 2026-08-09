@@ -21,7 +21,7 @@ export default function HomePage() {
         <div className="pt-2 pb-8 md:pt-0 md:pb-0 w-full">
           <div className="flex flex-col md:flex-row items-center justify-between gap-5 md:gap-12 w-full">
             <div className="w-full md:w-5/12 flex justify-center items-center">
-              <div className="w-full max-w-[240px] sm:max-w-[260px] md:max-w-[320px] lg:max-w-[350px] mx-auto">
+              <div className="w-full max-w-60 sm:max-w-65 md:max-w-80 lg:max-w-87.5 mx-auto">
                 <TiltImage
                   src="/images/logo.svg"
                   alt="Logo Gustavo Baranda"
@@ -90,9 +90,10 @@ export default function HomePage() {
                       initial: { opacity: 0, x: 0, y: 8 },
                       transition: { duration: 0.5, ease: "easeOut", delay: 0.25 },
                     }}
+                    className="px-3 font-medium"
                   >
                     Contacto
-                    <Mail className="h-5 w-5" />
+                    <Mail className="h-4 w-4 opacity-80" />
                   </FillButton>
                 </div>
               </div>

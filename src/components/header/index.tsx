@@ -14,13 +14,39 @@ const Header: React.FC = () => {
   const [active, setActive] = useState<boolean>(false);
 
   useEffect(() => {
-    if (active) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    const html = document.documentElement;
+    const body = document.body;
+
+    if (!active) return;
+
+    const scrollY = window.scrollY;
+    const prev = {
+      htmlOverflow: html.style.overflow,
+      bodyOverflow: body.style.overflow,
+      bodyOverflowX: body.style.overflowX,
+      bodyPosition: body.style.position,
+      bodyTop: body.style.top,
+      bodyWidth: body.style.width,
+      bodyPaddingRight: body.style.paddingRight,
+    };
+
+    // Lock page scroll while the drawer is open (prevents iOS/desktop x-scrollbars)
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    body.style.overflowX = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.width = "100%";
+
     return () => {
-      document.body.style.overflow = "";
+      html.style.overflow = prev.htmlOverflow;
+      body.style.overflow = prev.bodyOverflow;
+      body.style.overflowX = prev.bodyOverflowX;
+      body.style.position = prev.bodyPosition;
+      body.style.top = prev.bodyTop;
+      body.style.width = prev.bodyWidth;
+      body.style.paddingRight = prev.bodyPaddingRight;
+      window.scrollTo(0, scrollY);
     };
   }, [active]);
 

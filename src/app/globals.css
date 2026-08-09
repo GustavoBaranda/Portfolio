@@ -41,6 +41,11 @@ body {
 	color: var(--text);
 	scrollbar-width: thin;
 	scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+	overflow-x: clip;
+}
+
+html {
+	overflow-x: clip;
 }
 
 body::-webkit-scrollbar {
@@ -157,24 +162,30 @@ body::-webkit-scrollbar-thumb {
 	width: min(280px, 100%);
 	background-color: var(--surface);
 	border-left: 1px solid var(--border);
-	box-shadow: -10px 0 40px rgba(2, 6, 23, 0.4);
+	box-shadow: -12px 0 32px rgba(2, 6, 23, 0.18);
 	color: var(--text);
 	position: fixed;
 	top: 0;
 	right: 0;
 	z-index: 60;
-	overflow-y: auto;
+	overflow: hidden;
 }
 
 .menu .body {
 	box-sizing: border-box;
 	padding: 0 1.5rem max(1.25rem, env(safe-area-inset-bottom)) 1.5rem;
+	height: 100%;
 	min-height: 100%;
+	max-height: 100%;
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
 	position: relative;
 	z-index: 50;
+	overflow-x: hidden;
+	overflow-y: auto;
+	scrollbar-width: thin;
+	overscroll-behavior: contain;
 }
 
 .menu .body .nav {
@@ -284,16 +295,6 @@ body::-webkit-scrollbar-thumb {
 .link-active .link-label {
 	color: var(--text);
 	font-weight: 600;
-}
-
-.svgCurve {
-	position: absolute;
-	top: 0;
-	left: -320px;
-	width: 360px;
-	height: 100%;
-	fill: var(--surface);
-	z-index: 45;
 }
 
 .hero-title {

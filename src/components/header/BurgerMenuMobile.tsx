@@ -6,7 +6,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { menuSlide, slide } from "./Animation";
 import ItemNavigationMobile from "./ItemNavigationMobile";
-import SvgCurve from "./SvgCurve";
 import { NavigationNavBar } from "./ItemNavigation";
 import ThemeToggle from "@/components/common/ThemeToggle";
 import SocialLinks from "@/components/common/SocialLinks";
@@ -44,7 +43,6 @@ const BurgerMenuMobile: React.FC<BurgerMenuMobileProps> = ({ updateMenu }) => {
       exit="exit"
       className="menu"
     >
-      <SvgCurve />
       <div className="body">
         <div className="nav">
           <Link href="/" onClick={updateMenu}>
@@ -71,7 +69,7 @@ const BurgerMenuMobile: React.FC<BurgerMenuMobileProps> = ({ updateMenu }) => {
         <motion.div
           {...slideMotionProps}
           custom={footerStartIndex}
-          className="footer border-t border-soft pt-5 pb-3 flex-shrink-0 flex flex-col items-center gap-4"
+          className="footer border-t border-soft pt-5 pb-3 shrink-0 flex flex-col items-center gap-4"
         >
           <div className="flex items-center gap-2.5">
             <Link
