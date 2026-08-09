@@ -24,7 +24,8 @@ export interface AnimatedTextProps {
   text: string;
   className?: string;
   allowWrap?: boolean;
-  align?: "left" | "center";
+  /** "responsive" = center on mobile, left from md */
+  align?: "left" | "center" | "responsive";
   as?: "h1" | "h2" | "p" | "span";
 }
 
@@ -41,7 +42,9 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({
   const alignClasses =
     align === "left"
       ? "justify-start text-left"
-      : "justify-center text-center";
+      : align === "responsive"
+        ? "justify-center text-center md:justify-start md:text-left"
+        : "justify-center text-center";
 
   return (
     <div className={`w-full mx-auto flex items-center ${alignClasses} overflow-hidden`}>

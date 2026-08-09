@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { slide, scale } from "./Animation";
+import { slide } from "./Animation";
 import { NavigationItem } from "./ItemNavigation";
 
 export interface NavigationMobileItemData extends NavigationItem {
@@ -31,10 +31,6 @@ const ItemNavigationMobile: React.FC<ItemNavigationMobileProps> = ({ data, isAct
       animate="enter"
       exit="exit"
     >
-      <motion.div
-        variants={scale}
-        animate={isActive ? "open" : "closed"}
-      />
       <Link
         href={href}
         onClick={handleClick}

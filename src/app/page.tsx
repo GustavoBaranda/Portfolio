@@ -31,13 +31,13 @@ export default function HomePage() {
                 />
               </div>
             </div>
-            <div className="w-full md:w-7/12 flex flex-col items-start self-center text-left">
+            <div className="w-full md:w-7/12 flex flex-col items-center md:items-start self-center text-center md:text-left">
               
               {/* Nombre (H1) */}
               <AnimatedText
                 text="Gustavo Baranda"
                 as="h1"
-                align="left"
+                align="responsive"
                 className="text-2xl sm:text-3xl md:text-4xl font-bold capitalize leading-tight"
               />
 
@@ -45,7 +45,7 @@ export default function HomePage() {
               <AnimatedText
                 text="Full Stack Developer"
                 as="h2"
-                align="left"
+                align="responsive"
                 className="text-base md:text-xl font-semibold opacity-90 mt-1 md:mt-2"
               />
 
@@ -53,7 +53,7 @@ export default function HomePage() {
               <AnimatedText
                 text="Transformo ideas en soluciones digitales con código y diseño."
                 as="h2"
-                align="left"
+                align="responsive"
                 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mt-4 md:mt-6 leading-snug md:leading-[1.05] pb-1 md:pb-2!"
                 allowWrap={true}
               />
@@ -62,13 +62,13 @@ export default function HomePage() {
               <AnimatedText
                 text="Enfocado en construir sistemas robustos que combinan eficiencia técnica y claridad visual."
                 as="p"
-                align="left"
+                align="responsive"
                 className="text-sm sm:text-base md:text-lg font-medium mt-3 md:mt-4 max-w-xl opacity-80"
                 allowWrap={true}
               />
 
               {/* Botones: mobile solo Proyectos; Contacto desde md */}
-              <div className="flex flex-col md:flex-row items-stretch md:items-center mt-5 md:mt-6 gap-3 md:gap-5 w-full md:w-auto justify-start">
+              <div className="flex flex-col md:flex-row items-center md:items-center mt-5 md:mt-6 gap-3 md:gap-5 w-full md:w-auto justify-center md:justify-start">
                 <FillButton
                   href="/projects"
                   ariaLabel="Ver proyectos"
@@ -76,7 +76,7 @@ export default function HomePage() {
                     initial: { opacity: 0, x: 0, y: -8 },
                     transition: { duration: 0.5, ease: "easeOut", delay: 0.05 },
                   }}
-                  className="w-full md:w-auto hover:-translate-y-px hover:shadow-sm hover:bg-[#081026]/90 hover:text-[#f8fafc]/90"
+                  className="w-[min(100%,20rem)] md:w-auto py-3 md:hover:-translate-y-px md:hover:shadow-sm"
                 >
                   Proyectos
                   <ArrowRight className="h-5 w-5" />

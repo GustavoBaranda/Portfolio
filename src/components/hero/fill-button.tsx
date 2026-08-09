@@ -58,16 +58,9 @@ export function FillButton({
     top: "before:h-0 hover:before:h-full",
   };
 
-  const staticFillStyles = {
-    left: "before:w-full",
-    right: "before:w-full",
-    bottom: "before:h-full",
-    top: "before:h-full",
-  };
-
   const directionStyles = `
     ${baseDirectionStyles[fillDirection]}
-    ${(prefersHover ? animatedFillStyles : staticFillStyles)[fillDirection]}
+    ${animatedFillStyles[fillDirection]}
   `;
 
   const baseStyles = `
@@ -102,8 +95,8 @@ export function FillButton({
     before:content-['']
     ${directionStyles}
     hover:border-[#0f172a]
-    dark:border-gray-700
-    dark:bg-[#0f172a]
+    dark:border-slate-400/50
+    dark:bg-transparent
     dark:before:bg-[#f8fafc]
     dark:hover:border-[#f8fafc]
   `;
@@ -116,10 +109,8 @@ export function FillButton({
       dark:hover:text-[#0f172a]
     `
     : `
-      text-[#f8fafc]
-      hover:text-[#f8fafc]
-      dark:text-[#0f172a]
-      dark:hover:text-[#0f172a]
+      text-[#0f172a]
+      dark:text-[#f8fafc]
     `;
 
   const ghostStyles = `
@@ -145,10 +136,10 @@ export function FillButton({
     },
   };
 
-  const isFullWidth = /\bw-full\b/.test(className);
+  const hasWidthClass = /\bw-(full|\[)/.test(className);
 
   return (
-    <motion.div {...mergedMotion} className={isFullWidth ? "w-full" : undefined}>
+    <motion.div {...mergedMotion} className={hasWidthClass ? className.match(/w-\S+|max-w-\S+/g)?.join(" ") : undefined}>
       <Link
         href={href}
         aria-label={ariaLabel}
@@ -159,6 +150,7 @@ export function FillButton({
               ? `${primaryStyles} ${primaryTextStyles}`
               : ghostStyles
           }
+          ${hasWidthClass ? "w-full" : ""}
           ${className}
         `}
       >

@@ -188,7 +188,7 @@ export default function ProjectsGrid() {
               transition={{ duration: 0.2, ease: "easeInOut" }}
               className="overflow-hidden w-full max-w-xl pt-2"
             >
-              <div className="flex flex-wrap items-center justify-center gap-2 p-3 sm:p-4 rounded-[0.35rem] surface-glass border border-soft shadow-xs">
+              <div className="flex flex-wrap items-center justify-center gap-2 py-2 px-1">
                 {CORE_TECH_FILTERS.map((filter) => {
                   const isActive =
                     typeof selectedTech !== "string" && selectedTech?.id === filter.id;
