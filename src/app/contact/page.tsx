@@ -3,15 +3,40 @@ import ContactInfo from "@/components/contact/ContactInfo";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contacto | Gustavo Baranda",
-  description: "Ponte en contacto con Gustavo Baranda para propuestas laborales, desarrollo de software Full Stack, consultas técnicas o colaboración en proyectos.",
+  title: "Contacto",
+  description:
+    "Contactá a Gustavo Baranda para propuestas laborales, desarrollo Full Stack, arquitectura o colaboración en proyectos de software.",
   alternates: {
     canonical: "/contact",
   },
   openGraph: {
-    title: "Contacto | Gustavo Baranda - Full Stack Developer",
-    description: "Envíame un mensaje directo o por formulario para propuestas de trabajo, desarrollo backend/frontend o consultas.",
+    title: "Contacto | Gustavo Baranda",
+    description:
+      "Envíame un mensaje para propuestas de trabajo, desarrollo backend/frontend o consultas técnicas.",
     url: "/contact",
+    siteName: "Gustavo Baranda Portfolio",
+    locale: "es_AR",
+    type: "website",
+    images: [
+      {
+        url: "/images/opengraph.png",
+        width: 1200,
+        height: 630,
+        alt: "Contacto — Gustavo Baranda",
+        type: "image/png",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contacto | Gustavo Baranda",
+    description:
+      "Envíame un mensaje para propuestas de trabajo, desarrollo backend/frontend o consultas técnicas.",
+    images: ["/images/opengraph.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 

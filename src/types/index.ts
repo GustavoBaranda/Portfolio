@@ -3,7 +3,8 @@
 export interface Project {
   id: string;
   title: string;
-  description: string;
+  challenge: string;
+  solution: string;
   dateSort: number;
   category: "destacado" | "logistica" | "finanzas" | "frontend";
   tags: string[];

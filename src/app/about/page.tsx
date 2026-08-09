@@ -3,16 +3,49 @@ import ExperienceSection from "@/components/about/ExperienceSection";
 import EducationSection from "@/components/about/EducationSection";
 import { Metadata } from "next";
 
+const TITLE = "Sobre mí";
+const DESCRIPTION =
+  "Trayectoria de Gustavo Baranda como Full Stack Developer (Python, Django, React/TypeScript): experiencia laboral, formación en Ciencia de Datos y enfoque en sistemas robustos.";
+
 export const metadata: Metadata = {
-  title: "Sobre mí | Gustavo Baranda",
-  description: "Conoce mi trayectoria profesional como desarrollador Full Stack Python/Django & React, formación en Ciencia de Datos y experiencia laboral en desarrollo de software.",
+  title: TITLE,
+  description: DESCRIPTION,
   alternates: {
     canonical: "/about",
   },
   openGraph: {
-    title: "Sobre mí | Gustavo Baranda - Full Stack Developer",
-    description: "Trayectoria técnica, desarrollo backend en Python/Django, interfaces en React y formación en Ciencia de Datos en Udelaciudad.",
+    title: `${TITLE} | Gustavo Baranda`,
+    description: DESCRIPTION,
     url: "/about",
+    siteName: "Gustavo Baranda Portfolio",
+    locale: "es_AR",
+    type: "profile",
+    images: [
+      {
+        url: "/images/opengraph.png",
+        width: 1200,
+        height: 630,
+        alt: "Gustavo Baranda — Full Stack Developer",
+        type: "image/png",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${TITLE} | Gustavo Baranda`,
+    description: DESCRIPTION,
+    images: [
+      {
+        url: "/images/opengraph.png",
+        width: 1200,
+        height: 630,
+        alt: "Gustavo Baranda — Full Stack Developer",
+      },
+    ],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 

@@ -3,6 +3,13 @@ export interface ProjectCategory {
   label: string;
 }
 
+/**
+ * Case-study shape mapped by the projects grid.
+ * challenge → Problema / Desafío
+ * solution  → Solución / Rol
+ * tags      → Stack técnico
+ * demoUrl / githubUrl → Enlaces
+ */
 export interface ProjectItem {
   id: string;
   title: string;
@@ -10,10 +17,14 @@ export interface ProjectItem {
   categoryLabel: string;
   company: string;
   period: string;
+  /** ISO-ish sort key YYYY-MM (higher = more recent). Use "9999-99" for ongoing top roles. */
   dateSort: string;
-  summary: string;
-  description: string;
+  /** Problema / desafío del caso */
+  challenge: string;
+  /** Solución implementada y rol desempeñado */
+  solution: string;
   image: string;
+  /** Stack técnico */
   tags: string[];
   featured: boolean;
   githubUrl: string | null;
@@ -28,7 +39,7 @@ export const PROJECT_CATEGORIES: ProjectCategory[] = [
 ];
 
 export const PROJECTS: ProjectItem[] = [
-  /* ───────────────── 1. FULL STACK (Más reciente al más antiguo) ───────────────── */
+  /* ───────────────── Full Stack ───────────────── */
   {
     id: "syspro-logistica",
     title: "Plataforma de Logística & Depósitos Fiscales",
@@ -37,10 +48,10 @@ export const PROJECTS: ProjectItem[] = [
     company: "SysPro Consulting",
     period: "2025 — Presente",
     dateSort: "9999-99",
-    summary:
-      "Sistema integral para logística de depósitos fiscales con módulo público de turnos (Turnero), monitoreo en tiempo real y gestión empresarial de cargas y contenedores.",
-    description:
-      "Arquitectura distribuida multimodular compuesta por el portal público de reserva de turnos para operadores logísticos (Turnero) y la plataforma empresarial interna (depofis.web) para recepción, entrega y trazabilidad de contenedores de importación, exportación y nacionales. Backend en Django 4.2 y SQL Server, comunicación en tiempo real con WebSockets (Django Channels), tareas asíncronas con Celery & Redis, generación de reportes/firmas digitales (ReportLab, PyMuPDF, pyHanko) y geolocalización de depósitos con Leaflet.",
+    challenge:
+      "Operadores y depósitos fiscales necesitaban coordinar turnos, cargas y contenedores sin procesos manuales fragmentados, con trazabilidad en tiempo real y reportes con validez operativa.",
+    solution:
+      "Como Full Stack Developer diseñé e implementé una arquitectura multimodular en Django 4.2 y SQL Server: portal público de turnos (Turnero) y plataforma interna (depofis.web) para recepción, entrega y trazabilidad de contenedores. Integré WebSockets (Channels), Celery & Redis, firmas/PDFs (ReportLab, PyMuPDF, pyHanko) y mapas con Leaflet.",
     image: "/images/syspro.png",
     tags: ["Python", "Django", "SQL Server", "Celery & Redis", "WebSockets", "Leaflet", "Tailwind", "Bootstrap"],
     featured: true,
@@ -55,10 +66,10 @@ export const PROJECTS: ProjectItem[] = [
     company: "MHINE HOME",
     period: "2025 - 2026",
     dateSort: "2025-04",
-    summary:
-      "Plataforma e-commerce de alto rendimiento para fragancias artesanales y decoración del hogar con Next.js 15, React 19, Prisma ORM, PostgreSQL (Neon), NextAuth v5, Vercel Blob y panel admin en tiempo real.",
-    description:
-      "E-commerce de productos para el hogar construido sobre Next.js 15 App Router y React 19. Cuenta con catálogo interactivo con variantes de fragancias y gramajes, visualizador de imágenes a pantalla completa, carrito deslizable persistente, checkout integrado (WhatsApp/Mercado Pago), autenticación OAuth con Google (NextAuth v5) y panel de administración completo (CRUD de productos/categorías, roles de usuario y reordenamiento en tiempo real de las secciones del landing page). Persistencia en PostgreSQL vía Prisma ORM, subida de imágenes a Vercel Blob y notificaciones por mailing con Nodemailer.",
+    challenge:
+      "La marca necesitaba un e-commerce performante para fragancias y decoración: catálogo con variantes, checkout confiable, admin en tiempo real e identidad visual de alto impacto.",
+    solution:
+      "Construí la plataforma con Next.js 15 App Router y React 19: variantes de producto, carrito persistente, checkout WhatsApp/Mercado Pago, OAuth con NextAuth v5, CRUD admin con roles y reordenamiento del landing. Persistencia en PostgreSQL (Prisma/Neon), assets en Vercel Blob y mailings con Nodemailer.",
     image: "/images/mhine-home.png",
     tags: ["Next.js 15", "React 19", "Prisma ORM", "PostgreSQL", "NextAuth v5", "Vercel Blob", "Tailwind CSS", "Framer Motion"],
     featured: true,
@@ -73,10 +84,10 @@ export const PROJECTS: ProjectItem[] = [
     company: "Proyecto Personal",
     period: "2025 — 2026",
     dateSort: "2025-11",
-    summary:
-      "Plataforma web progresiva (PWA) e interactiva de gestión de tareas estilo Kanban con Next.js 14 App Router, Vercel Postgres, Vercel Blob Storage, autenticación JWT/OAuth y envío de emails con Resend.",
-    description:
-      "Aplicación web progresiva (PWA) de gestión de proyectos y productividad personal estilo Kanban construida sobre Next.js 14 (App Router) y React 18. Cuenta con soporte de instalación nativa (PWA manifest y Service Worker), tablero dinámico con columnas y prioridades, formato Markdown, subida de archivos adjuntos a Vercel Blob Storage, autenticación social con Google y GitHub OAuth, verificación por email con Resend y almacenamiento relacional en Vercel Postgres.",
+    challenge:
+      "Faltaba un tablero Kanban instalable como PWA, con adjuntos, auth social y flujo de onboarding por email sin depender de tools SaaS cerradas.",
+    solution:
+      "Desarrollé la PWA con Next.js 14 App Router y React 18: columnas/prioridades, Markdown, Blob Storage, OAuth Google/GitHub, verificación con Resend y Vercel Postgres. Incluye manifest, service worker e instalación nativa.",
     image: "/images/gusflow.png",
     tags: ["PWA", "Next.js 14", "React 18", "Vercel Postgres", "Vercel Blob", "Tailwind CSS", "Resend", "OAuth & JWT", "Kanban"],
     featured: true,
@@ -91,10 +102,10 @@ export const PROJECTS: ProjectItem[] = [
     company: "Fundación Maldonado",
     period: "2025",
     dateSort: "2025-04",
-    summary:
-      "Sistema de gestión de pacientes, visor interactivo de imágenes médicas DICOM, administración de estudios clínicos y reportes en PDF.",
-    description:
-      "Plataforma médica desarrollada en Laravel 12 y MySQL con interfaz dinámica mediante Yajra DataTables y AJAX. Incorpora visor interactivo de estudios (resonancias y tomografías) con controles de zoom y rotación, gestión de pacientes/médicos y control de acceso multinivel por roles (Admin, Colaborador, Paciente).",
+    challenge:
+      "La institución necesitaba digitalizar pacientes y estudios clínicos, con roles de acceso y un visor usable para imágenes médicas DICOM y reportes en PDF.",
+    solution:
+      "Implementé la plataforma en Laravel 12 y MySQL con DataTables/AJAX, visor DICOM (zoom/rotación), gestión médico-paciente y control de roles (Admin, Colaborador, Paciente) más generación de reportes.",
     image: "/images/fundacion_maldonado_preview.png",
     tags: ["Laravel 12", "PHP", "MySQL", "Visor DICOM", "Yajra DataTables", "JavaScript", "Tailwind CSS"],
     featured: false,
@@ -102,7 +113,7 @@ export const PROJECTS: ProjectItem[] = [
     demoUrl: null,
   },
 
-  /* ───────────────── 2. APIS Y MICROSERVICIOS (Más reciente al más antiguo) ───────────────── */
+  /* ───────────────── APIs y microservicios ───────────────── */
   {
     id: "weatherflow-api",
     title: "WeatherFlow API — Servicio RESTful & OpenAPI 3",
@@ -111,10 +122,10 @@ export const PROJECTS: ProjectItem[] = [
     company: "Proyecto Personal",
     period: "2026",
     dateSort: "2026-02",
-    summary:
-      "Servicio web RESTful modular desarrollado en Python 3.10+ y Django REST Framework para la gestión de usuarios, preferencias de temperatura y agregación meteorológica con Swagger UI & ReDoc.",
-    description:
-      "API RESTful de alta calidad construida con Django 5.0+ y Django REST Framework (DRF 3.15+). Cuenta con arquitectura limpia con separación de ViewSets y Serializers en paquetes dedicados, documentación interactiva OpenAPI 3 (Swagger UI y ReDoc vía drf-spectacular), comprobación de salud (/api/health/), suite de pruebas unitarias/integración con pytest-django y variables de entorno dinámicas con python-dotenv.",
+    challenge:
+      "Se requería una API REST documentada y testeable para preferencias climáticas y agregación meteorológica, con convenciones product-ready.",
+    solution:
+      "Diseñé el servicio con Django 5 y DRF: ViewSets/Serializers modularizados, OpenAPI 3 (Swagger UI y ReDoc), /api/health/, suite pytest-django y configuración por entorno con dotenv.",
     image: "/images/weatherflow.png",
     tags: ["Python 3.10+", "Django 5.0", "Django REST Framework", "OpenAPI 3 / Swagger", "pytest-django", "REST API"],
     featured: true,
@@ -129,10 +140,10 @@ export const PROJECTS: ProjectItem[] = [
     company: "Solar Banco",
     period: "2024 — 2025",
     dateSort: "2024-12",
-    summary:
-      "Motor backend en Django y pipelines ETL para el cálculo dinámico de LCR, VaR de liquidez, calce de plazos y parámetros regulatorios bancarios.",
-    description:
-      "Diseño y desarrollo de solución backend financiera en Django 5.0 para el cálculo de Ratios de Cobertura de Liquidez (LCR), Valor en Riesgo (VaR de liquidez) y calce de plazos por bandas temporales. Implementación de pipelines ETL automáticos en Python (Pandas, cx_Oracle, OpenPyXL) para ingesta y sincronización entre SQLite, Excel y Data Warehouse en Oracle. Autenticación SSO con Active Directory corporativo (LDAP) y logs de auditoría.",
+    challenge:
+      "El área de riesgos debía calcular LCR, VaR de liquidez y calce de plazos con datos heterogéneos (Excel, Oracle) y control de acceso corporativo.",
+    solution:
+      "Desarrollé el backend en Django 5 y pipelines ETL en Python (Pandas, cx_Oracle, OpenPyXL) hacia Oracle DW, con SSO Active Directory (LDAP), auditorías y parámetros regulatorios dinámicos.",
     image: "/images/solar_banco.png",
     tags: ["Python", "Django 5", "Oracle DW", "ETL", "LCR & VaR", "Pandas", "Active Directory"],
     featured: true,
@@ -140,7 +151,7 @@ export const PROJECTS: ProjectItem[] = [
     demoUrl: null,
   },
 
-  /* ───────────────── 3. FREELANCE & OPEN SOURCE (Más reciente al más antiguo) ───────────────── */
+  /* ───────────────── Freelance & open source ───────────────── */
   {
     id: "portfolio-personal",
     title: "Portfolio Web Personal & Design System",
@@ -149,10 +160,10 @@ export const PROJECTS: ProjectItem[] = [
     company: "Proyecto Personal",
     period: "2025 — Presente",
     dateSort: "2025-01",
-    summary:
-      "Sitio web personal 100% TypeScript (TSX) desarrollado con Next.js 16 App Router, Tailwind CSS v4, Framer Motion, optimización SEO (Sitemap & JSON-LD) e integración de API de contacto.",
-    description:
-      "Plataforma web profesional migrada 100% a TypeScript (TSX) sobre React 19 y Next.js 16 App Router. Incorpora arquitectura limpia, sistema de temas dinámico (Dark/Light mode) con escala de colores Slate neutra, microinteracciones avanzadas con Framer Motion, metadatos SEO dinámicos (sitemap.xml, robots.txt, Schema.org Person JSON-LD) e integración de Nodemailer API Route en Next.js.",
+    challenge:
+      "Necesitaba un portfolio TypeScript-first con buen SEO, performance y un canal de contacto confiable, alineado a un design system propio.",
+    solution:
+      "Construí el sitio con Next.js App Router, Tailwind v4, Framer Motion, tema clear/dark, sitemap/robots/JSON-LD y API Route de contacto con Nodemailer.",
     image: "/images/opengraph.png",
     tags: ["TypeScript", "React 19 (TSX)", "Next.js 16", "Tailwind CSS v4", "SEO & JSON-LD", "Framer Motion", "Nodemailer"],
     featured: false,
@@ -167,10 +178,10 @@ export const PROJECTS: ProjectItem[] = [
     company: "Las Verde",
     period: "2022 — 2023",
     dateSort: "2022-06",
-    summary:
-      "Aplicación e-commerce en React.js para fábrica de jugos naturales con catálogo interactivo y sincronización en tiempo real con Firebase Firestore.",
-    description:
-      "Proyecto cliente real otorgado por Coderhouse como distinción por quedar seleccionado en el Top 10 del curso de React.js. Incorpora catálogo dinámico de productos e insumos con Firebase Firestore, ruteo SPA con React Router v6, arquitectura de estilos modular en Sass (SCSS) y canal de contacto directo por WhatsApp.",
+    challenge:
+      "La fábrica de jugos necesitaba un catálogo digital actualizable en tiempo real y un canal simple de contacto comercial.",
+    solution:
+      "Desarrollé un e-commerce SPA en React con Firebase Firestore, React Router v6, Sass modular y contacto por WhatsApp. Proyecto real Coderhouse (Top 10 del curso).",
     image: "/images/las_verde_preview.png",
     tags: ["React.js", "Firebase", "React Router", "Sass", "JavaScript"],
     featured: false,
@@ -185,10 +196,10 @@ export const PROJECTS: ProjectItem[] = [
     company: "Descubriendo Jardin Maternal",
     period: "2022",
     dateSort: "2022-01",
-    summary:
-      "Plataforma institucional responsiva con catálogo de propuesta educativa, slider interactivo, FAQ y validación de contacto.",
-    description:
-      "Proyecto cliente real asignado por Coderhouse como premio por quedar en el Top 10 del curso de Desarrollo Web. Desarrollado con HTML5 semántico, CSS3/Bootstrap 5 y JavaScript (ES6+). Incluye slider interactivo de instalaciones, validación cliente de formularios, acordeón de preguntas frecuentes e integración con Google Maps y WhatsApp.",
+    challenge:
+      "La institución requería una web clara y responsive para comunicar propuesta educativa, instalaciones y contacto con las familias.",
+    solution:
+      "Implementé el sitio con HTML5, CSS3/Bootstrap 5 y JS ES6+: sliders, FAQ, validación de formularios, Maps y WhatsApp. Proyecto real Coderhouse (Top 10 del curso).",
     image: "/images/descubriendo_jardin_preview.png",
     tags: ["HTML5", "CSS3", "Bootstrap 5", "UX/UI", "JavaScript", "Responsive"],
     featured: false,

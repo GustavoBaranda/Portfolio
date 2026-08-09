@@ -33,8 +33,8 @@ export interface Project {
   categoryLabel: string;
   company: string;
   period: string;
-  summary: string;
-  description: string;
+  challenge: string;
+  solution: string;
   image: string;
   tags: string[];
   featured: boolean;
