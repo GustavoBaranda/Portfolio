@@ -17,11 +17,11 @@ export default function HomePage() {
   return (
     <>
       <TransitionEffect />
-      <main className="flex items-center justify-center text-dark min-h-[calc(100vh-225px)] dark:text-light w-full">
-        <div className="pt-0">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 w-full">
+      <main className="flex md:items-center md:justify-center text-dark md:min-h-[calc(100vh-225px)] dark:text-light w-full">
+        <div className="pt-2 pb-8 md:pt-0 md:pb-0 w-full">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-5 md:gap-12 w-full">
             <div className="w-full md:w-5/12 flex justify-center items-center">
-              <div className="w-full max-w-[220px] sm:max-w-[280px] md:max-w-[320px] lg:max-w-[350px] mx-auto">
+              <div className="w-full max-w-[240px] sm:max-w-[260px] md:max-w-[320px] lg:max-w-[350px] mx-auto">
                 <TiltImage
                   src="/images/logo.svg"
                   alt="Logo Gustavo Baranda"
@@ -31,14 +31,14 @@ export default function HomePage() {
                 />
               </div>
             </div>
-            <div className="w-full md:w-7/12 flex flex-col items-center md:items-start self-center text-center md:text-left">
+            <div className="w-full md:w-7/12 flex flex-col items-start self-center text-left">
               
               {/* Nombre (H1) */}
               <AnimatedText
                 text="Gustavo Baranda"
                 as="h1"
                 align="left"
-                className="text-3xl md:text-4xl font-bold capitalize leading-tight"
+                className="text-2xl sm:text-3xl md:text-4xl font-bold capitalize leading-tight"
               />
 
               {/* Rol */}
@@ -46,7 +46,7 @@ export default function HomePage() {
                 text="Full Stack Developer"
                 as="h2"
                 align="left"
-                className="text-lg md:text-xl font-semibold opacity-90 mt-2"
+                className="text-base md:text-xl font-semibold opacity-90 mt-1 md:mt-2"
               />
 
               {/* Headline */}
@@ -54,7 +54,7 @@ export default function HomePage() {
                 text="Transformo ideas en soluciones digitales con código y diseño."
                 as="h2"
                 align="left"
-                className="text-3xl md:text-5xl lg:text-6xl font-bold mt-6 leading-[1.05] pb-2!"
+                className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mt-4 md:mt-6 leading-snug md:leading-[1.05] pb-1 md:pb-2!"
                 allowWrap={true}
               />
 
@@ -63,12 +63,12 @@ export default function HomePage() {
                 text="Enfocado en construir sistemas robustos que combinan eficiencia técnica y claridad visual."
                 as="p"
                 align="left"
-                className="text-base md:text-lg font-medium mt-4 max-w-xl opacity-80"
+                className="text-sm sm:text-base md:text-lg font-medium mt-3 md:mt-4 max-w-xl opacity-80"
                 allowWrap={true}
               />
 
-              {/* Botones */}
-              <div className="flex items-center mt-6 gap-5 w-full justify-center md:justify-start flex-nowrap">
+              {/* Botones: mobile solo Proyectos; Contacto desde md */}
+              <div className="flex flex-col md:flex-row items-stretch md:items-center mt-5 md:mt-6 gap-3 md:gap-5 w-full md:w-auto justify-start">
                 <FillButton
                   href="/projects"
                   ariaLabel="Ver proyectos"
@@ -76,23 +76,25 @@ export default function HomePage() {
                     initial: { opacity: 0, x: 0, y: -8 },
                     transition: { duration: 0.5, ease: "easeOut", delay: 0.05 },
                   }}
-                  className="hover:-translate-y-px hover:shadow-sm hover:bg-[#081026]/90 hover:text-[#f8fafc]/90"
+                  className="w-full md:w-auto hover:-translate-y-px hover:shadow-sm hover:bg-[#081026]/90 hover:text-[#f8fafc]/90"
                 >
                   Proyectos
                   <ArrowRight className="h-5 w-5" />
                 </FillButton>
-                <FillButton
-                  href="/contact"
-                  ariaLabel="Contacto"
-                  variant="ghost"
-                  motionProps={{
-                    initial: { opacity: 0, x: 0, y: 8 },
-                    transition: { duration: 0.5, ease: "easeOut", delay: 0.25 },
-                  }}
-                >
-                  Contacto
-                  <Mail className="h-5 w-5" />
-                </FillButton>
+                <div className="hidden md:block">
+                  <FillButton
+                    href="/contact"
+                    ariaLabel="Contacto"
+                    variant="ghost"
+                    motionProps={{
+                      initial: { opacity: 0, x: 0, y: 8 },
+                      transition: { duration: 0.5, ease: "easeOut", delay: 0.25 },
+                    }}
+                  >
+                    Contacto
+                    <Mail className="h-5 w-5" />
+                  </FillButton>
+                </div>
               </div>
             </div>
           </div>

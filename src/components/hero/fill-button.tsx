@@ -145,8 +145,10 @@ export function FillButton({
     },
   };
 
+  const isFullWidth = /\bw-full\b/.test(className);
+
   return (
-    <motion.div {...mergedMotion}>
+    <motion.div {...mergedMotion} className={isFullWidth ? "w-full" : undefined}>
       <Link
         href={href}
         aria-label={ariaLabel}

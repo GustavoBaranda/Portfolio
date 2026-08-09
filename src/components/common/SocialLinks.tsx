@@ -28,16 +28,23 @@ export interface SocialLinksProps {
   className?: string;
   linkClassName?: string;
   iconSize?: number;
+  /** Defaults to true. Set false when Contacto already covers email nearby (e.g. mobile drawer). */
+  includeEmail?: boolean;
 }
 
 export default function SocialLinks({
   className = "flex items-center gap-3",
   linkClassName = "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors opacity-80 hover:opacity-100",
   iconSize = 20,
+  includeEmail = true,
 }: SocialLinksProps) {
+  const links = includeEmail
+    ? SOCIAL_LINKS
+    : SOCIAL_LINKS.filter(({ href }) => !href.startsWith("mailto:"));
+
   return (
     <div className={className}>
-      {SOCIAL_LINKS.map(({ href, label, Icon }) => {
+      {links.map(({ href, label, Icon }) => {
         const isMail = href.startsWith("mailto:");
         return (
           <a

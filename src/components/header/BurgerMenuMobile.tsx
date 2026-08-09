@@ -3,12 +3,13 @@
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { menuSlide, slide } from "./Animation";
 import ItemNavigationMobile from "./ItemNavigationMobile";
 import SvgCurve from "./SvgCurve";
 import { NavigationNavBar } from "./ItemNavigation";
 import ThemeToggle from "@/components/common/ThemeToggle";
-import { SOCIAL_LINKS } from "@/components/common/SocialLinks";
+import SocialLinks from "@/components/common/SocialLinks";
 
 const normalizePath = (path: string | null) => {
   if (!path) return "/";
@@ -26,13 +27,14 @@ const BurgerMenuMobile: React.FC<BurgerMenuMobileProps> = ({ updateMenu }) => {
     ...item,
     index: index + 1,
   }));
-  const footerStartIndex = navItemsWithIndex.length + 1;
+  const year = new Date().getFullYear();
   const slideMotionProps = {
     variants: slide,
     initial: "initial",
     animate: "enter",
     exit: "exit",
   };
+  const footerStartIndex = navItemsWithIndex.length + 1;
 
   return (
     <motion.div
@@ -49,7 +51,7 @@ const BurgerMenuMobile: React.FC<BurgerMenuMobileProps> = ({ updateMenu }) => {
             <motion.div
               {...slideMotionProps}
               custom={0}
-              className="header border-b pb-4 border-b-gray-200"
+              className="header border-b border-soft pb-4"
             >
               <h2 className="text-2xl font-bold">Gustavo Baranda</h2>
               <p className="text-lg font-semibold opacity-90">Full Stack Developer</p>
@@ -64,28 +66,44 @@ const BurgerMenuMobile: React.FC<BurgerMenuMobileProps> = ({ updateMenu }) => {
             />
           ))}
         </div>
-        <div className="footer border-t border-soft pt-6 pb-4 flex-shrink-0 flex items-center justify-center gap-6 sm:gap-8">
-          <motion.div {...slideMotionProps} custom={footerStartIndex}>
+
+        {/* Footer del drawer — mismo patrón que el footer del sitio */}
+        <motion.div
+          {...slideMotionProps}
+          custom={footerStartIndex}
+          className="footer border-t border-soft pt-5 pb-3 flex-shrink-0 flex flex-col items-center gap-4"
+        >
+          <div className="flex items-center gap-2.5">
+            <Link
+              href="/"
+              onClick={updateMenu}
+              className="group flex items-center gap-2 transition-opacity hover:opacity-90 cursor-pointer"
+              aria-label="Ir al inicio"
+            >
+              <Image
+                src="/images/logo.svg"
+                alt="Logo Gustavo Baranda"
+                width={26}
+                height={26}
+                className="w-6 h-6 object-contain transition-all duration-200 grayscale brightness-0 opacity-40 group-hover:opacity-70 dark:invert"
+              />
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors leading-none">
+                Gustavo Baranda
+              </span>
+            </Link>
+            <span className="text-slate-400 dark:text-slate-500 text-xs opacity-60 leading-none">
+              ·
+            </span>
+            <span className="text-xs text-slate-500 dark:text-slate-400 leading-none">
+              &copy; {year}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-4">
             <ThemeToggle />
-          </motion.div>
-          {SOCIAL_LINKS.map(({ href, label, Icon }, index) => {
-            const isMail = href.startsWith("mailto:");
-            return (
-              <motion.a
-                key={href}
-                {...slideMotionProps}
-                custom={footerStartIndex + index + 1}
-                href={href}
-                target={isMail ? undefined : "_blank"}
-                rel={isMail ? undefined : "noreferrer"}
-                aria-label={label}
-                className="text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors"
-              >
-                <Icon size={20} />
-              </motion.a>
-            );
-          })}
-        </div>
+            <SocialLinks className="flex items-center gap-4" iconSize={18} includeEmail={false} />
+          </div>
+        </motion.div>
       </div>
     </motion.div>
   );

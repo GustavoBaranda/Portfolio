@@ -40,14 +40,15 @@ const Header: React.FC = () => {
             width={36}
             height={36}
             className="w-8 h-8 sm:w-9 sm:h-9 object-contain transition-all duration-300 ease-out group-hover:scale-115 dark:invert dark:brightness-125 group-hover:drop-shadow-[0_0_10px_rgba(99,102,241,0.6)]"
+            priority
           />
         </Link>
 
         <div className="hidden flex-1 justify-center md:flex">
           <ItemMenu />
         </div>
-        
-        <div className="flex items-center gap-3 md:hidden w-full justify-end">
+
+        <div className="flex items-center gap-3 md:hidden">
           <Menu active={active} setActive={setActive} />
         </div>
 

@@ -190,6 +190,7 @@ body::-webkit-scrollbar-thumb {
 	letter-spacing: 0.2em;
 	text-transform: uppercase;
 	color: var(--text);
+	line-height: 1.2;
 }
 
 .menu .body .nav .header p {
@@ -200,6 +201,7 @@ body::-webkit-scrollbar-thumb {
 
 .menu .body .nav .link-content {
 	width: 100%;
+	min-height: 2.75rem;
 	display: flex;
 	gap: 0.75rem;
 	align-items: center;
@@ -207,7 +209,7 @@ body::-webkit-scrollbar-thumb {
 	color: inherit;
 	font-weight: 500;
 	transition: color 0.2s ease;
-	padding-left: 0.25rem;
+	padding: 0.5rem 0.25rem;
 }
 
 .menu .body .nav .link-content:hover {
@@ -216,13 +218,14 @@ body::-webkit-scrollbar-thumb {
 
 .menu .footer {
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	gap: 1.5rem;
+	gap: 1rem;
 	font-size: 0.85rem;
 	color: var(--muted);
-	padding-top: 1.5rem !important;
-	padding-bottom: 1rem !important;
+	padding-top: 1.25rem !important;
+	padding-bottom: 0.75rem !important;
 }
 
 .menu .footer a {
