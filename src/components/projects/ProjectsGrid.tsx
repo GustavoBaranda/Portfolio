@@ -24,6 +24,13 @@ const CORE_TECH_FILTERS: CoreTechFilter[] = [
   { id: "tailwind", label: "Tailwind CSS", aliases: ["tailwind"] },
 ];
 
+// Constante de módulo: no se recrea en cada render
+const CATEGORY_ORDER: Record<string, number> = {
+  "full-stack": 1,
+  apis: 2,
+  opensource: 3,
+};
+
 export default function ProjectsGrid() {
   const [selectedCategory, setSelectedCategory] = useState<string>(() => {
     if (typeof window !== "undefined" && window.location.hash) {
@@ -36,12 +43,6 @@ export default function ProjectsGrid() {
 
   const [selectedTech, setSelectedTech] = useState<CoreTechFilter | string | null>(null);
   const [isTechFilterOpen, setIsTechFilterOpen] = useState<boolean>(false);
-
-  const CATEGORY_ORDER: Record<string, number> = {
-    "full-stack": 1,
-    apis: 2,
-    opensource: 3,
-  };
 
   const sortedProjects = useMemo(() => {
     return [...PROJECTS].sort((a, b) => {

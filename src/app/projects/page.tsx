@@ -2,6 +2,9 @@ import ProjectsGrid from "@/components/projects/ProjectsGrid";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Metadata } from "next";
+import { getSiteUrl } from "@/config/site";
+
+const baseUrl = getSiteUrl();
 
 const TITLE = "Proyectos";
 const DESCRIPTION =
@@ -11,7 +14,7 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: {
-    canonical: "/projects",
+    canonical: `${baseUrl}/projects`,
   },
   openGraph: {
     title: `${TITLE} | Gustavo Baranda`,

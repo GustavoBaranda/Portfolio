@@ -2,6 +2,9 @@ import HeroBio from "@/components/about/HeroBio";
 import ExperienceSection from "@/components/about/ExperienceSection";
 import EducationSection from "@/components/about/EducationSection";
 import { Metadata } from "next";
+import { getSiteUrl } from "@/config/site";
+
+const baseUrl = getSiteUrl();
 
 const TITLE = "Sobre mí";
 const DESCRIPTION =
@@ -11,7 +14,7 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: {
-    canonical: "/about",
+    canonical: `${baseUrl}/about`,
   },
   openGraph: {
     title: `${TITLE} | Gustavo Baranda`,

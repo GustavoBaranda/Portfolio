@@ -1,13 +1,16 @@
 import ContactForm from "@/components/contact/ContactForm";
 import ContactInfo from "@/components/contact/ContactInfo";
 import { Metadata } from "next";
+import { getSiteUrl } from "@/config/site";
+
+const baseUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   title: "Contacto",
   description:
     "Contactá a Gustavo Baranda para propuestas laborales, desarrollo Full Stack, arquitectura o colaboración en proyectos de software.",
   alternates: {
-    canonical: "/contact",
+    canonical: `${baseUrl}/contact`,
   },
   openGraph: {
     title: "Contacto | Gustavo Baranda",
