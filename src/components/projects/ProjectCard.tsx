@@ -169,7 +169,7 @@ export default function ProjectCard({
 
       {/* Fila 3: Links / estado privado */}
       {hasLinks ? (
-        <section className="pt-4 sm:pt-5 border-t border-soft/50">
+        <section className="mt-4 pt-4 sm:pt-5 border-t border-soft/50">
           <div className="flex flex-wrap items-center gap-3 sm:gap-4">
             {project.demoUrl && (
               <a
@@ -196,7 +196,7 @@ export default function ProjectCard({
           </div>
         </section>
       ) : (
-        <div className="pt-4 sm:pt-5 border-t border-soft/50">
+        <div className="mt-4 pt-4 sm:pt-5 border-t border-soft/50">
           <span className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-muted/80">
             <Lock className="w-3.5 h-3.5 shrink-0" />
             Proyecto corporativo · código privado
