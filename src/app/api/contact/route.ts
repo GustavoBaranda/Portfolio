@@ -3,25 +3,86 @@ import nodemailer from "nodemailer";
 import path from "path";
 import fs from "fs";
 
+// ─── Rate limiting in-memory ─────────────────────────────────────────────────
+// 3 mensajes por IP cada 10 minutos. Se resetea en cada cold start de Vercel,
+// lo cual es aceptable para un portfolio personal.
+const RATE_LIMIT_MAX = 3;
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000; // 10 minutos
+const rateLimitMap = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const timestamps = (rateLimitMap.get(ip) ?? []).filter(
+    (t) => now - t < RATE_LIMIT_WINDOW_MS
+  );
+  if (timestamps.length >= RATE_LIMIT_MAX) return true;
+  rateLimitMap.set(ip, [...timestamps, now]);
+  return false;
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 export async function POST(req: NextRequest) {
   try {
+    // ── Rate limiting ────────────────────────────────────────────────────────
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0].trim() ??
+      req.headers.get("x-real-ip") ??
+      "unknown";
+
+    if (isRateLimited(ip)) {
+      return NextResponse.json(
+        { success: false, error: "Demasiados intentos. Por favor esperá unos minutos antes de volver a enviar." },
+        { status: 429 }
+      );
+    }
+
+    // ── Parseo de campos ─────────────────────────────────────────────────────
     const { nombre, name, email, asunto, subject, mensaje, message } = await req.json();
 
-    const senderName = nombre || name;
-    const senderSubject = asunto || subject;
-    const senderMessage = mensaje || message;
+    const senderName = (nombre || name || "").toString().trim();
+    const senderSubject = (asunto || subject || "").toString().trim();
+    const senderMessage = (mensaje || message || "").toString().trim();
+    const senderEmail = (email || "").toString().trim();
 
-    if (!senderName || !email || !senderMessage) {
+    // ── Validación de presencia ───────────────────────────────────────────────
+    if (!senderName || !senderEmail || !senderMessage) {
       return NextResponse.json(
         { success: false, error: "Todos los campos obligatorios deben ser completados." },
         { status: 400 }
       );
     }
 
-    const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!EMAIL_REGEX.test(email.trim())) {
+    // ── Validación de longitud máxima ─────────────────────────────────────────
+    if (senderName.length > 100) {
       return NextResponse.json(
-        { success: false, error: "Por favor proporciona un correo electrónico válido." },
+        { success: false, error: "El nombre no puede superar los 100 caracteres." },
+        { status: 400 }
+      );
+    }
+    if (senderEmail.length > 254) {
+      return NextResponse.json(
+        { success: false, error: "El correo electrónico no es válido." },
+        { status: 400 }
+      );
+    }
+    if (senderSubject.length > 200) {
+      return NextResponse.json(
+        { success: false, error: "El asunto no puede superar los 200 caracteres." },
+        { status: 400 }
+      );
+    }
+    if (senderMessage.length > 2000) {
+      return NextResponse.json(
+        { success: false, error: "El mensaje no puede superar los 2000 caracteres." },
+        { status: 400 }
+      );
+    }
+
+    // ── Validación de formato de email ────────────────────────────────────────
+    const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!EMAIL_REGEX.test(senderEmail)) {
+      return NextResponse.json(
+        { success: false, error: "Por favor proporcioná un correo electrónico válido." },
         { status: 400 }
       );
     }
@@ -78,9 +139,9 @@ export async function POST(req: NextRequest) {
     const mailOptions = {
       from: `"Portfolio GusDev Contacto" <${emailUser}>`,
       to: emailUser,
-      replyTo: email,
+      replyTo: senderEmail,
       subject: mailSubject,
-      text: `Nombre: ${senderName}\nEmail: ${email}\nAsunto: ${senderSubject || "Sin asunto"}\n\nMensaje:\n${senderMessage}`,
+      text: `Nombre: ${senderName}\nEmail: ${senderEmail}\nAsunto: ${senderSubject || "Sin asunto"}\n\nMensaje:\n${senderMessage}`,
       attachments: attachments,
       html: `
         <!DOCTYPE html>
@@ -131,7 +192,7 @@ export async function POST(req: NextRequest) {
                         <tr>
                           <td style="padding: 16px 0; border-bottom: 1px solid #f1f5f9;">
                             <span style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; display: block; margin-bottom: 4px;">Correo Electrónico</span>
-                            <a href="mailto:${email}" style="color: #4f46e5; font-size: 15px; font-weight: 600; text-decoration: none;">${email}</a>
+                            <a href="mailto:${senderEmail}" style="color: #4f46e5; font-size: 15px; font-weight: 600; text-decoration: none;">${senderEmail}</a>
                           </td>
                         </tr>
                         ${
@@ -156,7 +217,7 @@ export async function POST(req: NextRequest) {
                       <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
                         <tr>
                           <td align="left">
-                            <a href="mailto:${email}" style="display: inline-block; background-color: #0f172a; color: #ffffff; font-size: 13px; font-weight: 600; text-decoration: none; padding: 12px 24px; border-radius: 6px; letter-spacing: 0.2px;">
+                            <a href="mailto:${senderEmail}" style="display: inline-block; background-color: #0f172a; color: #ffffff; font-size: 13px; font-weight: 600; text-decoration: none; padding: 12px 24px; border-radius: 6px; letter-spacing: 0.2px;">
                               Responder a ${senderName}
                             </a>
                           </td>
@@ -190,9 +251,11 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error al enviar el correo con Nodemailer:", error);
+    // Loggeamos solo el mensaje para evitar exponer credenciales SMTP en logs de Vercel
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error("[contact] Error al enviar correo:", errorMessage);
     return NextResponse.json(
-      { success: false, error: "Ocurrió un error al intentar enviar el mensaje." },
+      { success: false, error: "Ocurrió un error al intentar enviar el mensaje. Por favor intentá de nuevo." },
       { status: 500 }
     );
   }
