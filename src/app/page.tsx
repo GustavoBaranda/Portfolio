@@ -17,7 +17,7 @@ export default function HomePage() {
   return (
     <>
       <TransitionEffect />
-      <main className="flex md:items-center md:justify-center text-dark md:min-h-[calc(100vh-225px)] dark:text-light w-full">
+      <section className="flex md:items-center md:justify-center text-dark md:min-h-[calc(100vh-225px)] dark:text-light w-full">
         <div className="pt-2 pb-8 md:pt-0 md:pb-0 w-full">
           <div className="flex flex-col md:flex-row items-center justify-between gap-5 md:gap-12 w-full">
             <div className="w-full md:w-5/12 flex justify-center items-center">
@@ -31,6 +31,7 @@ export default function HomePage() {
                 />
               </div>
             </div>
+
             <div className="w-full md:w-7/12 flex flex-col items-center md:items-start self-center text-center md:text-left">
               
               {/* Nombre (H1) */}
@@ -100,7 +101,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </main>
+      </section>
     </>
   );
 }

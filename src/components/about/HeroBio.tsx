@@ -8,7 +8,7 @@ export default function HeroBio() {
   const [step, setStep] = useState<number>(1);
 
   return (
-    <motion.section className="space-y-10 mb-32">
+    <motion.section className="space-y-10 mb-16 sm:mb-20 md:mb-28">
       <motion.header
         className="space-y-3"
         variants={textReveal}

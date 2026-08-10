@@ -53,10 +53,11 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({
         variants={quote}
         initial="initial"
         animate="animate"
+        aria-label={text}
       >
         {words.map((word, index) => (
           <React.Fragment key={`${word}-${index}`}>
-            <motion.span className="inline-block" variants={singleWord}>
+            <motion.span className="inline-block" variants={singleWord} aria-hidden="true">
               {word}
             </motion.span>
             {index < words.length - 1 && (allowWrap ? " " : "\u00a0")}

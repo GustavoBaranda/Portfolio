@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { Calendar, MapPin } from "lucide-react";
 import { COLOR_MAP, cardVariants, calculateDuration, Experience } from "@/data/aboutData";
 import { RefObject } from "react";
 
@@ -45,6 +46,7 @@ export default function ExperienceCard({
         onClick={onToggle}
         className={`w-full text-left rounded-[0.35rem] border ${colors.border} surface-card p-4 sm:p-5 transition-all duration-300 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500`}
         aria-expanded={isExpanded}
+        aria-label={`${isExpanded ? 'Colapsar' : 'Expandir'} experiencia en ${exp.company}`}
       >
         {/* Header row with logo */}
         <div className="flex items-start gap-4">
@@ -121,8 +123,16 @@ export default function ExperienceCard({
 
             {/* Dates & Location */}
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-foreground/80 font-medium italic pt-0.5">
-              <span>🗓️ {exp.period}</span>
-              {exp.location && <span>📍 {exp.location}</span>}
+              <span className="inline-flex items-center gap-1">
+                <Calendar className="w-3 h-3 shrink-0 opacity-70" aria-hidden="true" />
+                {exp.period}
+              </span>
+              {exp.location && (
+                <span className="inline-flex items-center gap-1">
+                  <MapPin className="w-3 h-3 shrink-0 opacity-70" aria-hidden="true" />
+                  {exp.location}
+                </span>
+              )}
             </div>
           </div>
         </div>

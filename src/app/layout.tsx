@@ -158,9 +158,16 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         className={`${montserrat.className} antialiased`}
         suppressHydrationWarning
       >
+        {/* Skip-to-content: invisible para usuarios visuales, esencial para navegación por teclado */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:rounded-[0.35rem] focus:bg-indigo-600 focus:text-white focus:text-sm focus:font-semibold focus:shadow-lg focus:outline-none"
+        >
+          Saltar al contenido principal
+        </a>
         <Header />
         <div className="site-shell">
-          <main className="flex-1 min-w-0">
+          <main id="main-content" className="flex-1 min-w-0">
             <div className="mx-auto w-full max-w-7xl px-6 py-10">{children}</div>
           </main>
           <Footer />

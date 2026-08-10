@@ -57,7 +57,7 @@ export default function ExperienceSection() {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.05 }}
-      className="space-y-10 mb-32"
+      className="space-y-10 mb-16 sm:mb-20 md:mb-28"
     >
       <motion.header className="space-y-6" variants={textReveal}>
         <p className="text-xl sm:text-2xl font-bold uppercase tracking-[0.3em] text-foreground">
