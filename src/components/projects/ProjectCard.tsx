@@ -13,7 +13,6 @@ import {
   Target,
   Lightbulb,
   Wrench,
-  Link2,
 } from "lucide-react";
 import { ProjectItem } from "@/data/projectsData";
 
@@ -31,9 +30,7 @@ export default function ProjectCard({
   onSelectTechTag,
 }: ProjectCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(() =>
-    typeof window !== "undefined" ? window.matchMedia("(min-width: 768px)").matches : false
-  );
+  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(min-width: 768px)");
@@ -62,7 +59,7 @@ export default function ProjectCard({
         delay: Math.min(index * (isDesktop ? 0.1 : 0.05), isDesktop ? 0.8 : 0.25),
         ease: [0.25, 1, 0.5, 1],
       }}
-      className="group relative flex flex-col justify-between rounded-[0.35rem] border border-soft surface-card p-4 sm:p-6 lg:p-8 transition-all duration-300 hover:border-indigo-500/50 hover:shadow-2xl dark:hover:shadow-indigo-950/30 focus-within:ring-2 focus-within:ring-indigo-500/40"
+      className="group relative flex flex-col md:grid md:grid-rows-subgrid md:row-span-3 rounded-[0.35rem] border border-soft surface-card p-4 sm:p-6 lg:p-8 transition-all duration-300 hover:border-indigo-500/50 hover:shadow-2xl dark:hover:shadow-indigo-950/30 focus-within:ring-2 focus-within:ring-indigo-500/40"
     >
       <div>
         <div className="flex flex-wrap items-center justify-between gap-2 text-[0.7rem] sm:text-xs font-semibold uppercase tracking-wider text-muted mb-3 sm:mb-4">
@@ -132,7 +129,7 @@ export default function ProjectCard({
               className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 mt-1 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-sm px-1 py-0.5 -ml-1"
               aria-expanded={isExpanded}
             >
-              <span>{isExpanded ? "Ver menos" : "Ver solución completa"}</span>
+              <span>{isExpanded ? "Leer menos" : "Leer más"}</span>
               {isExpanded ? (
                 <ChevronUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               ) : (
@@ -142,10 +139,8 @@ export default function ProjectCard({
           )}
         </section>
       </div>
-
-      <div>
-        {/* Stack técnico */}
-        <section className="mt-4 pt-4 border-t border-soft">
+      {/* Fila 2: Stack técnico */}
+      <section className="mt-4 pt-4 border-t border-soft">
           <h4 className="inline-flex items-center gap-1.5 text-[0.7rem] sm:text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 mb-2.5">
             <Wrench className="w-3.5 h-3.5 shrink-0" aria-hidden />
             Stack técnico
@@ -172,52 +167,43 @@ export default function ProjectCard({
           </div>
         </section>
 
-        {/* Enlaces */}
-        <section className="pt-3 mt-3 border-t border-soft/50">
-          <h4 className="inline-flex items-center gap-1.5 text-[0.7rem] sm:text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 mb-2.5">
-            <Link2 className="w-3.5 h-3.5 shrink-0" aria-hidden />
-            Enlaces
-          </h4>
-          {hasLinks ? (
-            <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
-              {project.demoUrl ? (
-                <a
-                  href={project.demoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group/link inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 rounded-sm transition-colors"
-                >
-                  <span className="hover:underline">Demo / sitio en vivo</span>
-                  <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-200" />
-                </a>
-              ) : (
-                <span className="text-xs sm:text-sm text-muted">Sin demo pública</span>
-              )}
-              {project.githubUrl ? (
-                <a
-                  href={project.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group/github inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 rounded-sm transition-colors"
-                >
-                  <Github className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/github:scale-110 transition-transform duration-200" />
-                  <span>Repo GitHub</span>
-                </a>
-              ) : (
-                <span className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-muted opacity-90">
-                  <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 opacity-80" />
-                  <span>Código a solicitud</span>
-                </span>
-              )}
-            </div>
-          ) : (
-            <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-muted">
-              <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 opacity-80" />
-              <span>Proyecto de código privado · sin demo pública</span>
-            </div>
-          )}
+      {/* Fila 3: Links / estado privado */}
+      {hasLinks ? (
+        <section className="pt-4 sm:pt-5 border-t border-soft/50">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+            {project.demoUrl && (
+              <a
+                href={project.demoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group/link inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 rounded-sm transition-colors"
+              >
+                Ver demo
+                <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-200" />
+              </a>
+            )}
+            {project.githubUrl && (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group/github inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-muted hover:text-foreground underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 rounded-sm transition-colors"
+              >
+                <Github className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/github:translate-x-0.5 group-hover/github:-translate-y-0.5 transition-transform duration-200" />
+                Ver código
+              </a>
+            )}
+          </div>
         </section>
-      </div>
+      ) : (
+        <div className="pt-4 sm:pt-5 border-t border-soft/50">
+          <span className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-muted/80">
+            <Lock className="w-3.5 h-3.5 shrink-0" />
+            Proyecto corporativo · código privado
+          </span>
+        </div>
+      )}
+
     </motion.article>
   );
 }

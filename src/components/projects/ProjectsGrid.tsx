@@ -84,6 +84,8 @@ export default function ProjectsGrid() {
     } else {
       setSelectedTech(filter);
     }
+    // Cierra el panel tras seleccionar un filtro
+    setIsTechFilterOpen(false);
   };
 
   const handleCardTagClick = (tag: string) => {
@@ -106,6 +108,7 @@ export default function ProjectsGrid() {
   const resetFilters = () => {
     setSelectedCategory("all");
     setSelectedTech(null);
+    setIsTechFilterOpen(false);
   };
 
   const activeTechLabel = typeof selectedTech === "string" ? selectedTech : selectedTech?.label;
@@ -121,7 +124,10 @@ export default function ProjectsGrid() {
             return (
               <button
                 key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
+                onClick={() => {
+                  setSelectedCategory(cat.id);
+                  setIsTechFilterOpen(false);
+                }}
                 className={`px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-[0.35rem] text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                   isActive
                     ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/20 scale-105"
@@ -217,7 +223,7 @@ export default function ProjectsGrid() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8, transition: { duration: 0.15 } }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-stretch"
           >
             {filteredProjects.map((project, index) => (
               <ProjectCard
