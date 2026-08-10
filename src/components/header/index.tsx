@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
@@ -11,13 +11,12 @@ import Menu from "./Menu";
 import ThemeToggle from "@/components/common/ThemeToggle";
 import SocialLinks from "@/components/common/SocialLinks";
 
+const emptySubscribe = () => () => {};
+
 const Header: React.FC = () => {
   const [active, setActive] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // Client-only flag for portals without setState-in-effect
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
 
   useEffect(() => {
     if (!active) return;
@@ -37,11 +36,11 @@ const Header: React.FC = () => {
       <header
         className={`site-header border-b border-soft backdrop-blur ${
           active
-            ? "z-[220] border-transparent bg-transparent"
+            ? "z-220 border-transparent bg-transparent"
             : "z-50 surface-glass"
         }`}
       >
-        <div className="relative mx-auto flex h-[var(--site-header-h)] max-w-7xl items-center justify-between px-6">
+        <div className="relative mx-auto flex h-(--site-header-h) max-w-7xl items-center justify-between px-6">
           <Link
             href="/"
             className="group inline-flex items-center justify-center bg-transparent transition-transform cursor-pointer"
