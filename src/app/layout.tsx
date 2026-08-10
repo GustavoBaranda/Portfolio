@@ -167,7 +167,8 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         </a>
         <Header />
         <div className="site-shell">
-          <main id="main-content" className="flex-1 min-w-0">
+          <main id="main-content" className="flex-1 min-w-0 relative">
+
             <div className="mx-auto w-full max-w-7xl px-6 py-10">{children}</div>
           </main>
           <Footer />
