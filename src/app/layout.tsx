@@ -42,10 +42,18 @@ export const metadata: Metadata = {
   alternates: {
     canonical: baseUrl,
   },
+  // 👇 CONFIGURACIÓN MULTIPLATAFORMA DE FAVICONS
   icons: {
-    icon: '/icon.svg',
-    shortcut: '/icon.svg',
-    apple: '/icon.svg',
+    icon: [
+      { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
+  manifest: '/site.webmanifest',
+  appleWebApp: {
+    title: 'Gustavo Baranda',
   },
   openGraph: {
     title: 'Gustavo Baranda | Full Stack Developer & Data Science Student',
@@ -168,7 +176,6 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         <Header />
         <div className="site-shell">
           <main id="main-content" className="flex-1 min-w-0 relative">
-
             <div className="mx-auto w-full max-w-7xl px-6 py-10">{children}</div>
           </main>
           <Footer />
