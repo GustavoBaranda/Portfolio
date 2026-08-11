@@ -92,7 +92,7 @@ export const PROJECTS: ProjectItem[] = [
     tags: ["PWA", "Next.js 14", "React 18", "Resend", "Vercel Postgres", "Vercel Blob", "Tailwind CSS", "OAuth & JWT", "Kanban"],
     featured: true,
     githubUrl: null,
-    demoUrl: "https://gusflow.vercel.app/",
+    demoUrl: null,
   },
   {
     id: "fundacion-medicina",
