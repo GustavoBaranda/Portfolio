@@ -3,7 +3,7 @@ import { getSiteUrl } from '@/config/site';
 
 // Fecha de la última actualización real del contenido del sitio.
 // Actualizar manualmente cada vez que se agreguen proyectos o se modifique contenido importante.
-const LAST_CONTENT_UPDATE = new Date('2026-08-10');
+const LAST_CONTENT_UPDATE = new Date('2026-08-11');
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = getSiteUrl();

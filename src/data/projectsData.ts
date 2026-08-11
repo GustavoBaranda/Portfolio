@@ -53,7 +53,7 @@ export const PROJECTS: ProjectItem[] = [
     solution:
       "Como Full Stack Developer diseñé e implementé una arquitectura multimodular en Django 4.2 y SQL Server: portal público de turnos (Turnero) y plataforma interna (depofis.web) para recepción, entrega y trazabilidad de contenedores. Integré WebSockets (Channels), Celery & Redis, firmas/PDFs (ReportLab, PyMuPDF, pyHanko) y mapas con Leaflet.",
     image: "/images/syspro.png",
-    tags: ["Python", "Django", "SQL Server", "Celery & Redis", "WebSockets", "Leaflet", "Tailwind", "Bootstrap"],
+    tags: ["Python", "Django", "SQL Server", "Celery & Redis", "WebSockets", "Leaflet", "Tailwind CSS", "Bootstrap"],
     featured: true,
     githubUrl: null,
     demoUrl: null,
@@ -165,7 +165,7 @@ export const PROJECTS: ProjectItem[] = [
     solution:
       "Construí el sitio con Next.js App Router, Tailwind v4, Framer Motion, tema clear/dark, sitemap/robots/JSON-LD y API Route de contacto con Nodemailer.",
     image: "/images/opengraph.png",
-    tags: ["TypeScript", "React 19 (TSX)", "Next.js 16", "Tailwind CSS v4", "SEO & JSON-LD", "Framer Motion", "Nodemailer"],
+    tags: ["TypeScript", "React 19 (TSX)", "Next.js 16", "Tailwind CSS", "SEO & JSON-LD", "Framer Motion", "Nodemailer"],
     featured: false,
     githubUrl: "https://github.com/GustavoBaranda/Portfolio",
     demoUrl: "https://gustavobaranda.com",
