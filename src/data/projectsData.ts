@@ -161,11 +161,11 @@ export const PROJECTS: ProjectItem[] = [
     period: "2025 — Presente",
     dateSort: "2025-01",
     challenge:
-      "Necesitaba un portfolio TypeScript-first con buen SEO, performance y un canal de contacto confiable, alineado a un design system propio.",
+      "Necesitaba un portfolio TypeScript-first con SEO técnico real, performance, un canal de contacto confiable con protección anti-spam sin CAPTCHA y un design system propio escalable.",
     solution:
-      "Construí el sitio con Next.js App Router, Tailwind v4, Framer Motion, tema clear/dark, sitemap/robots/JSON-LD y API Route de contacto con Nodemailer.",
+      "Construí el sitio con Next.js 16 App Router, React 19, Tailwind CSS v4 y Framer Motion. Implementé protección anti-spam multicapa: honeypot field, time-based validation y rate limiting por IP en API Route serverless. Layout de proyectos con CSS subgrid para alineación sin JS. SEO técnico completo: metadataBase dinámico, sitemap/robots generados en build time y JSON-LD Schema.org. Sistema de temas sin hydration flash via script beforeInteractive y tokens CSS semánticos.",
     image: "/images/opengraph.png",
-    tags: ["TypeScript", "React 19 (TSX)", "Next.js 16", "Tailwind CSS", "SEO & JSON-LD", "Framer Motion", "Nodemailer"],
+    tags: ["TypeScript", "Next.js 16", "React 19", "Tailwind CSS v4", "CSS Subgrid", "SEO & JSON-LD", "Framer Motion", "Nodemailer", "Anti-Spam"],
     featured: false,
     githubUrl: "https://github.com/GustavoBaranda/Portfolio",
     demoUrl: "https://gustavobaranda.com",
