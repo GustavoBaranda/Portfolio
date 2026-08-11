@@ -7,7 +7,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Gustavo Baranda | Full Stack Developer & Data Science Student',
-  description: 'Portafolio profesional de Gustavo Baranda. Desarrollador Full Stack especializado en Python, Django, React y TypeScript con enfoque en arquitectura limpia y datos.',
+  description: 'Portafolio profesional de Gustavo Baranda. Desarrollador Full Stack especializado en Python, Django y React con enfoque en arquitectura limpia y datos.',
   alternates: {
     canonical: '/',
   },

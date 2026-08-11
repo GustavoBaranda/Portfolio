@@ -8,7 +8,7 @@ const baseUrl = getSiteUrl();
 
 const TITLE = "Sobre mí";
 const DESCRIPTION =
-  "Trayectoria de Gustavo Baranda como Full Stack Developer (Python, Django, React/TypeScript): experiencia laboral, formación en Ciencia de Datos y enfoque en sistemas robustos.";
+  "Trayectoria de Gustavo Baranda como Full Stack Developer (Python, Django, React): experiencia laboral, formación en Ciencia de Datos y enfoque en sistemas robustos.";
 
 export const metadata: Metadata = {
   title: TITLE,

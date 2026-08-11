@@ -8,7 +8,7 @@ const baseUrl = getSiteUrl();
 
 const TITLE = "Proyectos";
 const DESCRIPTION =
-  "Casos de estudio de desarrollo Full Stack: logística fiscal, e-commerce, PWA, APIs REST, ETL bancario (LCR/VaR) y productos web con Python, Django, React y TypeScript.";
+  "Casos de estudio de desarrollo Full Stack: logística fiscal, e-commerce, PWA, APIs REST, ETL bancario (LCR/VaR) y productos web con Python, Django y React.";
 
 export const metadata: Metadata = {
   title: TITLE,
