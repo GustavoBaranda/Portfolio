@@ -89,7 +89,7 @@ export const PROJECTS: ProjectItem[] = [
     solution:
       "Desarrollé la PWA con Next.js 14 App Router y React 18: columnas/prioridades, Markdown, Blob Storage, OAuth Google/GitHub, verificación con Resend y Vercel Postgres. Incluye manifest, service worker e instalación nativa.",
     image: "/images/gusflow.png",
-    tags: ["PWA", "Next.js 14", "React 18", "Vercel Postgres", "Vercel Blob", "Tailwind CSS", "Resend", "OAuth & JWT", "Kanban"],
+    tags: ["PWA", "Next.js 14", "React 18", "Resend", "Vercel Postgres", "Vercel Blob", "Tailwind CSS", "OAuth & JWT", "Kanban"],
     featured: true,
     githubUrl: null,
     demoUrl: "https://gusflow.vercel.app/",
@@ -127,7 +127,7 @@ export const PROJECTS: ProjectItem[] = [
     solution:
       "Diseñé el servicio con Django 5 y DRF: ViewSets/Serializers modularizados, OpenAPI 3 (Swagger UI y ReDoc), /api/health/, suite pytest-django y configuración por entorno con dotenv.",
     image: "/images/weatherflow.png",
-    tags: ["Python 3.10+", "Django 5.0", "Django REST Framework", "OpenAPI 3 / Swagger", "pytest-django", "REST API"],
+    tags: ["Python 3.10+", "Django 5.0", "REST API", "OpenAPI 3 / Swagger", "pytest-django", "Django REST Framework"],
     featured: true,
     githubUrl: "https://github.com/GustavoBaranda/WeatherFlow-API",
     demoUrl: null,
