@@ -51,7 +51,7 @@ export const PROJECTS: ProjectItem[] = [
     challenge:
       "Depósitos fiscales y terminales logísticas portuarias operaban con procesos manuales fragmentados para la coordinación de turnos de transporte, recepción de contenedores e inspecciones aduaneras. Se requería una plataforma distribuida en tiempo real que garantizara la trazabilidad punto a punto de la carga, validez legal y operativa en la documentación emitida y alta disponibilidad operativa.",
     solution:
-      "Como Full Stack Developer, diseñé e implementé la arquitectura multimodular enterprise de la plataforma DepofisWEB en Django 4.2 y Microsoft SQL Server. Estructuré el sistema en tres módulos interconectados: Portal Público de Turnos (TURNERO_APP) para transportistas y choferes, Suite Operativa Interna (DEPO_2025_App) para recepción, inspección física y trazabilidad de contenedores, y Motor de Informes (INFORMES_APP). Integré comunicación en tiempo real con WebSockets (Django Channels), procesamiento asincrónico y cronjobs con Celery & Redis, firma digital criptográfica de PDFs con validez legal (pyHanko, ReportLab, PyMuPDF), notificaciones Web Push (VAPID), almacenamiento de imágenes de inspección en Object Storage (Huawei Cloud OBS) y geolocalización avanzada.",
+      "Como Full Stack Developer, diseñé e implementé la arquitectura multimodular enterprise de la plataforma DepofisWEB en Django 4.2 y Microsoft SQL Server. Estructuré el sistema en dos módulos interconectados: Portal Público de Turnos (TURNERO_APP) para transportistas y choferes, y Suite Operativa Interna (DEPO_2025_App) para gestión de recepciones, entregas, inspección física y trazabilidad de contenedores. Integré comunicación en tiempo real con WebSockets (Django Channels), procesamiento asincrónico y cronjobs con Celery & Redis, firma digital criptográfica de PDFs con validez legal (pyHanko, ReportLab, PyMuPDF), notificaciones Web Push (VAPID), almacenamiento de imágenes de inspección en Object Storage (Huawei Cloud OBS) y geolocalización avanzada.",
     image: "/images/syspro.png",
     tags: [
       "Python 3.11+",
@@ -105,9 +105,9 @@ export const PROJECTS: ProjectItem[] = [
     period: "2025 — 2026",
     dateSort: "2025-11",
     challenge:
-      "Los equipos de desarrollo y profesionales independientes requerían un gestor de tareas reactivo y personalizable en formato PWA, eliminando la dependencia de herramientas SaaS propietarias y garantizando persistencia relacional segura, soporte para adjuntos pesados, editor Markdown, autenticación social y verificación por email.",
+      "Los equipos de desarrollo y profesionales independientes requerían un gestor de tareas reactivo y personalizable en formato PWA, eliminando la dependencia de herramientas SaaS propietarias y garantizando persistencia relacional segura, soporte para adjuntos pesados, autenticación social y verificación por email.",
     solution:
-      "Diseñé e implementé la plataforma web progresiva (PWA) instalable utilizando Next.js 14 App Router y React 18. Desarrollé el tablero Kanban dinámico con reordenamiento de columnas/tareas, prioridades, fechas de vencimiento y editor de notas con renderizado seguro Markdown (DOMPurify + Remark GFM). Implementé la capa de datos en Vercel Postgres (PostgreSQL), gestión de adjuntos multimedia en Vercel Blob Storage, sistema de autenticación híbrido (JWT + Google/GitHub OAuth), onboarding y recuperación transaccional con Resend API y micro-interacciones con Framer Motion y Tailwind CSS.",
+      "Diseñé e implementé la plataforma web progresiva (PWA) instalable utilizando Next.js 14 App Router y React 18. Desarrollé el tablero Kanban dinámico con reordenamiento de columnas/tareas, prioridades, fechas de vencimiento y gestión de notas. Implementé la capa de datos en Vercel Postgres (PostgreSQL), gestión de adjuntos multimedia en Vercel Blob Storage, sistema de autenticación híbrido (JWT + Google/GitHub OAuth), onboarding y recuperación transaccional con Resend API y micro-interacciones con Framer Motion y Tailwind CSS.",
     image: "/images/gusflow.png",
     tags: [
       "Next.js 14 App Router",
@@ -118,7 +118,7 @@ export const PROJECTS: ProjectItem[] = [
       "Resend API",
       "PWA Native",
       "Tailwind CSS & Framer Motion",
-      "Markdown / DOMPurify",
+      "DOMPurify",
     ],
     featured: true,
     githubUrl:null,
