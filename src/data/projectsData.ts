@@ -94,7 +94,7 @@ export const PROJECTS: ProjectItem[] = [
     ],
     featured: true,
     githubUrl: null,
-    demoUrl: "https://mhine-home.vercel.app",
+    demoUrl: "https://mhine-home.gustavobaranda.com",
   },
   {
     id: "gusflow-kanban",
@@ -255,7 +255,7 @@ export const PROJECTS: ProjectItem[] = [
     ],
     featured: false,
     githubUrl: "https://github.com/GustavoBaranda/Las-verde",
-    demoUrl: "https://las-verde.vercel.app/",
+    demoUrl: "https://lasverde.gustavobaranda.com/",
   },
   {
     id: "maternal-descubriendo",
@@ -282,6 +282,6 @@ export const PROJECTS: ProjectItem[] = [
     ],
     featured: false,
     githubUrl: "https://github.com/GustavoBaranda/Descubrimiento-Jardin-Maternal",
-    demoUrl: "https://jardinmaternaldescubriendo.vercel.app/",
+    demoUrl: "https://descubriendo.gustavobaranda.com",
   },
 ];

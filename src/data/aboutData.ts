@@ -168,7 +168,7 @@ export const EXPERIENCES: Experience[] = [
       "GitHub",
     ],
     color: "lasverde",
-    url: "https://las-verde.vercel.app/",
+    url: "https://lasverde.gustavobaranda.com/",
     modalidad: "Remoto",
   },
   {
@@ -196,7 +196,7 @@ export const EXPERIENCES: Experience[] = [
       "GitHub",
     ],
     color: "blue",
-    url: "https://jardinmaternaldescubriendo.vercel.app/",
+    url: "https://descubriendo.gustavobaranda.com",
     modalidad: "Remoto",
   },
 ];
