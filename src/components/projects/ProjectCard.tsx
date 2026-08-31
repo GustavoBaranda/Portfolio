@@ -145,7 +145,7 @@ export default function ProjectCard({
             <Wrench className="w-3.5 h-3.5 shrink-0" aria-hidden />
             Stack técnico
           </h4>
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+          <div className="flex flex-wrap items-center gap-1.5">
             {project.tags.map((tag) => {
               const isSelected = selectedTechTag?.toLowerCase() === tag.toLowerCase();
               return (
@@ -154,7 +154,7 @@ export default function ProjectCard({
                   type="button"
                   onClick={() => onSelectTechTag?.(tag)}
                   title={`Filtrar proyectos por ${tag}`}
-                  className={`inline-flex items-center text-[0.65rem] sm:text-xs font-semibold uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-[0.35rem] leading-tight transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                  className={`inline-flex items-center text-[0.68rem] sm:text-xs font-semibold uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-[0.35rem] leading-normal transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                     isSelected
                       ? "bg-indigo-600 text-white shadow-xs ring-1 ring-indigo-400"
                       : "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/15 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-500 dark:hover:text-white hover:scale-105"

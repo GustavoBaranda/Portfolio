@@ -16,9 +16,17 @@ export interface ItemNavigationMobileProps {
 }
 
 const ItemNavigationMobile: React.FC<ItemNavigationMobileProps> = ({ data, isActive, onClick }) => {
-  const { text, href, index, icon: Icon } = data;
+  const { text, href, targetId, index, icon: Icon } = data;
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (window.location.pathname === "/") {
+      e.preventDefault();
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+        window.history.pushState(null, "", `#${targetId}`);
+      }
+    }
     onClick?.();
   };
 

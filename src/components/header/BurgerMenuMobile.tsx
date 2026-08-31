@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { menuSlide, slide } from "./Animation";
@@ -9,19 +8,16 @@ import ItemNavigationMobile from "./ItemNavigationMobile";
 import { NavigationNavBar } from "./ItemNavigation";
 import ThemeToggle from "@/components/common/ThemeToggle";
 import SocialLinks from "@/components/common/SocialLinks";
-
-const normalizePath = (path: string | null) => {
-  if (!path) return "/";
-  return path === "/" ? "/" : path.replace(/\/+$/, "");
-};
+import { useActiveSection } from "@/components/utils/useActiveSection";
 
 export interface BurgerMenuMobileProps {
   updateMenu: () => void;
 }
 
+const sectionIds = NavigationNavBar.map((item) => item.targetId);
+
 const BurgerMenuMobile: React.FC<BurgerMenuMobileProps> = ({ updateMenu }) => {
-  const pathname = usePathname();
-  const currentPath = normalizePath(pathname);
+  const activeSection = useActiveSection(sectionIds, "home");
   const navItemsWithIndex = NavigationNavBar.map((item, index) => ({
     ...item,
     index: index + 1,
@@ -35,6 +31,18 @@ const BurgerMenuMobile: React.FC<BurgerMenuMobileProps> = ({ updateMenu }) => {
   };
   const footerStartIndex = navItemsWithIndex.length + 1;
 
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (window.location.pathname === "/") {
+      e.preventDefault();
+      const element = document.getElementById("home");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+        window.history.pushState(null, "", "#home");
+      }
+    }
+    updateMenu();
+  };
+
   return (
     <motion.div
       variants={menuSlide}
@@ -45,11 +53,11 @@ const BurgerMenuMobile: React.FC<BurgerMenuMobileProps> = ({ updateMenu }) => {
     >
       <div className="body">
         <div className="nav">
-          <Link href="/" onClick={updateMenu}>
+          <Link href="#home" onClick={handleLogoClick}>
             <motion.div
               {...slideMotionProps}
               custom={0}
-              className="header border-b border-soft pb-4"
+              className="header border-b border-soft pb-4 cursor-pointer"
             >
               <h2 className="text-2xl font-bold">Gustavo Baranda</h2>
               <p className="text-lg font-semibold opacity-90">Full Stack Developer</p>
@@ -60,12 +68,12 @@ const BurgerMenuMobile: React.FC<BurgerMenuMobileProps> = ({ updateMenu }) => {
               key={data.href}
               data={data}
               onClick={updateMenu}
-              isActive={currentPath === normalizePath(data.href)}
+              isActive={activeSection === data.targetId}
             />
           ))}
         </div>
 
-        {/* Footer del drawer — mismo patrón que el footer del sitio */}
+        {/* Footer del drawer */}
         <motion.div
           {...slideMotionProps}
           custom={footerStartIndex}
@@ -73,8 +81,8 @@ const BurgerMenuMobile: React.FC<BurgerMenuMobileProps> = ({ updateMenu }) => {
         >
           <div className="flex items-center gap-2.5">
             <Link
-              href="/"
-              onClick={updateMenu}
+              href="#home"
+              onClick={handleLogoClick}
               className="group flex items-center gap-2 transition-opacity hover:opacity-90 cursor-pointer"
               aria-label="Ir al inicio"
             >

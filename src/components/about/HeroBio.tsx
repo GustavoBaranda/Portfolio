@@ -19,11 +19,11 @@ export default function HeroBio() {
         <p className="text-xl sm:text-2xl font-bold uppercase tracking-[0.3em] text-foreground">
           Sobre mi
         </p>
-        <h1 className="text-3xl font-extrabold leading-snug sm:text-4xl md:text-6xl text-foreground text-balance">
+        <h2 className="text-3xl font-extrabold leading-snug sm:text-4xl md:text-6xl text-foreground text-balance">
           Construyendo el puente entre el{" "}
           <span className="text-indigo-600">{"código"}</span> y los{" "}
           <span className="text-blue-600">{"datos"}</span>.
-        </h1>
+        </h2>
       </motion.header>
 
       <div className="space-y-6 sm:space-y-7 text-lg text-muted-foreground leading-relaxed">

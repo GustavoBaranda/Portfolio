@@ -153,11 +153,11 @@ export default function ExperienceCard({
                 <p className="text-xs font-semibold uppercase tracking-wider text-muted">
                   Tecnologías y Herramientas:
                 </p>
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-1.5 items-center">
                   {exp.skills.map((skill) => (
                     <span
                       key={skill}
-                      className={`text-xs px-2.5 py-1 rounded-[0.35rem] border font-medium transition-all ${colors.skillBg} ${colors.skillText} ${colors.skillBorder}`}
+                      className={`text-[0.72rem] sm:text-xs px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-[0.35rem] border font-medium leading-normal transition-all ${colors.skillBg} ${colors.skillText} ${colors.skillBorder}`}
                     >
                       {skill}
                     </span>

@@ -31,6 +31,17 @@ const Header: React.FC = () => {
 
   const closeMenu = () => setActive(false);
 
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (window.location.pathname === "/") {
+      e.preventDefault();
+      const el = document.getElementById("home");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+        window.history.pushState(null, "", "#home");
+      }
+    }
+  };
+
   return (
     <>
       <header
@@ -42,7 +53,8 @@ const Header: React.FC = () => {
       >
         <div className="relative mx-auto flex h-(--site-header-h) max-w-7xl items-center justify-between px-6">
           <Link
-            href="/"
+            href="/#home"
+            onClick={handleLogoClick}
             className="group inline-flex items-center justify-center bg-transparent transition-transform cursor-pointer"
             aria-label="Ir al inicio"
           >
