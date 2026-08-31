@@ -15,7 +15,6 @@ const emptySubscribe = () => () => {};
 
 const Header: React.FC = () => {
   const [active, setActive] = useState(false);
-  // Client-only flag for portals without setState-in-effect
   const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
 
   useEffect(() => {

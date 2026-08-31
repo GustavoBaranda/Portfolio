@@ -13,19 +13,16 @@ export function useActiveSection(sectionIds: string[], defaultSection: string = 
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
 
-      // Bottom of page check
       if (windowHeight + scrollPosition >= documentHeight - 60) {
         setActiveSection(sectionIds[sectionIds.length - 1]);
         return;
       }
 
-      // Top of page check
       if (scrollPosition < 100) {
         setActiveSection(sectionIds[0] || defaultSection);
         return;
       }
 
-      // Header offset check
       const offset = 140;
       let current = sectionIds[0] || defaultSection;
 

@@ -6,11 +6,10 @@ import { FolderSearch, RotateCcw, Tag, ChevronDown, ChevronUp, X } from "lucide-
 import { PROJECTS, PROJECT_CATEGORIES } from "@/data/projectsData";
 import ProjectCard from "./ProjectCard";
 
-// Define curated, high-impact Core Technologies for top UX filtering
 export interface CoreTechFilter {
   id: string;
   label: string;
-  aliases: string[]; // matching substrings in project tags
+  aliases: string[];
 }
 
 const CORE_TECH_FILTERS: CoreTechFilter[] = [
@@ -24,7 +23,6 @@ const CORE_TECH_FILTERS: CoreTechFilter[] = [
   { id: "tailwind", label: "Tailwind CSS", aliases: ["tailwind"] },
 ];
 
-// Constante de módulo: no se recrea en cada render
 const CATEGORY_ORDER: Record<string, number> = {
   "full-stack": 1,
   apis: 2,
@@ -57,17 +55,15 @@ export default function ProjectsGrid() {
       const projectTagsLower = p.tags.map((t) => t.toLowerCase());
 
       if (typeof selectedTech === "string") {
-        // Direct tag click from project card
         const searchTag = selectedTech.toLowerCase();
         const matchesDirectTech = projectTagsLower.some((t) => t.includes(searchTag));
         return matchesCategory && matchesDirectTech;
-      } else {
-        // Core tech filter click
-        const matchesCoreTech = selectedTech.aliases.some((alias) =>
-          projectTagsLower.some((t) => t.includes(alias))
-        );
-        return matchesCategory && matchesCoreTech;
       }
+
+      const matchesCoreTech = selectedTech.aliases.some((alias) =>
+        projectTagsLower.some((t) => t.includes(alias))
+      );
+      return matchesCategory && matchesCoreTech;
     });
   }, [sortedProjects, selectedCategory, selectedTech]);
 
@@ -77,12 +73,10 @@ export default function ProjectsGrid() {
     } else {
       setSelectedTech(filter);
     }
-    // Cierra el panel tras seleccionar un filtro
     setIsTechFilterOpen(false);
   };
 
   const handleCardTagClick = (tag: string) => {
-    // Check if tag matches a core tech filter for better UX
     const matchedCore = CORE_TECH_FILTERS.find((filter) =>
       filter.aliases.some((alias) => tag.toLowerCase().includes(alias))
     );

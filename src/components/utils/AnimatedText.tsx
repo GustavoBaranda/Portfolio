@@ -24,7 +24,6 @@ export interface AnimatedTextProps {
   text: string;
   className?: string;
   allowWrap?: boolean;
-  /** "responsive" = center on mobile, left from md */
   align?: "left" | "center" | "responsive";
   as?: "h1" | "h2" | "p" | "span";
 }

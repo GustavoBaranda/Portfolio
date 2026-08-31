@@ -10,7 +10,6 @@ const ItemMenu: React.FC = () => {
   const activeSection = useActiveSection(sectionIds, "home");
 
   const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
-    // If we're on the home page, perform smooth scroll and update hash without full navigation reload
     if (window.location.pathname === "/") {
       e.preventDefault();
       const element = document.getElementById(targetId);

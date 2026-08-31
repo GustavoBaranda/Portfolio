@@ -28,7 +28,6 @@ export interface SocialLinksProps {
   className?: string;
   linkClassName?: string;
   iconSize?: number;
-  /** Defaults to true. Set false when Contacto already covers email nearby (e.g. mobile drawer). */
   includeEmail?: boolean;
 }
 

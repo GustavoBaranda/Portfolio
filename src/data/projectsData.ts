@@ -3,13 +3,6 @@ export interface ProjectCategory {
   label: string;
 }
 
-/**
- * Case-study shape mapped by the projects grid.
- * challenge → Problema / Desafío
- * solution  → Solución / Rol
- * tags      → Stack técnico
- * demoUrl / githubUrl → Enlaces
- */
 export interface ProjectItem {
   id: string;
   title: string;
@@ -17,14 +10,10 @@ export interface ProjectItem {
   categoryLabel: string;
   company: string;
   period: string;
-  /** ISO-ish sort key YYYY-MM (higher = more recent). Use "9999-99" for ongoing top roles. */
   dateSort: string;
-  /** Problema / desafío del caso */
   challenge: string;
-  /** Solución implementada y rol desempeñado */
   solution: string;
   image: string;
-  /** Stack técnico */
   tags: string[];
   featured: boolean;
   githubUrl: string | null;
