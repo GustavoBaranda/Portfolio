@@ -32,14 +32,7 @@ const CATEGORY_ORDER: Record<string, number> = {
 };
 
 export default function ProjectsGrid() {
-  const [selectedCategory, setSelectedCategory] = useState<string>(() => {
-    if (typeof window !== "undefined" && window.location.hash) {
-      const hash = window.location.hash.replace("#", "");
-      const matched = PROJECT_CATEGORIES.find((cat) => cat.id === hash);
-      if (matched) return matched.id;
-    }
-    return "all";
-  });
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const [selectedTech, setSelectedTech] = useState<CoreTechFilter | string | null>(null);
   const [isTechFilterOpen, setIsTechFilterOpen] = useState<boolean>(false);

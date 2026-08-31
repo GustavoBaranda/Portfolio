@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, MouseEvent, PointerEvent, TouchEvent } from 'react';
+import { useRef, MouseEvent, PointerEvent } from 'react';
 import { motion, useMotionValue, Variants } from 'framer-motion';
 import Image from 'next/image';
 
@@ -16,7 +16,7 @@ export interface TiltImageProps {
 
 export default function TiltImage({
   src = '/images/logo.svg',
-  alt = 'logo',
+  alt = 'Logo Gustavo Baranda',
   width = 400,
   height = 280,
   sizes = '(max-width: 768px) 100vw,(max-width: 1200px) 50vw, 50vw',
@@ -53,14 +53,8 @@ export default function TiltImage({
   const handleMouseMove = (event: MouseEvent<HTMLDivElement>) => applyTiltToMotion(event);
 
   const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType === 'touch') return;
+    if (event.pointerType !== 'mouse') return;
     applyTiltToMotion(event);
-  };
-
-  const handleTouchMove = (event: TouchEvent<HTMLDivElement>) => {
-    const touch = event.touches[0];
-    if (!touch) return;
-    applyTiltToMotion(touch);
   };
 
   const imageMotion: Variants = {
@@ -71,12 +65,10 @@ export default function TiltImage({
   return (
     <motion.div
       ref={tiltRef}
-      style={{ perspective: 900, touchAction: 'none' }}
+      style={{ perspective: 900 }}
       onMouseMove={handleMouseMove}
       onPointerMove={handlePointerMove}
       onPointerLeave={resetTilt}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={resetTilt}
     >
       <motion.div
         variants={imageMotion}

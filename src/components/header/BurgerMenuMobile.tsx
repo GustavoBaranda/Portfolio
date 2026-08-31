@@ -53,7 +53,7 @@ const BurgerMenuMobile: React.FC<BurgerMenuMobileProps> = ({ updateMenu }) => {
     >
       <div className="body">
         <div className="nav">
-          <Link href="#home" onClick={handleLogoClick}>
+          <Link href="/#home" onClick={handleLogoClick}>
             <motion.div
               {...slideMotionProps}
               custom={0}
@@ -81,7 +81,7 @@ const BurgerMenuMobile: React.FC<BurgerMenuMobileProps> = ({ updateMenu }) => {
         >
           <div className="flex items-center gap-2.5">
             <Link
-              href="#home"
+              href="/#home"
               onClick={handleLogoClick}
               className="group flex items-center gap-2 transition-opacity hover:opacity-90 cursor-pointer"
               aria-label="Ir al inicio"

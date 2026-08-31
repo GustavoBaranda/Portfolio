@@ -66,7 +66,7 @@ export default function ExperienceSection() {
 
         <h2 className="text-2xl font-extrabold leading-snug sm:text-3xl md:text-5xl text-foreground whitespace-normal">
           Proyectos y <span className="text-indigo-600">desafíos</span> que impulsaron mi{" "}
-          <span className="text-blue-600">{"crecimiento"}</span>.
+          <span className="text-blue-600">crecimiento</span>.
         </h2>
 
         <p className="max-w-2xl text-foreground">
@@ -79,7 +79,7 @@ export default function ExperienceSection() {
         {/* Track line */}
         {lineHeight > 0 && (
           <div
-            className="hidden sm:block absolute left-[1.6875rem] w-0.5 bg-border z-0"
+            className="hidden sm:block absolute left-6.75 w-0.5 bg-border z-0"
             style={{
               top: `${lineTop}px`,
               height: `${lineHeight}px`,
@@ -91,7 +91,7 @@ export default function ExperienceSection() {
         {/* Animated fill line */}
         {lineHeight > 0 && (
           <motion.div
-            className="hidden sm:block absolute left-[1.6875rem] w-0.5 bg-indigo-600 origin-top z-0"
+            className="hidden sm:block absolute left-6.75 w-0.5 bg-indigo-600 origin-top z-0"
             style={{
               scaleY,
               top: `${lineTop}px`,

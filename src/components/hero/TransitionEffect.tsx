@@ -1,28 +1,28 @@
 "use client";
 
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
-const TransitionEffect: React.FC = () => {
+const panels = [
+  { className: "z-30 bg-[var(--accent)]", delay: 0 },
+  { className: "z-20 bg-[var(--surface)]", delay: 0.2 },
+  { className: "z-10 bg-[var(--text)]", delay: 0.4 },
+] as const;
+
+export default function TransitionEffect() {
   return (
-    <>
-      <motion.div className='fixed top-0 bottom-0 right-full w-screen z-30 bg-primary'
-        initial= {{x: "100%", width: "100%"}}
-        animate= {{x: "0%", width: "0%"}}
-        exit={{x: "100%", width: "100%"}}
-        transition={{duration:0.8, ease:"easeInOut"}}
-      />
-      <motion.div className='fixed top-0 bottom-0 right-full w-screen z-20 bg-light'
-        initial= {{x: "100%", width: "100%"}}
-        animate= {{x: "0%", width: "0%"}}
-        transition={{delay:0.2, duration:0.8, ease:"easeInOut"}}
-      />
-      <motion.div className='fixed top-0 bottom-0 right-full w-screen z-10 bg-dark'
-        initial= {{x: "100%", width: "100%"}}
-        animate= {{x: "0%", width: "0%"}}
-        transition={{delay:0.4 ,duration:0.8, ease:"easeInOut"}}
-      />
-    </>
+    <div
+      className="pointer-events-none fixed inset-0 z-300 overflow-hidden"
+      aria-hidden="true"
+    >
+      {panels.map((panel) => (
+        <motion.div
+          key={panel.className}
+          className={`absolute top-0 bottom-0 right-full w-screen ${panel.className}`}
+          initial={{ x: "100%", width: "100%" }}
+          animate={{ x: "0%", width: "0%" }}
+          transition={{ delay: panel.delay, duration: 0.8, ease: "easeInOut" }}
+        />
+      ))}
+    </div>
   );
-};
-
-export default TransitionEffect;
+}

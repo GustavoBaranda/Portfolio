@@ -1,5 +1,3 @@
-"use client";
-
 import { Mail, MapPin, ArrowUpRight } from "lucide-react";
 
 export default function ContactInfo() {

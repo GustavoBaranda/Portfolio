@@ -60,7 +60,7 @@ export default function NotFound() {
           <span>Ir al inicio</span>
         </Link>
         <Link
-          href="/projects"
+          href="/#projects"
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[0.35rem] border border-soft surface-glass text-sm font-semibold text-muted hover:text-foreground hover:border-indigo-500/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
         >
           <span>Ver proyectos</span>
@@ -72,7 +72,7 @@ export default function NotFound() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.35 }}
-        className="mt-12 w-16 h-px bg-gradient-to-r from-transparent via-indigo-500/40 to-transparent"
+        className="mt-12 w-16 h-px bg-linear-to-r from-transparent via-indigo-500/40 to-transparent"
         aria-hidden="true"
       />
     </section>

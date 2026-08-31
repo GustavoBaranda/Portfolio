@@ -18,6 +18,8 @@ export default function ContactForm() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
+  const [company, setCompany] = useState("");
+  const [startedAt] = useState(() => Date.now());
 
   const validateEmail = (email: string): string => {
     if (!email) {
@@ -70,7 +72,7 @@ export default function ContactForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, company, t: startedAt }),
       });
 
       const data: ApiResponse = await res.json();
@@ -120,7 +122,20 @@ export default function ContactForm() {
               </button>
             </motion.div>
           ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-5" noValidate>
+            <form onSubmit={handleSubmit} className="relative flex flex-col gap-4 sm:gap-5" noValidate>
+              <div className="sr-only" aria-hidden="true">
+                <label htmlFor="company">Empresa</label>
+                <input
+                  id="company"
+                  name="company"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                />
+              </div>
+
               {status === "error" && (
                 <div className="flex items-start gap-2.5 p-3 rounded-[0.35rem] bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-xs sm:text-sm">
                   <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
@@ -141,6 +156,7 @@ export default function ContactForm() {
                     name="nombre"
                     type="text"
                     required
+                    maxLength={100}
                     value={formData.nombre}
                     onChange={handleChange}
                     placeholder="Tu nombre"
@@ -159,6 +175,7 @@ export default function ContactForm() {
                     name="email"
                     type="email"
                     required
+                    maxLength={254}
                     value={formData.email}
                     onChange={handleChange}
                     onBlur={handleEmailBlur}
@@ -188,8 +205,9 @@ export default function ContactForm() {
                 <input
                   id="asunto"
                   name="asunto"
-                  type="text"
-                  value={formData.asunto}
+                    type="text"
+                    maxLength={200}
+                    value={formData.asunto}
                   onChange={handleChange}
                   placeholder="Ej. Oportunidad laboral / Consulta de proyecto"
                   className="rounded-[0.35rem] border border-soft surface px-3.5 py-2.5 text-xs sm:text-sm text-foreground placeholder:text-muted focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20 focus:outline-none"
@@ -206,9 +224,10 @@ export default function ContactForm() {
                 <textarea
                   id="mensaje"
                   name="mensaje"
-                  rows={4}
-                  required
-                  value={formData.mensaje}
+                    rows={4}
+                    required
+                    maxLength={2000}
+                    value={formData.mensaje}
                   onChange={handleChange}
                   placeholder="Cuéntame sobre tu proyecto o propuesta..."
                   className="rounded-[0.35rem] border border-soft surface px-3.5 py-2.5 text-xs sm:text-sm text-foreground placeholder:text-muted resize-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20 focus:outline-none"

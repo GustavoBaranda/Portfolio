@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-export function useActiveSection(sectionIds: string[], defaultSection: string = "inicio"): string {
+export function useActiveSection(sectionIds: string[], defaultSection: string = "home"): string {
   const [activeSection, setActiveSection] = useState<string>(defaultSection);
 
   useEffect(() => {

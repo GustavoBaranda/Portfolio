@@ -15,7 +15,7 @@
 
 ---
 
-Portfolio personal de **Gustavo Baranda**, Full Stack Developer. Construido con Next.js 16 App Router, React 19 y TypeScript para reflejar criterio de producción real: protección anti-spam sin CAPTCHA, SEO técnico avanzado, sistema de temas sin hydration flash y layout con CSS subgrid moderno.
+Portfolio personal de **Gustavo Baranda**, Full Stack Developer. Sitio de una sola página construido con Next.js 16 App Router, React 19 y TypeScript: protección anti-spam sin CAPTCHA, SEO técnico, sistema de temas sin hydration flash y layout de proyectos con CSS subgrid.
 
 ---
 
@@ -29,9 +29,10 @@ El formulario de contacto combina tres capas independientes sin degradar la expe
 
 | Capa | Implementación | Archivo |
 |---|---|---|
-| **Honeypot field** | Campo oculto (`display:none` + `tabIndex={-1}` + `autoComplete="off"`) invisible para humanos pero completado por bots. El backend rechaza silenciosamente con `200 OK` para no alertar al bot. | `ContactForm.tsx` / `route.ts` |
-| **Time-based validation** | Timestamp de inicio del formulario incluido en el payload. Envíos en < 2 s se rechazan silenciosamente. | `ContactForm.tsx` / `route.ts` |
-| **Rate limiting in-memory** | Ventana deslizante de 3 requests / IP cada 10 min. Implementado sin dependencias externas, con comentario explícito sobre el comportamiento en cold starts de Vercel. | `src/app/api/contact/route.ts` |
+| **Honeypot field** | Campo oculto (`sr-only` + `tabIndex={-1}` + `autoComplete="off"`). Si viene completo, el backend responde `200 OK` y no envía el mail. | `ContactForm.tsx` / `src/lib/contact.ts` |
+| **Time-based validation** | Timestamp al montar el formulario. Envíos en menos de 2 s se rechazan en silencio. | `ContactForm.tsx` / `src/lib/contact.ts` |
+| **Rate limiting in-memory** | 3 requests por IP cada 10 min. Sin dependencias extra; el Map se vacía en cada cold start de Vercel. | `src/lib/contact.ts` |
+| **Origin + HTML escape** | El POST exige un `Origin` permitido y escapa nombre, email, asunto y mensaje en la plantilla HTML. | `src/lib/contact.ts` / `route.ts` |
 
 > El rechazo silencioso con `200 OK` en honeypot y time-based es intencional: evita que bots adaptativos detecten que están siendo filtrados.
 
@@ -70,8 +71,9 @@ Cuando una tarjeta expande su sección de solución, la fila del grid se estira 
 
 - **`metadataBase` dinámico**: resuelve todas las URLs de OpenGraph, Twitter Cards y canonical contra la URL base correcta según entorno.
 - **`getSiteUrl()` con prioridad de entorno**: `NEXT_PUBLIC_BASE_URL` → `VERCEL_URL` (preview deployments automáticos) → fallback hardcoded. Fuerza `https://` en producción aunque la variable tenga `http://`.
-- **Sitemap y robots dinámicos** generados por Next.js en build time (`src/app/sitemap.ts`, `src/app/robots.ts`).
-- **JSON-LD `Person`** con `sameAs` GitHub/LinkedIn, `knowsAbout` y `alumniOf` para rich results de Google.
+- **Sitemap y robots dinámicos** (`src/app/sitemap.ts`, `src/app/robots.ts`). `robots` bloquea `/api/`.
+- **JSON-LD `Person`** con `sameAs` GitHub/LinkedIn, `knowsAbout` y `alumniOf`.
+- **Una sola ruta `/`**. La navegación es por anclas: `/#home`, `/#about`, `/#projects`, `/#contact`.
 
 ---
 
@@ -81,25 +83,26 @@ Cuando una tarjeta expande su sección de solución, la fila del grid se estira 
 
 | Tecnología | Versión | Motivo |
 |---|---|---|
-| Next.js App Router | 16 | Server Components por defecto, rutas de API integradas, generación estática de sitemap/robots |
-| React | 19 | Concurrent features, `useOptimistic` disponible para futuras mejoras del formulario |
-| TypeScript | 6 | Tipado estricto en componentes, datos y respuestas de API |
-| Tailwind CSS | v4 | Design tokens nativos, subgrid support, `@custom-variant` para dark mode sin config extra |
-| Framer Motion | 12 | Animaciones declarativas con `AnimatePresence` para transiciones de estado del formulario |
+| Next.js App Router | 16.1.6 | App Router, `POST /api/contact`, sitemap y robots |
+| React | 19.2.3 | UI, `AnimatePresence` en el formulario y el menú mobile |
+| TypeScript | 6.0.3 | `strict: true` en `tsconfig.json` |
+| Tailwind CSS | v4 | Design tokens, subgrid, `@custom-variant` para dark mode |
+| Framer Motion | 12 | Cortina de carga, drawer mobile, transiciones del formulario |
 
 ### Backend / API
 
 | Tecnología | Motivo |
 |---|---|
-| Next.js API Routes | Serverless functions en el mismo repo, sin servidor externo |
-| Nodemailer + Gmail SMTP | Envío de email con plantilla HTML personalizada y adjunto de logo inline (CID) |
+| Next.js API Routes | `POST /api/contact` en el mismo repo (Nodemailer + Gmail SMTP) |
+| Nodemailer + Gmail SMTP | Plantilla HTML del mensaje; sin adjunto CID |
 
 ### Tooling & Deploy
 
 | Tecnología | Motivo |
 |---|---|
-| Vercel | Deploy automático desde GitHub, edge network, variables de entorno por entorno |
-| ESLint + eslint-config-next | Reglas de Next.js + React Hooks linting |
+| Vercel | Deploy automático desde GitHub, variables de entorno por entorno |
+| ESLint + eslint-config-next | 16.1.6 — reglas de Next.js + React Hooks |
+| Node.js test runner + tsx | `npm test` — 7 tests de honeypot, rate limit, origen y escape HTML |
 
 ---
 
@@ -111,11 +114,10 @@ GusDev/
 └── src/
     ├── app/                   # Next.js App Router — páginas y rutas
     │   ├── api/contact/       # POST endpoint — validación, honeypot, rate limit, Nodemailer
-    │   ├── about/             # Página About (Server Component)
-    │   ├── contact/           # Página Contact
-    │   ├── projects/          # Página Proyectos
     │   ├── layout.tsx         # Root layout — metadataBase, JSON-LD, skip-to-content, tema
-    │   ├── page.tsx           # Hero page
+    │   ├── page.tsx           # Página única: hero, about, proyectos, contacto
+    │   ├── not-found.tsx
+    │   ├── error.tsx
     │   ├── sitemap.ts         # Sitemap dinámico (build time)
     │   └── robots.ts          # robots.txt dinámico
     ├── components/
@@ -124,15 +126,18 @@ GusDev/
     │   ├── hero/              # TiltImage, FillButton, TransitionEffect
     │   ├── projects/          # ProjectsGrid.tsx (filtros), ProjectCard.tsx (subgrid)
     │   ├── about/             # HeroBio, ExperienceSection, EducationSection
-    │   ├── common/            # SocialLinks
-    │   ├── utils/             # AnimatedText
+    │   ├── common/            # SocialLinks, ThemeToggle
+    │   ├── utils/             # AnimatedText, useActiveSection
     │   └── footer.tsx
     ├── config/
     │   └── site.ts            # getSiteUrl() con lógica de entorno y fallbacks
+    ├── lib/
+    │   └── contact.ts         # Helpers del endpoint + contact.test.ts
     ├── data/
-    │   └── projectsData.ts    # Datos tipados de proyectos y categorías
+    │   ├── projectsData.ts    # Proyectos y categorías
+    │   └── aboutData.ts       # Experiencia, formación y colores
     └── types/
-        └── index.ts           # Interfaces TypeScript globales (ContactFormData, ApiResponse)
+        └── index.ts           # ContactFormData, ApiResponse
 ```
 
 ---
@@ -180,20 +185,21 @@ EMAIL_PASS=tu_contrasena_de_aplicacion
 
 # ── SEO / URL Base ─────────────────────────────────────────────────────────────
 # En local: http://localhost:3000
-# En producción (Vercel): https://tudominio.com
+# En producción (Vercel): https://gustavobaranda.com
 # Si no se define, getSiteUrl() cae al fallback https://gustavobaranda.com
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
 ```
 
-> **En Vercel:** Configurar `NEXT_PUBLIC_BASE_URL=https://tudominio.com` únicamente en el entorno **Production**. Los preview deployments usarán `VERCEL_URL` automáticamente.
+> **En Vercel:** Configurar `NEXT_PUBLIC_BASE_URL=https://gustavobaranda.com` únicamente en el entorno **Production**. Los preview deployments usarán `VERCEL_URL` automáticamente.
 
 ### Comandos disponibles
 
 ```bash
 npm run dev      # Servidor de desarrollo con HMR
-npm run build    # Build de producción (type-check + export estático)
+npm run build    # Build de producción (type-check)
 npm run start    # Servidor de producción local (requiere build previo)
 npm run lint     # ESLint con reglas de Next.js
+npm test         # Tests del módulo de contacto
 ```
 
 ---

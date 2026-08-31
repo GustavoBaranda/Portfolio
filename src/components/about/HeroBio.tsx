@@ -21,8 +21,8 @@ export default function HeroBio() {
         </p>
         <h2 className="text-3xl font-extrabold leading-snug sm:text-4xl md:text-6xl text-foreground text-balance">
           Construyendo el puente entre el{" "}
-          <span className="text-indigo-600">{"código"}</span> y los{" "}
-          <span className="text-blue-600">{"datos"}</span>.
+          <span className="text-indigo-600">código</span> y los{" "}
+          <span className="text-blue-600">datos</span>.
         </h2>
       </motion.header>
 
@@ -49,11 +49,11 @@ export default function HeroBio() {
         >
           Soy{" "}
           <span className="font-semibold text-foreground">
-            {"Técnico Superior en Desarrollo de Software"}
+            Técnico Superior en Desarrollo de Software
           </span>{" "}
           y estudiante de la{" "}
           <span className="font-semibold italic text-foreground">
-            {"Licenciatura en Ciencias de Datos"}
+            Licenciatura en Ciencias de Datos
           </span>{" "}
           en la Universidad de la Ciudad de Buenos Aires (Udelaciudad). Comencé
           creando aplicaciones y, con el tiempo, incorporé una mirada
@@ -92,7 +92,7 @@ export default function HeroBio() {
               Frontend
             </span>
             , utilizo React para crear interfaces limpias y funcionales.
-            Creo que la experiencia de usuario no es un {"\"extra\""}: si algo
+            Creo que la experiencia de usuario no es un extra: si algo
             es potente pero confuso, todavía no está terminado.
           </motion.p>
 
@@ -165,16 +165,13 @@ export default function HeroBio() {
                 whileHover={{ y: -2, scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                {"Ver más ↓"}
+                Ver más ↓
               </motion.button>
             )}
             {step === 2 && (
               <motion.button
                 key="show-less"
-                onClick={() => {
-                  setStep(1);
-                  setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 420);
-                }}
+                onClick={() => setStep(1)}
                 className="text-indigo-600 font-semibold hover:underline cursor-pointer"
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -183,7 +180,7 @@ export default function HeroBio() {
                 whileHover={{ y: -2, scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                {"Ver menos ↑"}
+                Ver menos ↑
               </motion.button>
             )}
           </AnimatePresence>

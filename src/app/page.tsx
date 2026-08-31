@@ -102,7 +102,7 @@ export default function HomePage() {
                 {/* Botones: mobile solo Proyectos; Contacto desde md */}
                 <div className="flex flex-col md:flex-row items-center md:items-center mt-5 md:mt-6 gap-3 md:gap-5 w-full md:w-auto justify-center md:justify-start">
                   <FillButton
-                    href="#projects"
+                    href="/#projects"
                     ariaLabel="Ver proyectos"
                     motionProps={{
                       initial: { opacity: 0, x: 0, y: -8 },
@@ -115,7 +115,7 @@ export default function HomePage() {
                   </FillButton>
                   <div className="hidden md:block">
                     <FillButton
-                      href="#contact"
+                      href="/#contact"
                       ariaLabel="Contacto"
                       variant="ghost"
                       motionProps={{

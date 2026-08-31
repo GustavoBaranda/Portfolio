@@ -237,7 +237,7 @@ export const PROJECTS: ProjectItem[] = [
     challenge:
       "Necesitaba un portfolio TypeScript-first con SEO técnico real, performance, un canal de contacto confiable con protección anti-spam sin CAPTCHA y un design system propio escalable.",
     solution:
-      "Construí el sitio con Next.js 16 App Router, React 19, Tailwind CSS v4 y Framer Motion. Implementé protección anti-spam multicapa: honeypot field, time-based validation y rate limiting por IP en API Route serverless. Layout de proyectos con CSS subgrid para alineación sin JS. SEO técnico completo: metadataBase dinámico, sitemap/robots generados en build time y JSON-LD Schema.org. Sistema de temas sin hydration flash via script beforeInteractive y tokens CSS semánticos.",
+      "Sitio en Next.js 16 App Router, React 19 y Tailwind CSS v4. Formulario de contacto con honeypot, validación por tiempo mínimo y rate limit por IP. SEO con metadataBase, sitemap, robots y JSON-LD. Tema claro/oscuro sin flash de hidratación.",
     image: "/images/opengraph.png",
     tags: ["TypeScript", "Next.js 16", "React 19", "Tailwind CSS v4", "CSS Subgrid", "SEO", "JSON-LD", "Framer Motion", "Nodemailer", "Anti-Spam"],
     featured: false,

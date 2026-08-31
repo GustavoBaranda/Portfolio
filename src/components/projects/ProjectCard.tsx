@@ -31,6 +31,7 @@ export default function ProjectCard({
 }: ProjectCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [imgFailed, setImgFailed] = useState(false);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(min-width: 768px)");
@@ -78,17 +79,24 @@ export default function ProjectCard({
         </div>
 
         <div className="relative w-full h-44 sm:h-52 md:h-56 my-3 sm:my-4 rounded-[0.35rem] overflow-hidden bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 flex items-center justify-center shadow-xs transition-colors">
-          <Image
-            src={project.image}
-            alt={`Vista del proyecto ${project.title}`}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
-            className={
-              isLogo
-                ? "object-contain p-6 sm:p-8 transition-transform duration-500 group-hover:scale-105 dark:brightness-95 dark:contrast-105"
-                : "object-cover object-top w-full h-full transition-transform duration-500 group-hover:scale-105 dark:brightness-95 dark:contrast-105"
-            }
-          />
+          {imgFailed ? (
+            <span className="text-sm font-semibold text-muted px-4 text-center">
+              {project.company}
+            </span>
+          ) : (
+            <Image
+              src={project.image}
+              alt={`Vista del proyecto ${project.title}`}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+              onError={() => setImgFailed(true)}
+              className={
+                isLogo
+                  ? "object-contain p-6 sm:p-8 transition-transform duration-500 group-hover:scale-105 dark:brightness-95 dark:contrast-105"
+                  : "object-cover object-top w-full h-full transition-transform duration-500 group-hover:scale-105 dark:brightness-95 dark:contrast-105"
+              }
+            />
+          )}
         </div>
 
         {/* Caso de estudio: Desafío */}

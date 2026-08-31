@@ -73,7 +73,7 @@ export default function EducationSection() {
         </h2>
 
         <p className="max-w-2xl text-foreground">
-          Títulos y cursos. Completa las fechas y el lugar cuando quieras.
+          Títulos y cursos que sostienen mi trabajo como desarrollador.
         </p>
       </motion.header>
 
@@ -82,7 +82,7 @@ export default function EducationSection() {
         {/* Track line */}
         {lineHeight > 0 && (
           <div
-            className="hidden sm:block absolute left-[1.6875rem] w-0.5 bg-border z-0"
+            className="hidden sm:block absolute left-6.75 w-0.5 bg-border z-0"
             style={{
               top: `${lineTop}px`,
               height: `${lineHeight}px`,
@@ -94,7 +94,7 @@ export default function EducationSection() {
         {/* Animated fill line */}
         {lineHeight > 0 && (
           <motion.div
-            className="hidden sm:block absolute left-[1.6875rem] w-0.5 bg-indigo-600 origin-top z-0"
+            className="hidden sm:block absolute left-6.75 w-0.5 bg-indigo-600 origin-top z-0"
             style={{
               scaleY: eduScaleY,
               top: `${lineTop}px`,

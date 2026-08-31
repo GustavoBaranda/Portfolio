@@ -9,8 +9,8 @@ export interface NavigationItem {
 }
 
 export const NavigationNavBar: NavigationItem[] = [
-  { id: 1, text: "Inicio", href: "#home", targetId: "home", icon: Home },
-  { id: 2, text: "Sobre mí", href: "#about", targetId: "about", icon: UserRound },
-  { id: 3, text: "Proyectos", href: "#projects", targetId: "projects", icon: Layers },
-  { id: 4, text: "Contacto", href: "#contact", targetId: "contact", icon: Mail },
+  { id: 1, text: "Inicio", href: "/#home", targetId: "home", icon: Home },
+  { id: 2, text: "Sobre mí", href: "/#about", targetId: "about", icon: UserRound },
+  { id: 3, text: "Proyectos", href: "/#projects", targetId: "projects", icon: Layers },
+  { id: 4, text: "Contacto", href: "/#contact", targetId: "contact", icon: Mail },
 ];

@@ -78,7 +78,7 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.35 }}
-        className="mt-12 w-16 h-px bg-gradient-to-r from-transparent via-rose-500/30 to-transparent"
+        className="mt-12 w-16 h-px bg-linear-to-r from-transparent via-rose-500/30 to-transparent"
         aria-hidden="true"
       />
     </section>

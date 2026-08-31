@@ -5,14 +5,13 @@ import Header from '@/components/header';
 import Footer from '@/components/footer';
 import { Metadata } from 'next';
 import { ReactNode } from 'react';
+import { getSiteUrl, SITE_CONFIG } from '@/config/site';
 
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: '--font-montserrat',
   display: 'swap',
 });
-
-import { getSiteUrl } from '@/config/site';
 
 const baseUrl = getSiteUrl();
 
@@ -118,7 +117,7 @@ const jsonLdPerson = {
   url: baseUrl,
   sameAs: [
     'https://github.com/GustavoBaranda',
-    'https://linkedin.com/in/gustavo-baranda'
+    SITE_CONFIG.links.linkedin,
   ],
   knowsAbout: [
     'Full Stack Software Development',
@@ -166,10 +165,9 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         className={`${montserrat.className} antialiased`}
         suppressHydrationWarning
       >
-        {/* Skip-to-content: invisible para usuarios visuales, esencial para navegación por teclado */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:rounded-[0.35rem] focus:bg-indigo-600 focus:text-white focus:text-sm focus:font-semibold focus:shadow-lg focus:outline-none"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-9999 focus:px-4 focus:py-2 focus:rounded-[0.35rem] focus:bg-indigo-600 focus:text-white focus:text-sm focus:font-semibold focus:shadow-lg focus:outline-none"
         >
           Saltar al contenido principal
         </a>
