@@ -25,16 +25,17 @@ Esta sección resume las implementaciones con mayor criterio de producción — 
 
 ### Protección Anti-Spam Multicapa (Sin CAPTCHA)
 
-El formulario de contacto combina tres capas independientes sin degradar la experiencia del usuario:
+El formulario valida los mismos campos en cliente y servidor. El servidor exige JSON con tipos correctos, limita el cuerpo a 16 KiB y no informa éxito hasta que SMTP acepta el destinatario. Esa aceptación no garantiza la entrega final en la bandeja de entrada.
 
 | Capa | Implementación | Archivo |
 |---|---|---|
-| **Honeypot field** | Campo oculto (`sr-only` + `tabIndex={-1}` + `autoComplete="off"`). Si viene completo, el backend responde `200 OK` y no envía el mail. | `ContactForm.tsx` / `src/lib/contact.ts` |
-| **Time-based validation** | Timestamp al montar el formulario. Envíos en menos de 2 s se rechazan en silencio. | `ContactForm.tsx` / `src/lib/contact.ts` |
-| **Rate limiting in-memory** | 3 requests por IP cada 10 min. Sin dependencias extra; el Map se vacía en cada cold start de Vercel. | `src/lib/contact.ts` |
-| **Origin + HTML escape** | El POST exige un `Origin` permitido y escapa nombre, email, asunto y mensaje en la plantilla HTML. | `src/lib/contact.ts` / `route.ts` |
+| **Honeypot** | Si el campo auxiliar está completo, devuelve un error genérico sin enviar correo. Al finalizar cada solicitud, el cliente limpia solo ese campo y conserva los datos legítimos. El visitante puede volver a enviar manualmente; no hay reintentos automáticos ni excepciones al límite por IP. | `ContactForm.tsx` / `contact-handler.ts` |
+| **Limitador local** | 3 intentos por IP cada 10 minutos, limpieza de clientes vencidos y máximo de 5000 entradas. A capacidad completa rechaza nuevos clientes sin borrar cuotas activas. | `src/lib/contact.ts` |
+| **Origen y escape** | Exige un Origin permitido, valida tipos y longitudes, rechaza controles en cabeceras y escapa contenido HTML. | `contact-validation.ts` / `route.ts` |
 
-> El rechazo silencioso con `200 OK` en honeypot y time-based es intencional: evita que bots adaptativos detecten que están siendo filtrados.
+El limitador es **por proceso**, se reinicia en un cold start y no comparte cuotas entre instancias de Vercel. Origin y honeypot son defensas complementarias, no autenticación ni una garantía contra bots. Se retiró el timestamp del cliente: era manipulable y podía descartar contactos legítimos. No se añadió CAPTCHA ni almacenamiento externo.
+
+Las pruebas HTTP inyectan un envío simulado: no usan credenciales reales ni conectan a SMTP. El formulario conserva los datos ante errores y anuncia validación, carga y resultado con atributos accesibles.
 
 ---
 
@@ -83,7 +84,7 @@ Cuando una tarjeta expande su sección de solución, la fila del grid se estira 
 
 | Tecnología | Versión | Motivo |
 |---|---|---|
-| Next.js App Router | 16.1.6 | App Router, `POST /api/contact`, sitemap y robots |
+| Next.js App Router | 16.4.2 | App Router, `POST /api/contact`, sitemap y robots |
 | React | 19.2.3 | UI, `AnimatePresence` en el formulario y el menú mobile |
 | TypeScript | 6.0.3 | `strict: true` en `tsconfig.json` |
 | Tailwind CSS | v4 | Design tokens, subgrid, `@custom-variant` para dark mode |
@@ -101,8 +102,8 @@ Cuando una tarjeta expande su sección de solución, la fila del grid se estira 
 | Tecnología | Motivo |
 |---|---|
 | Vercel | Deploy automático desde GitHub, variables de entorno por entorno |
-| ESLint + eslint-config-next | 16.1.6 — reglas de Next.js + React Hooks |
-| Node.js test runner + tsx | `npm test` — 7 tests de honeypot, rate limit, origen y escape HTML |
+| ESLint + eslint-config-next | 16.4.2 — reglas de Next.js + React Hooks |
+| Node.js test runner + tsx | `npm test` — regresiones de validación, límites, origen, escape y flujo HTTP con correo simulado |
 
 ---
 
@@ -121,7 +122,7 @@ GusDev/
     │   ├── sitemap.ts         # Sitemap dinámico (build time)
     │   └── robots.ts          # robots.txt dinámico
     ├── components/
-    │   ├── contact/           # ContactForm.tsx (honeypot, time validation), ContactInfo.tsx
+    │   ├── contact/           # ContactForm.tsx (validación accesible y honeypot), ContactInfo.tsx
     │   ├── header/            # Header sticky, menú mobile con drawer, ThemeToggle
     │   ├── hero/              # TiltImage, FillButton, TransitionEffect
     │   ├── projects/          # ProjectsGrid.tsx (filtros), ProjectCard.tsx (subgrid)
@@ -146,7 +147,7 @@ GusDev/
 
 ### Prerrequisitos
 
-- **Node.js** `>= 20.x`
+- **Node.js** `>= 20.9.0`
 - **npm** `>= 10.x` (o pnpm / yarn equivalente)
 - Cuenta de Gmail con [Contraseña de Aplicación](https://myaccount.google.com/apppasswords) habilitada (requiere 2FA activo)
 
@@ -233,3 +234,41 @@ MIT — ver [LICENSE](./LICENSE).
 <div align="center">
   Desarrollado por <a href="https://github.com/GustavoBaranda"><strong>Gustavo Baranda</strong></a>
 </div>
+
+## Pendientes de la Fase 1
+
+### Dependencias de desarrollo
+
+Revisión del 17 de octubre de 2026: quedan **12 paquetes señalados por npm audit (2 moderados y 10 altos)**. Ocho tienen avisos propios y cuatro están afectados por arrastre. Su actualización está diferida por decisión del responsable del proyecto; no se aplicó `audit fix --force` ni una degradación de Next.js.
+
+| Paquete instalado | Severidad | Corrección o pendiente |
+|---|---|---|
+| @humanfs/node 0.16.7 | Moderada | 0.16.8 |
+| ajv 6.12.6 | Moderada | 6.14.0 |
+| brace-expansion 1.1.12 / 5.0.9 | Alta | 1.1.21 / 5.0.12 |
+| braces 3.0.3 | Alta | Sin versión corregida declarada en el aviso revisado |
+| micromatch 4.0.8 | Alta, heredada | Resolver la dependencia afectada de braces |
+| fast-glob 3.3.1 | Alta, heredada | Resolver la cadena micromatch / braces |
+| @next/eslint-plugin-next 16.4.2 | Alta, heredada | Resolver la cadena fast-glob / micromatch / braces |
+| eslint-config-next 16.4.2 | Alta, heredada | Resolver la cadena del plugin anterior |
+| flatted 3.3.3 | Alta | 3.4.2 |
+| js-yaml 4.1.1 | Alta | 4.3.2 |
+| minimatch 3.1.2 | Alta | 3.1.4 |
+| picomatch 4.0.3 | Alta | 4.0.4 |
+
+Los mínimos corregidos corresponden a los avisos consultados en esa fecha; antes de actualizar hay que volver a consultar los avisos y comprobar compatibilidad. El alcance encontrado corresponde a ESLint, sus plugins, patrones y cachés de herramientas. No se encontró una ruta desde el formulario público hacia estos paquetes; no aparecen en el trazado del endpoint compilado. Esto no elimina el riesgo al procesar configuraciones, patrones o cachés no confiables en CI. Next.js 16 no ejecuta ESLint automáticamente dentro de `next build`.
+
+### Comprobación manual del formulario
+
+No había navegador conectado durante la validación automatizada. Queda pendiente comprobar en un entorno local con respuestas HTTP simuladas y sin conexión a SMTP:
+
+- Recorrer el formulario con Tab y Shift+Tab; el campo auxiliar debe quedar fuera del recorrido.
+- Enviar campos vacíos, espacios y correo inválido; verificar mensajes, foco y asociación de errores.
+- Simular un 400 del honeypot: conservar los cuatro campos legítimos, anunciar el error y permitir un nuevo intento manual sin envío automático.
+- Simular 400 por campo, 429 y 503: verificar mensajes visibles, foco, datos conservados y ausencia de éxito falso.
+- Simular éxito y usar «Enviar otro mensaje»; comprobar el restablecimiento y el foco en Nombre.
+- Verificar anuncios con lector de pantalla y presentación en móvil y en ambos temas.
+
+## Revisión manual pendiente de la captura médica
+
+`public/images/fundacion_maldonado_preview.png` muestra un visor DICOM con texto incrustado en la imagen. Se conserva sin cambios: no se confirmó que contenga datos personales reales. Antes de volver a publicarla, el responsable del material debe verificar procedencia, autorización y anonimización de los píxeles visibles, además de cualquier identificador del estudio. No se publican transcripciones de ese texto en esta documentación.
