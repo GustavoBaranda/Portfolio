@@ -52,9 +52,9 @@ export default function SocialLinks({
             target={isMail ? undefined : "_blank"}
             rel={isMail ? undefined : "noopener noreferrer"}
             aria-label={label}
-            className={linkClassName}
+            className={`inline-flex min-h-8 min-w-8 items-center justify-center ${linkClassName}`}
           >
-            <Icon size={iconSize} />
+            <Icon aria-hidden="true" size={iconSize} />
           </a>
         );
       })}

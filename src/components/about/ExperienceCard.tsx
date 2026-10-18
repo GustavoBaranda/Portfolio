@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Calendar, MapPin } from "lucide-react";
 import { COLOR_MAP, cardVariants, calculateDuration, Experience } from "@/data/aboutData";
-import { RefObject } from "react";
+import { RefObject, useId } from "react";
 
 export interface ExperienceCardProps {
   exp: Experience;
@@ -21,6 +21,7 @@ export default function ExperienceCard({
   onToggle,
   cardRef,
 }: ExperienceCardProps) {
+  const detailsId = useId();
   const colors = COLOR_MAP[exp.color] || COLOR_MAP.syspro;
   const displayDuration = calculateDuration(exp.period, exp.duration);
 
@@ -40,13 +41,9 @@ export default function ExperienceCard({
         aria-hidden="true"
       />
 
-      {/* Card button */}
-      <button
-        type="button"
-        onClick={onToggle}
-        className={`w-full text-left rounded-[0.35rem] border ${colors.border} surface-card p-4 sm:p-5 transition-all duration-300 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500`}
-        aria-expanded={isExpanded}
-        aria-label={`${isExpanded ? 'Colapsar' : 'Expandir'} experiencia en ${exp.company}`}
+      {/* Card with an independent disclosure and project link. */}
+      <div
+        className={`w-full text-left rounded-[0.35rem] border ${colors.border} surface-card p-4 sm:p-5 transition-all duration-300`}
       >
         {/* Header row with logo */}
         <div className="flex items-start gap-4">
@@ -80,7 +77,17 @@ export default function ExperienceCard({
             <div className="flex items-start justify-between gap-2.5 sm:gap-4">
               <div className="flex-1 min-w-0">
                 <h3 className={`text-base sm:text-xl font-bold leading-snug ${colors.heading}`}>
-                  {exp.role}
+                  <button
+                    type="button"
+                    onClick={onToggle}
+                    aria-expanded={isExpanded}
+                    aria-controls={detailsId}
+                    aria-label={`${isExpanded ? 'Colapsar' : 'Expandir'} experiencia en ${exp.company}`}
+                    className="flex w-full items-start justify-between gap-3 text-left cursor-pointer rounded-sm"
+                  >
+                    <span>{exp.role}</span>
+                    <span aria-hidden="true" className={`shrink-0 text-sm transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}>▼</span>
+                  </button>
                 </h3>
                 <p className="text-xs sm:text-sm font-semibold text-foreground mt-0.5">
                   {exp.company}{" "}
@@ -97,15 +104,6 @@ export default function ExperienceCard({
                   {displayDuration}
                 </span>
 
-                {/* Chevron */}
-                <span
-                  className={`transform transition-transform duration-200 text-foreground/60 text-xs sm:text-sm ${
-                    isExpanded ? "rotate-180" : ""
-                  }`}
-                  aria-hidden="true"
-                >
-                  ▼
-                </span>
               </div>
             </div>
 
@@ -139,6 +137,9 @@ export default function ExperienceCard({
 
         {/* Collapsible accordion body — CSS grid (no framer height:auto = fewer freezes on mobile) */}
         <div
+          id={detailsId}
+          inert={!isExpanded}
+          aria-hidden={!isExpanded}
           className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
             isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
           }`}
@@ -172,7 +173,6 @@ export default function ExperienceCard({
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`inline-flex items-center gap-1.5 text-xs font-semibold hover:underline ${colors.heading}`}
-                    onClick={(e) => e.stopPropagation()}
                   >
                     Ver proyecto ↗
                   </a>
@@ -181,7 +181,7 @@ export default function ExperienceCard({
             </div>
           </div>
         </div>
-      </button>
+      </div>
     </motion.div>
   );
 }

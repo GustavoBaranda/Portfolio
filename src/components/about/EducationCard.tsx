@@ -60,10 +60,10 @@ export default function EducationCard({ edu, index, cardRef }: EducationCardProp
           </div>
 
           {/* Details */}
-          <div className="space-y-2 flex-1 min-w-0">
+          <div className="space-y-2 flex-1 min-w-0 break-words">
             {/* Header row: Title + Status Tag */}
-            <div className="flex items-start justify-between gap-3">
-              <h3 className={`text-base sm:text-xl font-bold leading-snug ${colors.heading} flex-1 min-w-0`}>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <h3 className={`text-base sm:text-xl font-bold leading-snug ${colors.heading} flex-1 min-w-0 break-words`}>
                 {edu.title}
               </h3>
               {edu.status && (

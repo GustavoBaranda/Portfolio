@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FolderSearch, RotateCcw, Tag, ChevronDown, ChevronUp, X } from "lucide-react";
 import { PROJECTS, PROJECT_CATEGORIES } from "@/data/projectsData";
@@ -30,6 +30,7 @@ const CATEGORY_ORDER: Record<string, number> = {
 };
 
 export default function ProjectsGrid() {
+  const techToggleRef = useRef<HTMLButtonElement>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const [selectedTech, setSelectedTech] = useState<CoreTechFilter | string | null>(null);
@@ -74,6 +75,7 @@ export default function ProjectsGrid() {
       setSelectedTech(filter);
     }
     setIsTechFilterOpen(false);
+    techToggleRef.current?.focus();
   };
 
   const handleCardTagClick = (tag: string) => {
@@ -90,9 +92,11 @@ export default function ProjectsGrid() {
         setSelectedTech(tag);
       }
     }
+    techToggleRef.current?.focus();
   };
 
   const resetFilters = () => {
+    techToggleRef.current?.focus();
     setSelectedCategory("all");
     setSelectedTech(null);
     setIsTechFilterOpen(false);
@@ -110,6 +114,8 @@ export default function ProjectsGrid() {
             const isActive = selectedCategory === cat.id;
             return (
               <button
+                type="button"
+                aria-pressed={isActive}
                 key={cat.id}
                 onClick={() => {
                   setSelectedCategory(cat.id);
@@ -130,6 +136,10 @@ export default function ProjectsGrid() {
         {/* Tech Filter Toggle & Active Badge Bar */}
         <div className="flex flex-wrap items-center justify-center gap-2 pt-1 text-xs">
           <button
+            ref={techToggleRef}
+            type="button"
+            aria-expanded={isTechFilterOpen}
+            aria-controls="technology-filters"
             onClick={() => setIsTechFilterOpen(!isTechFilterOpen)}
             className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[0.35rem] border text-xs font-semibold transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
               isTechFilterOpen || selectedTech
@@ -151,7 +161,7 @@ export default function ProjectsGrid() {
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[0.35rem] bg-indigo-600 text-white text-xs font-semibold shadow-xs">
               <span>{activeTechLabel}</span>
               <button
-                onClick={() => setSelectedTech(null)}
+                onClick={() => { setSelectedTech(null); techToggleRef.current?.focus(); }}
                 className="hover:opacity-80 cursor-pointer ml-0.5"
                 title="Quitar filtro de tecnología"
               >
@@ -174,6 +184,15 @@ export default function ProjectsGrid() {
 
         {/* Collapsible Curated Core Tech Filter Grid */}
         <div
+          id="technology-filters"
+          inert={!isTechFilterOpen}
+          aria-hidden={!isTechFilterOpen}
+          onKeyDown={(event) => {
+            if (event.key === "Escape") {
+              setIsTechFilterOpen(false);
+              techToggleRef.current?.focus();
+            }
+          }}
           className={`grid w-full max-w-xl transition-[grid-template-rows] duration-200 ease-in-out ${
             isTechFilterOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
           }`}
@@ -185,6 +204,8 @@ export default function ProjectsGrid() {
                   typeof selectedTech !== "string" && selectedTech?.id === filter.id;
                 return (
                   <button
+                    type="button"
+                    aria-pressed={isActive}
                     key={filter.id}
                     onClick={() => handleCoreTechClick(filter)}
                     className={`px-3 py-1.5 rounded-[0.35rem] text-xs font-semibold transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
@@ -201,6 +222,8 @@ export default function ProjectsGrid() {
           </div>
         </div>
       </div>
+
+      <p role="status" className="sr-only">{filteredProjects.length} proyectos encontrados.</p>
 
       {/* Grid container or Empty State */}
       <AnimatePresence mode="wait">

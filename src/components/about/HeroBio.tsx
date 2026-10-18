@@ -21,8 +21,8 @@ export default function HeroBio() {
         </p>
         <h2 className="text-3xl font-extrabold leading-snug sm:text-4xl md:text-6xl text-foreground text-balance">
           Construyendo el puente entre el{" "}
-          <span className="text-indigo-600">código</span> y los{" "}
-          <span className="text-blue-600">datos</span>.
+          <span className="text-indigo-600 dark:text-indigo-400">código</span> y los{" "}
+          <span className="text-blue-600 dark:text-blue-400">datos</span>.
         </h2>
       </motion.header>
 
@@ -69,7 +69,7 @@ export default function HeroBio() {
             viewport={{ once: true, amount: 0.3 }}
           >
             En el{" "}
-            <span className="text-indigo-600 font-semibold uppercase tracking-wider text-sm">
+            <span className="text-indigo-600 dark:text-indigo-400 font-semibold uppercase tracking-wider text-sm">
               Backend
             </span>
             , busco solidez y escalabilidad. Trabajo principalmente con{" "}
@@ -88,7 +88,7 @@ export default function HeroBio() {
             viewport={{ once: true, amount: 0.3 }}
           >
             En el{" "}
-            <span className="text-blue-600 font-semibold uppercase tracking-wider text-sm">
+            <span className="text-blue-600 dark:text-blue-400 font-semibold uppercase tracking-wider text-sm">
               Frontend
             </span>
             , utilizo React para crear interfaces limpias y funcionales.
@@ -104,7 +104,7 @@ export default function HeroBio() {
             viewport={{ once: true, amount: 0.3 }}
           >
             La{" "}
-            <span className="text-cyan-600 font-semibold uppercase tracking-wider text-sm">
+            <span className="text-cyan-700 dark:text-cyan-400 font-semibold uppercase tracking-wider text-sm">
               Ciencia de Datos
             </span>{" "}
             me aporta una forma distinta de decidir. Analizo información
@@ -115,6 +115,9 @@ export default function HeroBio() {
         </div>
 
         <div
+          id="bio-details"
+          inert={step !== 2}
+          aria-hidden={step !== 2}
           className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
             step === 2 ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
           }`}
@@ -152,38 +155,28 @@ export default function HeroBio() {
           initial="hidden"
           animate="visible"
         >
-          <AnimatePresence initial={false} mode="wait">
-            {step === 1 && (
-              <motion.button
-                key="show-more"
-                onClick={() => setStep(2)}
-                className="text-indigo-600 font-semibold hover:underline cursor-pointer"
+          <motion.button
+            type="button"
+            onClick={() => setStep(step === 1 ? 2 : 1)}
+            aria-expanded={step === 2}
+            aria-controls="bio-details"
+            className="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline cursor-pointer"
+            whileHover={{ y: -2, scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <AnimatePresence initial={false} mode="wait">
+              <motion.span
+                key={step === 1 ? "show-more" : "show-less"}
+                className="inline-block"
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 6 }}
                 transition={{ duration: 0.24, ease: "easeInOut" }}
-                whileHover={{ y: -2, scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
               >
-                Ver más ↓
-              </motion.button>
-            )}
-            {step === 2 && (
-              <motion.button
-                key="show-less"
-                onClick={() => setStep(1)}
-                className="text-indigo-600 font-semibold hover:underline cursor-pointer"
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 6 }}
-                transition={{ duration: 0.24, ease: "easeInOut" }}
-                whileHover={{ y: -2, scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Ver menos ↑
-              </motion.button>
-            )}
-          </AnimatePresence>
+                {step === 1 ? "Ver más ↓" : "Ver menos ↑"}
+              </motion.span>
+            </AnimatePresence>
+          </motion.button>
         </motion.div>
       </div>
     </motion.section>

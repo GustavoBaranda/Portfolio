@@ -127,7 +127,7 @@ export function FillButton({
   return (
     <motion.div
       {...mergedMotion}
-      className={hasWidthClass ? className.match(/w-\S+|max-w-\S+/g)?.join(" ") : undefined}
+      className={hasWidthClass ? `min-w-0 max-w-full ${className.split(/\s+/).filter((token) => /^(?:[a-z]+:)*(?:w-|max-w-)/.test(token)).join(" ")}` : undefined}
     >
       <Link
         href={href}
