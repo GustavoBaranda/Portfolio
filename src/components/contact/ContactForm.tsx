@@ -1,11 +1,20 @@
 "use client";
 
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, useRef, ChangeEvent, FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
-import { ContactFormData, ApiResponse } from "@/types";
+import type { ContactFormData } from "@/types";
+import { CONTACT_FIELDS, validateContactFields, type ContactFieldErrors } from "@/lib/contact-validation";
+import { sendContactAttempt } from "@/lib/contact-client";
 
-const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+function FieldError({ name, errors }: { name: keyof ContactFormData; errors: ContactFieldErrors }) {
+  if (!errors[name]) return null;
+  return (
+    <span id={name + "-error"} className="text-xs font-medium text-rose-600 dark:text-rose-400">
+      {errors[name]}
+    </span>
+  );
+}
 
 export default function ContactForm() {
   const [formData, setFormData] = useState<ContactFormData>({
@@ -17,82 +26,69 @@ export default function ContactForm() {
 
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [emailError, setEmailError] = useState<string>("");
+  const [fieldErrors, setFieldErrors] = useState<ContactFieldErrors>({});
   const [company, setCompany] = useState("");
-  const [startedAt] = useState(() => Date.now());
+  const formRef = useRef<HTMLFormElement>(null);
+  const errorRef = useRef<HTMLDivElement>(null);
+  const submitting = useRef(false);
+  const restoreFocus = useRef(false);
 
-  const validateEmail = (email: string): string => {
-    if (!email) {
-      return "El correo es obligatorio";
-    }
-    if (!EMAIL_REGEX.test(email.trim())) {
-      return "Email inválido (ej. tu@email.com)";
-    }
-    return "";
+  const focusField = (field: keyof ContactFormData) => {
+    const input = formRef.current?.elements.namedItem(field);
+    if (input instanceof HTMLElement) input.focus();
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    if (name === "email") {
-      if (emailError) {
-        setEmailError(validateEmail(value));
-      }
-    }
-  };
-
-  const handleEmailBlur = () => {
-    if (formData.email) {
-      setEmailError(validateEmail(formData.email));
+    const name = e.target.name as keyof ContactFormData;
+    const next = { ...formData, [name]: e.target.value };
+    setFormData(next);
+    if (fieldErrors[name]) {
+      setFieldErrors((prev) => ({ ...prev, [name]: validateContactFields(next)[name] }));
     }
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const err = validateEmail(formData.email);
-    if (err) {
-      setEmailError(err);
+    if (submitting.current) return;
+    const errors = validateContactFields(formData);
+    setFieldErrors(errors);
+    const firstError = CONTACT_FIELDS.find((field) => errors[field]);
+    if (firstError) {
+      setErrorMessage("Revisá los campos indicados antes de enviar.");
+      setStatus("error");
+      focusField(firstError);
       return;
     }
-
-    if (!formData.nombre || !formData.mensaje) return;
-
+    submitting.current = true;
     setStatus("loading");
     setErrorMessage("");
-    setEmailError("");
-
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...formData, company, t: startedAt }),
-      });
-
-      const data: ApiResponse = await res.json();
-
-      if (res.ok && data.success) {
+      const result = await sendContactAttempt(formData, company, () => setCompany(""));
+      if (result.success) {
         setStatus("success");
       } else {
-        setErrorMessage(data.error || "Ocurrió un error al enviar el mensaje.");
+        setFieldErrors(result.fieldErrors);
+        setErrorMessage(result.error);
         setStatus("error");
+        const first = CONTACT_FIELDS.find((field) => result.fieldErrors[field]);
+        // Wait for React to commit the error text and aria-describedby before
+        // focusing. General errors receive focus so retry remains discoverable.
+        requestAnimationFrame(() => {
+          if (first) focusField(first);
+          else errorRef.current?.focus();
+        });
       }
-    } catch (err) {
-      console.error(err);
-      setErrorMessage("No se pudo conectar con el servidor. Inténtalo de nuevo.");
-      setStatus("error");
+    } finally {
+      submitting.current = false;
     }
   };
 
   return (
     <div className="rounded-[0.35rem] border border-soft surface-card p-4 sm:p-8 shadow-sm flex flex-col justify-between h-full">
       <div>
+        <p role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+          {status === "loading" ? "Enviando mensaje." : status === "success" ? "El servicio de correo aceptó tu mensaje." : ""}
+        </p>
         <AnimatePresence mode="wait">
           {status === "success" ? (
             <motion.div
@@ -104,17 +100,20 @@ export default function ContactForm() {
               <div className="inline-flex p-3 sm:p-4 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                 <CheckCircle2 className="w-10 h-10 sm:w-12 sm:h-12" />
               </div>
-              <h4 className="text-lg sm:text-xl font-bold text-foreground">
+              <h4 tabIndex={-1} ref={(node) => { node?.focus(); }} className="text-lg sm:text-xl font-bold text-foreground">
                 ¡Mensaje enviado con éxito!
               </h4>
               <p className="text-xs sm:text-sm text-muted max-w-sm mx-auto">
-                Gracias por escribirme. Tu mensaje ha sido enviado directamente a mi correo y te responderé lo antes posible.
+                Gracias por escribirme. El servicio de correo aceptó tu mensaje para su entrega. Te responderé lo antes posible.
               </p>
               <button
                 onClick={() => {
+                  restoreFocus.current = true;
                   setStatus("idle");
                   setFormData({ nombre: "", email: "", asunto: "", mensaje: "" });
-                  setEmailError("");
+                  setFieldErrors({});
+                  setCompany("");
+                  setErrorMessage("");
                 }}
                 className="mt-3 sm:mt-4 px-5 sm:px-6 py-2 rounded-[0.35rem] bg-indigo-600 text-white font-semibold text-xs sm:text-sm hover:bg-indigo-700 transition cursor-pointer"
               >
@@ -122,7 +121,19 @@ export default function ContactForm() {
               </button>
             </motion.div>
           ) : (
-            <form onSubmit={handleSubmit} className="relative flex flex-col gap-4 sm:gap-5" noValidate>
+            <form
+              ref={(node) => {
+                formRef.current = node;
+                if (node && restoreFocus.current) {
+                  restoreFocus.current = false;
+                  (node.elements.namedItem("nombre") as HTMLElement)?.focus();
+                }
+              }}
+              aria-busy={status === "loading"}
+              onSubmit={handleSubmit}
+              className="relative flex flex-col gap-4 sm:gap-5"
+              noValidate
+            >
               <div className="sr-only" aria-hidden="true">
                 <label htmlFor="company">Empresa</label>
                 <input
@@ -137,7 +148,7 @@ export default function ContactForm() {
               </div>
 
               {status === "error" && (
-                <div className="flex items-start gap-2.5 p-3 rounded-[0.35rem] bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-xs sm:text-sm">
+                <div ref={errorRef} role="alert" tabIndex={-1} className="flex items-start gap-2.5 p-3 rounded-[0.35rem] bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-xs sm:text-sm">
                   <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                   <span>{errorMessage}</span>
                 </div>
@@ -154,6 +165,8 @@ export default function ContactForm() {
                   <input
                     id="nombre"
                     name="nombre"
+                    aria-invalid={Boolean(fieldErrors.nombre)}
+                    aria-describedby={fieldErrors.nombre ? "nombre-error" : undefined}
                     type="text"
                     required
                     maxLength={100}
@@ -162,6 +175,7 @@ export default function ContactForm() {
                     placeholder="Tu nombre"
                     className="rounded-[0.35rem] border border-soft surface px-3.5 py-2.5 text-xs sm:text-sm text-foreground placeholder:text-muted focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20 focus:outline-none"
                   />
+                  <FieldError name="nombre" errors={fieldErrors} />
                 </div>
                 <div className="flex flex-col gap-1.5 sm:gap-2">
                   <label
@@ -173,25 +187,22 @@ export default function ContactForm() {
                   <input
                     id="email"
                     name="email"
+                    aria-invalid={Boolean(fieldErrors.email)}
+                    aria-describedby={fieldErrors.email ? "email-error" : undefined}
                     type="email"
                     required
                     maxLength={254}
                     value={formData.email}
                     onChange={handleChange}
-                    onBlur={handleEmailBlur}
+                    onBlur={() => setFieldErrors((prev) => ({ ...prev, email: validateContactFields(formData).email }))}
                     placeholder="tu@email.com"
                     className={`rounded-[0.35rem] border surface px-3.5 py-2.5 text-xs sm:text-sm text-foreground placeholder:text-muted focus:outline-none transition-colors ${
-                      emailError
+                      fieldErrors.email
                         ? "border-rose-500/70 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20"
                         : "border-soft focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20"
                     }`}
                   />
-                  {emailError && (
-                    <span className="text-[0.7rem] font-medium text-rose-500 dark:text-rose-400 flex items-center gap-1 mt-0.5">
-                      <AlertCircle className="w-3 h-3 shrink-0" />
-                      <span>{emailError}</span>
-                    </span>
-                  )}
+                  <FieldError name="email" errors={fieldErrors} />
                 </div>
               </div>
 
@@ -205,13 +216,16 @@ export default function ContactForm() {
                 <input
                   id="asunto"
                   name="asunto"
-                    type="text"
-                    maxLength={200}
-                    value={formData.asunto}
+                  aria-invalid={Boolean(fieldErrors.asunto)}
+                  aria-describedby={fieldErrors.asunto ? "asunto-error" : undefined}
+                  type="text"
+                  maxLength={200}
+                  value={formData.asunto}
                   onChange={handleChange}
                   placeholder="Ej. Oportunidad laboral / Consulta de proyecto"
                   className="rounded-[0.35rem] border border-soft surface px-3.5 py-2.5 text-xs sm:text-sm text-foreground placeholder:text-muted focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20 focus:outline-none"
                 />
+                  <FieldError name="asunto" errors={fieldErrors} />
               </div>
 
               <div className="flex flex-col gap-1.5 sm:gap-2">
@@ -224,14 +238,17 @@ export default function ContactForm() {
                 <textarea
                   id="mensaje"
                   name="mensaje"
-                    rows={4}
-                    required
-                    maxLength={2000}
-                    value={formData.mensaje}
+                  aria-invalid={Boolean(fieldErrors.mensaje)}
+                  aria-describedby={fieldErrors.mensaje ? "mensaje-error" : undefined}
+                  rows={4}
+                  required
+                  maxLength={2000}
+                  value={formData.mensaje}
                   onChange={handleChange}
                   placeholder="Cuéntame sobre tu proyecto o propuesta..."
                   className="rounded-[0.35rem] border border-soft surface px-3.5 py-2.5 text-xs sm:text-sm text-foreground placeholder:text-muted resize-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20 focus:outline-none"
                 />
+                  <FieldError name="mensaje" errors={fieldErrors} />
               </div>
 
               <button

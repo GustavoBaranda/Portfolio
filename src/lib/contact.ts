@@ -1,7 +1,5 @@
 export const RATE_LIMIT_MAX = 3;
 export const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
-export const MIN_SUBMIT_MS = 2000;
-export const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 export const RATE_LIMIT_MAX_ENTRIES = 5000;
 
 // Best-effort, per process. This is not a distributed/serverless global quota.
@@ -74,9 +72,4 @@ export function sanitizeHeader(value: string): string {
 
 export function isHoneypot(company: unknown): boolean {
   return String(company ?? "").trim().length > 0;
-}
-
-export function isTooFast(startedAt: unknown, now: number = Date.now()): boolean {
-  const t = Number(startedAt);
-  return !Number.isFinite(t) || now - t < MIN_SUBMIT_MS;
 }

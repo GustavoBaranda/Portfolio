@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsx --test src/lib/contact.test.ts"
+    "test": "tsx --test src/lib/contact.test.ts src/lib/contact-handler.test.ts src/lib/contact-route.test.ts"
   },
   "dependencies": {
     "framer-motion": "^12.29.2",

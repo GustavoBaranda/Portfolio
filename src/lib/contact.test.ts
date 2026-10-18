@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
-  MIN_SUBMIT_MS,
   RATE_LIMIT_MAX,
   RATE_LIMIT_MAX_ENTRIES,
   RATE_LIMIT_WINDOW_MS,
@@ -11,7 +10,6 @@ import {
   isAllowedOrigin,
   isHoneypot,
   isRateLimited,
-  isTooFast,
   sanitizeHeader,
 } from "./contact";
 
@@ -30,14 +28,6 @@ test("isHoneypot detects filled trap field", () => {
   assert.equal(isHoneypot(""), false);
   assert.equal(isHoneypot("   "), false);
   assert.equal(isHoneypot("Acme"), true);
-});
-
-test("isTooFast rejects missing, future and sub-2s timestamps", () => {
-  const now = 10_000;
-  assert.equal(isTooFast(undefined, now), true);
-  assert.equal(isTooFast("nope", now), true);
-  assert.equal(isTooFast(now - 500, now), true);
-  assert.equal(isTooFast(now - MIN_SUBMIT_MS, now), false);
 });
 
 test("isRateLimited trips after max hits in the window", () => {
