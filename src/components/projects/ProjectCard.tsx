@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import {
   Github,
@@ -30,6 +30,7 @@ export default function ProjectCard({
   onSelectTechTag,
 }: ProjectCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const reducedMotion = useReducedMotion();
   const [isDesktop, setIsDesktop] = useState(false);
   const [imgFailed, setImgFailed] = useState(false);
 
@@ -48,7 +49,14 @@ export default function ProjectCard({
     ? { opacity: 1, x: 0, scale: 1 }
     : { opacity: 1, y: 0 };
 
-  const isLogo = project.id === "syspro-logistica" || project.id === "solar-banco-etl";
+  const imageClasses = {
+    interface:
+      "object-contain object-top transition-transform duration-500 group-hover:scale-105 dark:brightness-95 dark:contrast-105",
+    "wide-logo":
+      "object-contain object-center p-3 sm:p-5 transition-transform duration-500 group-hover:scale-105 dark:brightness-95 dark:contrast-105",
+    "square-logo":
+      "object-contain object-center p-5 sm:p-8 transition-transform duration-500 group-hover:scale-105 dark:brightness-95 dark:contrast-105",
+  } satisfies Record<ProjectItem["imagePresentation"], string>;
   const hasLinks = Boolean(project.demoUrl || project.githubUrl);
 
   return (
@@ -78,7 +86,7 @@ export default function ProjectCard({
           <p className="text-xs sm:text-sm font-semibold text-muted mt-1">{project.company}</p>
         </div>
 
-        <div className="relative w-full h-44 sm:h-52 md:h-56 my-3 sm:my-4 rounded-[0.35rem] overflow-hidden bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 flex items-center justify-center shadow-xs transition-colors">
+        <div className="relative w-full aspect-video sm:aspect-[2/1] my-3 sm:my-4 rounded-[0.35rem] overflow-hidden bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 flex items-center justify-center shadow-xs transition-colors">
           {imgFailed ? (
             <span className="text-sm font-semibold text-muted px-4 text-center">
               {project.company}
@@ -90,11 +98,7 @@ export default function ProjectCard({
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
               onError={() => setImgFailed(true)}
-              className={
-                isLogo
-                  ? "object-contain p-6 sm:p-8 transition-transform duration-500 group-hover:scale-105 dark:brightness-95 dark:contrast-105"
-                  : "object-cover object-top w-full h-full transition-transform duration-500 group-hover:scale-105 dark:brightness-95 dark:contrast-105"
-              }
+              className={imageClasses[project.imagePresentation]}
             />
           )}
         </div>
@@ -116,25 +120,38 @@ export default function ProjectCard({
             <Lightbulb className="w-3.5 h-3.5 shrink-0" aria-hidden />
             Solución / Rol
           </h4>
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.p
-              key={isExpanded ? "full" : "preview"}
-              initial={{ opacity: 0.85 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0.85 }}
-              transition={{ duration: 0.2 }}
-              className="text-xs sm:text-sm md:text-base text-muted-foreground leading-relaxed"
-            >
-              {isExpanded
-                ? project.solution
-                : `${project.solution.slice(0, 160).trim()}${project.solution.length > 160 ? "…" : ""}`}
-            </motion.p>
-          </AnimatePresence>
+          <motion.div
+            id={`project-solution-${project.id}`}
+            layout="size"
+            className="overflow-hidden"
+            transition={{
+              layout: {
+                duration: reducedMotion ? 0 : 0.32,
+                ease: [0.25, 1, 0.5, 1],
+              },
+            }}
+          >
+            <AnimatePresence mode="popLayout" initial={false}>
+              <motion.p
+                key={isExpanded ? "full" : "preview"}
+                initial={{ opacity: reducedMotion ? 1 : 0.82 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: reducedMotion ? 1 : 0 }}
+                transition={{ duration: reducedMotion ? 0 : 0.24, ease: "easeOut" }}
+                className="text-xs sm:text-sm md:text-base text-muted-foreground leading-relaxed"
+              >
+                {isExpanded
+                  ? project.solution
+                  : `${project.solution.slice(0, 160).trim()}${project.solution.length > 160 ? "…" : ""}`}
+              </motion.p>
+            </AnimatePresence>
+          </motion.div>
           {project.solution.length > 160 && (
             <button
               type="button"
               onClick={() => setIsExpanded((v) => !v)}
               className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 mt-1 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-sm px-1 py-0.5 -ml-1"
+              aria-controls={`project-solution-${project.id}`}
               aria-expanded={isExpanded}
             >
               <span>{isExpanded ? "Leer menos" : "Leer más"}</span>
@@ -161,8 +178,9 @@ export default function ProjectCard({
                   key={tag}
                   type="button"
                   onClick={() => onSelectTechTag?.(tag)}
+                  aria-pressed={isSelected}
                   title={`Filtrar proyectos por ${tag}`}
-                  className={`inline-flex items-center text-[0.68rem] sm:text-xs font-semibold uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-[0.35rem] leading-normal transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                  className={`inline-flex min-h-6 items-center text-[0.68rem] sm:text-xs font-semibold uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-[0.35rem] leading-normal transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                     isSelected
                       ? "bg-indigo-600 text-white shadow-xs ring-1 ring-indigo-400"
                       : "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/15 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-500 dark:hover:text-white hover:scale-105"
@@ -205,7 +223,7 @@ export default function ProjectCard({
         </section>
       ) : (
         <div className="mt-4 pt-4 sm:pt-5 border-t border-soft/50">
-          <span className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-muted/80">
+          <span className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-muted">
             <Lock className="w-3.5 h-3.5 shrink-0" />
             Proyecto corporativo · código privado
           </span>

@@ -14,6 +14,7 @@ export interface ProjectItem {
   challenge: string;
   solution: string;
   image: string;
+  imagePresentation: "interface" | "wide-logo" | "square-logo";
   tags: string[];
   featured: boolean;
   githubUrl: string | null;
@@ -42,6 +43,7 @@ export const PROJECTS: ProjectItem[] = [
     solution:
       "Como Full Stack Developer, diseñé e implementé la arquitectura multimodular enterprise de la plataforma DepofisWEB en Django 4.2 y Microsoft SQL Server. Estructuré el sistema en dos módulos interconectados: Portal Público de Turnos (TURNERO_APP) para transportistas y choferes, y Suite Operativa Interna (DEPO_2025_App) para gestión de recepciones, entregas, inspección física y trazabilidad de contenedores. Integré comunicación en tiempo real con WebSockets (Django Channels), procesamiento asincrónico y cronjobs con Celery & Redis, firma digital criptográfica de PDFs con validez legal (pyHanko, ReportLab, PyMuPDF), notificaciones Web Push (VAPID), almacenamiento de imágenes de inspección en Object Storage (Huawei Cloud OBS) y geolocalización avanzada.",
     image: "/images/syspro.png",
+    imagePresentation: "wide-logo",
     tags: [
       "Python 3.11+",
       "Django 4.2",
@@ -75,6 +77,7 @@ export const PROJECTS: ProjectItem[] = [
     solution:
       "Construí la plataforma full stack con Next.js 15 App Router, React 19 y Tailwind CSS v4. Diseñé el modelo de datos relacional con Prisma ORM sobre PostgreSQL (Neon Serverless), soportando variantes complejas de producto y categorías. Implementé autenticación híbrida con NextAuth v5 (Auth.js) y Google OAuth, carrito persistente con sincronización local y descuentos, gestor de medios en Vercel Blob Storage, sistema transaccional de correo con Nodemailer y un panel de administración con control de acceso por roles (RBAC) que incluye un maquetador en tiempo real para reordenar dinámicamente las secciones del landing. Animaciones fluidas con Framer Motion y despliegue continuo en Vercel.",
     image: "/images/mhine-home.png",
+    imagePresentation: "interface",
     tags: [
       "Next.js 15",
       "React 19",
@@ -105,6 +108,7 @@ export const PROJECTS: ProjectItem[] = [
     solution:
       "Diseñé e implementé la plataforma web progresiva (PWA) instalable utilizando Next.js 14 App Router y React 18. Desarrollé el tablero Kanban dinámico con reordenamiento de columnas/tareas, prioridades, fechas de vencimiento y gestión de notas. Implementé la capa de datos en Vercel Postgres (PostgreSQL), gestión de adjuntos multimedia en Vercel Blob Storage, sistema de autenticación híbrido (JWT + Google/GitHub OAuth), onboarding y recuperación transaccional con Resend API y micro-interacciones con Framer Motion y Tailwind CSS.",
     image: "/images/gusflow.png",
+    imagePresentation: "interface",
     tags: [
       "Next.js 14",
       "React 18",
@@ -135,6 +139,7 @@ export const PROJECTS: ProjectItem[] = [
     solution:
       "Diseñé e implementé la plataforma clínica integral con Laravel 12, PHP 8.2 y MySQL. Desarrollé el control de acceso multidominio con autenticación por roles (Administrador, Colaborador Médico y Paciente) y middleware de autorización. Integré un visor interactivo de archivos DICOM (DWV / Canvas) con soporte para manipulación en tiempo real (zoom, contraste/brillo, panning y rotación), tablas dinámicas de alto rendimiento con Yajra DataTables (paginación server-side y búsqueda en tiempo real), almacenamiento estructurado de legajos médicos y exportación automatizada de reportes con Tailwind CSS y Alpine.js.",
     image: "/images/fundacion_maldonado_preview.png",
+    imagePresentation: "interface",
     tags: [
       "Laravel 12",
       "PHP 8.2",
@@ -166,6 +171,7 @@ export const PROJECTS: ProjectItem[] = [
     solution:
       "Diseñé e implementé la API con Django 5, Python 3.13 y Django REST Framework (DRF) estructurada en arquitectura limpia por capas (Services, Serializers, ViewSets). Integré autenticación stateless JWT (SimpleJWT) con perfil /api/users/me/, geocodificación dinámica con Open-Meteo API y caché en memoria (django.core.cache + DRF Throttling) logrando tiempos de respuesta de ~2ms por cache hit. Desarrollé un módulo nativo de notificaciones in-app con contador de no leídas (/api/notifications/), suite de 39 pruebas automatizadas con pytest-django, especificación OpenAPI 3 con Swagger UI y ReDoc (drf-spectacular), contenedorización multi-etapa en Docker y despliegue en Render Cloud con PostgreSQL y CI/CD en GitHub Actions.",
     image: "/images/weatherflow.png",
+    imagePresentation: "interface",
     tags: [
       "Python 3.13",
       "Django 5.0",
@@ -197,6 +203,7 @@ export const PROJECTS: ProjectItem[] = [
     solution:
       "Diseñé e implementé la arquitectura backend en Django 5 con pipelines ETL automatizados en Python (Pandas, cx_Oracle, OpenPyXL) para la extracción, transformación y carga continua desde Oracle DW. Desarrollé el motor de cálculo para la brecha de liquidez por bandas de tiempo y moneda, modelos parametrizables de VaR y reglas de LCR según normativas financieras. Integré autenticación Single Sign-On (SSO) mediante Active Directory (LDAP), middleware de control de inactividad, log automatizado de auditoría de procesos/usuarios y dashboards interactivos con DataTables para visualización y exportación ejecutiva.",
     image: "/images/solar_banco.png",
+    imagePresentation: "square-logo",
     tags: [
       "Python 3.10+",
       "Django 5",
@@ -228,6 +235,7 @@ export const PROJECTS: ProjectItem[] = [
     solution:
       "Sitio en Next.js 16 App Router, React 19 y Tailwind CSS v4. Formulario de contacto con honeypot, validación por tiempo mínimo y rate limit por IP. SEO con metadataBase, sitemap, robots y JSON-LD. Tema claro/oscuro sin flash de hidratación.",
     image: "/images/opengraph.png",
+    imagePresentation: "interface",
     tags: ["TypeScript", "Next.js 16", "React 19", "Tailwind CSS v4", "CSS Subgrid", "SEO", "JSON-LD", "Framer Motion", "Nodemailer", "Anti-Spam"],
     featured: false,
     githubUrl: "https://github.com/GustavoBaranda/Portfolio",
@@ -246,6 +254,7 @@ export const PROJECTS: ProjectItem[] = [
     solution:
       "Diseñé e implementé la aplicación Single Page Application (SPA) con React 18, React Router v6 y Firebase Firestore para la persistencia y sincronización en tiempo real del catálogo. Desarrollé arquitectura de estilos modular con Sass (SCSS) y Normalize.css, custom hooks reutilizables (useForm) para validación interactiva de consultas con envío automatizado vía API, modales de vista detallada de producto (ModalDetail), botón flotante de atención directa por WhatsApp e integración de mapas. Implementé ScrollToTop helper para navegación fluida entre rutas y despliegue continuo en Vercel. Reconocido dentro del Top 10 de la camada en Coderhouse.",
     image: "/images/las_verde_preview.png",
+    imagePresentation: "interface",
     tags: [
       "React 18",
       "Firebase",
@@ -274,6 +283,7 @@ export const PROJECTS: ProjectItem[] = [
     solution:
       "Diseñé e implementé la plataforma web con HTML5 semántico, CSS3 modular (Flexbox y CSS Grid), Bootstrap 5 y JavaScript Vanilla (ES6+). Desarrollé componentes interactivos a medida (slider de imágenes nativo, navegación móvil fluida y sección de FAQ interactiva), formulario con validación client-side en tiempo real, integración con Google Maps API y canal de atención directa por WhatsApp. Optimicé la accesibilidad, el SEO técnico on-page (metaetiquetas dinámicas y verificación de dominio) y el despliegue continuo en Vercel. Distinguido dentro del Top 10 de la camada en Coderhouse.",
     image: "/images/descubriendo_jardin_preview.png",
+    imagePresentation: "interface",
     tags: [
       "JavaScript ES6+",
       "HTML5",
