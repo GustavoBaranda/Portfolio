@@ -1,6 +1,7 @@
 import { Montserrat } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
+import MotionProvider from '@/components/common/MotionProvider';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import { Metadata } from 'next';
@@ -171,13 +172,15 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         >
           Saltar al contenido principal
         </a>
-        <Header />
-        <div className="site-shell">
-          <main id="main-content" className="flex-1 min-w-0 relative">
-            <div className="mx-auto w-full max-w-7xl px-6 py-10">{children}</div>
-          </main>
-          <Footer />
-        </div>
+        <MotionProvider>
+          <Header />
+          <div className="site-shell">
+            <main tabIndex={-1} id="main-content" className="flex-1 min-w-0 relative">
+              <div className="mx-auto w-full max-w-7xl px-6 py-10">{children}</div>
+            </main>
+            <Footer />
+          </div>
+        </MotionProvider>
       </body>
     </html>
   );

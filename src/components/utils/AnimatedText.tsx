@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, Variants } from "framer-motion";
+import { motion, useReducedMotion, Variants } from "framer-motion";
 
 const quote: Variants = {
   initial: { opacity: 1 },
@@ -35,6 +35,7 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({
   align = "center",
   as = "h2",
 }) => {
+  const reducedMotion = useReducedMotion();
   const words = text.split(" ");
   const Component = (motion[as] || motion.h2) as React.ElementType;
 
@@ -50,7 +51,7 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({
       <Component
         className={`mx-0 inline-block w-full text-dark dark:text-light sm:py-0 ${className}`}
         variants={quote}
-        initial="initial"
+        initial={reducedMotion ? false : "initial"}
         animate="animate"
         aria-label={text}
       >

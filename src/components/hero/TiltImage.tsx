@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, MouseEvent, PointerEvent } from 'react';
-import { motion, useMotionValue, Variants } from 'framer-motion';
+import { motion, useMotionValue, useReducedMotion, Variants } from 'framer-motion';
 import Image from 'next/image';
 
 export interface TiltImageProps {
@@ -23,6 +23,7 @@ export default function TiltImage({
   priority = true,
   className = '',
 }: TiltImageProps) {
+  const reducedMotion = useReducedMotion();
   const tiltRef = useRef<HTMLDivElement | null>(null);
   const rotationX = useMotionValue(0);
   const rotationY = useMotionValue(0);
@@ -33,6 +34,7 @@ export default function TiltImage({
   const maxTranslate = 12;
 
   const applyTiltToMotion = ({ clientX, clientY }: { clientX: number; clientY: number }) => {
+    if (reducedMotion) return;
     const rect = tiltRef.current?.getBoundingClientRect();
     if (!rect) return;
     const offsetX = (clientX - rect.left - rect.width / 2) / rect.width;
@@ -72,7 +74,7 @@ export default function TiltImage({
     >
       <motion.div
         variants={imageMotion}
-        initial="initial"
+        initial={reducedMotion ? false : "initial"}
         animate="animate"
         transition={{
           opacity: { duration: 0.9, ease: 'easeOut' },
@@ -81,20 +83,20 @@ export default function TiltImage({
         style={{
           transformStyle: 'preserve-3d',
           willChange: 'transform',
-          rotateX: rotationX,
-          rotateY: rotationY,
-          translateX: translateX,
-          translateY: translateY,
+          rotateX: reducedMotion ? 0 : rotationX,
+          rotateY: reducedMotion ? 0 : rotationY,
+          translateX: reducedMotion ? 0 : translateX,
+          translateY: reducedMotion ? 0 : translateY,
         }}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.98 }}
+          whileHover={reducedMotion ? undefined : { scale: 1.05 }}
+          whileTap={reducedMotion ? undefined : { scale: 0.98 }}
       >
         <motion.div
-          animate={{ y: [0, -12, 0] }}
+          animate={{ y: reducedMotion ? 0 : [0, -12, 0] }}
           transition={{
             duration: 4,
             ease: 'easeInOut',
-            repeat: Infinity,
+            repeat: reducedMotion ? 0 : Infinity,
             repeatType: 'reverse',
             delay: 0.3,
           }}

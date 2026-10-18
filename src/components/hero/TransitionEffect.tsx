@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 const panels = [
   { className: "z-30 bg-[var(--accent)]", delay: 0 },
@@ -9,9 +9,11 @@ const panels = [
 ] as const;
 
 export default function TransitionEffect() {
+  const reducedMotion = useReducedMotion();
+  if (reducedMotion) return null;
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-300 overflow-hidden"
+      className="page-transition pointer-events-none fixed inset-0 z-300 overflow-hidden"
       aria-hidden="true"
     >
       {panels.map((panel) => (
