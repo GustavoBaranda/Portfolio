@@ -65,8 +65,8 @@ export default function ExperienceSection() {
         </p>
 
         <h2 className="text-2xl font-extrabold leading-snug sm:text-3xl md:text-5xl text-foreground whitespace-normal">
-          Proyectos y <span className="text-indigo-600">desafíos</span> que impulsaron mi{" "}
-          <span className="text-blue-600">crecimiento</span>.
+          Proyectos y <span className="text-indigo-600 dark:text-indigo-400">desafíos</span> que impulsaron mi{" "}
+          <span className="text-blue-600 dark:text-blue-400">crecimiento</span>.
         </h2>
 
         <p className="max-w-2xl text-foreground">

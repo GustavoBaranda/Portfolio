@@ -5,7 +5,7 @@ export default function ContactInfo() {
     <div className="rounded-[0.35rem] border border-soft surface-card p-5 sm:p-8 shadow-sm flex flex-col justify-between h-full">
       <div className="flex flex-col gap-4 sm:gap-5">
         {/* Availability Badge */}
-        <span className="inline-flex w-fit items-center gap-2 rounded-[0.35rem] bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+        <span className="inline-flex w-fit items-center gap-2 rounded-[0.35rem] bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
           <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
           Disponible para nuevas oportunidades
         </span>

@@ -1,8 +1,20 @@
-@custom-variant dark (
-	&:where(:is(.dark, [data-theme="dark"]) &)
-);
-
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
+
+/* Semantic utilities must resolve the active theme at the element. */
+@theme inline {
+  --color-background: var(--canvas);
+  --color-foreground: var(--text);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted);
+  --color-border: var(--border);
+  --color-soft: var(--border);
+  --color-accent: var(--accent);
+  --color-dark: #0f172a;
+  --color-light: #f8fafc;
+  --color-gray-dark: #475569;
+}
 
 @property --canvas {
 	syntax: "<color>";
@@ -49,7 +61,7 @@
 @property --muted {
 	syntax: "<color>";
 	inherits: true;
-	initial-value: #64748b;
+	initial-value: #5f6f85;
 }
 
 @property --accent {
@@ -67,7 +79,7 @@
 	--border: #e2e8f0;
 	--border-strong: #cbd5f5;
 	--text: #0f172a;
-	--muted: #64748b;
+	--muted: #5f6f85;
 	--accent: #4f46e5;
 	--scrollbar-track: rgba(15, 23, 42, 0.08);
 	--scrollbar-thumb: rgba(15, 23, 42, 0.4);
@@ -75,7 +87,8 @@
 	--site-header-h: 4.5rem;
 }
 
-:root.dark {
+:root.dark,
+:root[data-theme="dark"] {
 	color-scheme: dark;
 	--canvas: #020617;
 	--surface: #0f172a;
@@ -218,8 +231,8 @@ body::-webkit-scrollbar-thumb {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	width: 1.25rem;
-	height: 1.25rem;
+	width: 2rem;
+	height: 2rem;
 	border-radius: 0.35rem;
 	background-color: var(--surface);
 	color: var(--muted);
@@ -240,7 +253,7 @@ body::-webkit-scrollbar-thumb {
 .theme-toggle {
 	color: var(--muted);
 	transition: color 0.2s ease, opacity 0.2s ease;
-	opacity: 0.8;
+	opacity: 1;
 }
 
 .theme-toggle:hover {
@@ -248,18 +261,6 @@ body::-webkit-scrollbar-thumb {
 	opacity: 1;
 }
 
-.menu-backdrop {
-	position: fixed;
-	inset: 0;
-	z-index: 200;
-	border: 0;
-	padding: 0;
-	margin: 0;
-	cursor: pointer;
-	background-color: rgba(2, 6, 23, 0.45);
-	-webkit-tap-highlight-color: transparent;
-	/* Don't use touch-action:none — freezes the page under mobile zoom */
-}
 
 .menu {
 	position: fixed;
@@ -407,3 +408,90 @@ body::-webkit-scrollbar-thumb {
 	font-weight: 600;
 }
 
+
+/* Shared keyboard focus, including links without component-specific rings. */
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.mobile-navigation-dialog {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  overflow: hidden;
+}
+.mobile-navigation-dialog::backdrop { background: transparent; }
+.mobile-navigation-dialog .menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  background-color: rgb(2 6 23 / 45%);
+  -webkit-tap-highlight-color: transparent;
+}
+/* The same control joins the native top layer while its header slot stays reserved. */
+.mobile-navigation-dialog > .mobile-menu-control {
+  position: fixed;
+  top: calc((var(--site-header-h) - 2.5rem) / 2);
+  right: 1.5rem;
+  z-index: 220;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.menu-toggle { display: block; }
+.menu-toggle[aria-expanded="true"] { box-shadow: inset 0 0 0 2px #e5e7eb; }
+
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition { display: none; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Contact fields share the card border while focus and validation stay distinct. */
+#contact form :is(input, textarea):not([name="company"]) {
+  border-color: var(--border-strong);
+  transition: border-color 180ms ease, background-color 180ms ease, opacity 180ms ease;
+}
+
+#contact form :is(input, textarea):not([name="company"]):hover:not(:focus):not(:disabled):not([aria-invalid="true"]) {
+  border-color: color-mix(in srgb, var(--border-strong) 75%, var(--accent));
+}
+
+#contact form :is(input, textarea):not([name="company"]):focus:not([aria-invalid="true"]) {
+  border-color: var(--accent);
+}
+
+#contact form :is(input, textarea):not([name="company"])[aria-invalid="true"] {
+  border-color: #e11d48;
+}
+
+:is(:root.dark, :root[data-theme="dark"]) #contact form :is(input, textarea):not([name="company"])[aria-invalid="true"] {
+  border-color: #fb7185;
+}
+
+#contact form :is(input, textarea):not([name="company"]):disabled {
+  border-color: var(--border);
+  background-color: var(--surface-card);
+  cursor: not-allowed;
+  opacity: 0.65;
+}
