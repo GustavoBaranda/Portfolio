@@ -46,7 +46,7 @@ Las pruebas HTTP inyectan un envío simulado: no usan credenciales reales ni con
 <Script id="theme-toggle" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: themeScript }} />
 ```
 
-El script lee `localStorage` sincrónicamente y aplica la clase `dark` al `<html>` antes del primer paint. Los tokens CSS semánticos (`--canvas`, `--surface`, `--text`, `--muted`, `--accent`) se intercambian a nivel de `:root` / `:root.dark`, sin ninguna variable de estado de React ni `useEffect` que cause parpadeo.
+El script lee `localStorage` sincrónicamente y aplica la clase `dark` al `<html>` antes del primer paint. Los tokens CSS semánticos (`--canvas`, `--surface`, `--text`, `--muted`, `--accent`) se intercambian a nivel de `:root` / `:root.dark`. Los controles se mantienen sincronizados y conservan la transición original de 0,45 s mediante View Transitions cuando están disponibles; fondos, textos, bordes, tarjetas e iconos cambian de forma coordinada. Un almacenamiento bloqueado no impide alternar el tema.
 
 ---
 
@@ -85,7 +85,7 @@ Cuando una tarjeta expande su sección de solución, la fila del grid se estira 
 | Tecnología | Versión | Motivo |
 |---|---|---|
 | Next.js App Router | 16.4.2 | App Router, `POST /api/contact`, sitemap y robots |
-| React | 19.2.3 | UI, `AnimatePresence` en el formulario y el menú mobile |
+| React | 19.2.3 | UI, `AnimatePresence` en el formulario y diálogo de navegación móvil |
 | TypeScript | 6.0.3 | `strict: true` en `tsconfig.json` |
 | Tailwind CSS | v4 | Design tokens, subgrid, `@custom-variant` para dark mode |
 | Framer Motion | 12 | Cortina de carga, drawer mobile, transiciones del formulario |
@@ -234,6 +234,38 @@ MIT — ver [LICENSE](./LICENSE).
 <div align="center">
   Desarrollado por <a href="https://github.com/GustavoBaranda"><strong>Gustavo Baranda</strong></a>
 </div>
+
+## Fase 2 — Estilos, accesibilidad y navegación
+
+### Correcciones implementadas
+
+- Tailwind v4: `@theme inline` conecta los tokens existentes con `text-foreground`, `text-muted`, `text-muted-foreground`, `bg-border`, `ring-offset-background` y sus modificadores de opacidad. Se registraron también los colores heredados `dark`, `light` y `gray-dark`. La variante oscura admite `.dark` y `data-theme="dark"`.
+- Contraste: se oscureció ligeramente el texto secundario claro y los textos de algunas etiquetas de experiencia/educación, conservando sus colores de marca en fondos y bordes. Se añadieron variantes oscuras a los acentos de la biografía y experiencia, y se reforzaron los límites visibles de los campos del formulario únicamente con CSS.
+- Formulario: los campos usan el gris semántico `--border-strong`, coherente con las tarjetas y más suave que el texto secundario que se aplicaba antes. Hover mezcla sutilmente el acento, foco usa el acento completo y su anillo visible, los errores mantienen rojo diferenciado y el estado deshabilitado reduce superficie y opacidad. Los mismos tokens se adaptan al tema oscuro sin tocar validación ni envío.
+- Semántica y teclado: el enlace de proyecto de una experiencia queda fuera de su botón de expansión. Los paneles colapsados de experiencia, biografía y tecnologías son inertes y se ocultan del árbol accesible. Los controles indican expansión o selección; el botón de biografía conserva su identidad al cambiar de estado.
+- Filtros: Escape cierra el panel de tecnologías y devuelve el foco al disparador. Al aplicar, quitar o restablecer filtros se conserva un destino de foco estable y se anuncia la cantidad de proyectos encontrados.
+- Menú móvil: un `<dialog>` abierto con `showModal()` proporciona el comportamiento modal nativo, Escape, contención y devolución de foco. El único botón hamburguesa conserva sus tres líneas, tamaño y posición: las tres utilizan exactamente los keyframes originales de Framer Motion para formar y desarmar la X. El mismo botón permanece montado mediante un portal estable, se incorpora al diálogo abierto y vuelve al encabezado al cerrar, sin duplicación ni icono X independiente. El espacio de 40 × 40 px del encabezado permanece reservado. Se conservan la secuencia de desplazamiento y rotación original, la duración de 0,5 s y `easeInOut`. El panel y sus elementos recuperan el desplazamiento original de 0,8 s, su easing y sus demoras escalonadas; el diálogo se cierra recién al terminar la salida y una reapertura rápida cancela ese cierre. Con movimiento reducido las duraciones pasan a cero, conservando los estados finales. El disparador expone `aria-expanded`, `aria-controls` y etiqueta de apertura/cierre. Seleccionar una opción cierra el menú. Al pasar a escritorio se cierra, libera el bloqueo de scroll y mueve el foco a la navegación visible.
+- Foco y tamaños: indicador común de foco, destino enfocable para el enlace de salto y áreas de interacción mayores para tema, redes sociales y etiquetas técnicas.
+- Movimiento: `MotionConfig reducedMotion="user"`, reducción de transiciones CSS y desplazamiento sin animación cuando se solicita movimiento reducido. Para el resto de los usuarios se conservan las animaciones originales completas: cortina de tres paneles de 0,8 s con demoras de 0/0,2/0,4 s, flotación continua del logo, inclinación interactiva, entradas con opacidad y desplazamiento, demoras escalonadas de textos, secciones y tarjetas, y transiciones de biografía y filtros. La preferencia reducida omite la cortina y detiene transformaciones continuas sin alterar el estado final ni la accesibilidad del contenido.
+- Tarjetas de proyectos: “Leer más” conserva el crossfade original y suma una transición de tamaño de 0,32 s con easing suave. El contenedor accesible permanece montado durante apertura y cierre; `AnimatePresence` gestiona la sustitución del texto y movimiento reducido elimina ambas duraciones.
+- Imágenes de proyectos: cada proyecto declara una presentación `interface`, `wide-logo` o `square-logo`. El marco reserva una proporción 16:9 en móvil y 2:1 desde `sm`, evitando saltos durante la carga. Las capturas de sitios, dashboards y documentación usan `object-contain` alineado arriba para conservar navegación, textos y controles; los logos se centran con padding específico. SysPro y las capturas panorámicas aprovechan casi todo el marco. Solar Banco conserva espacio lateral porque su recurso es cuadrado y llenarlo exigiría recorte o deformación.
+- Responsive: se preservan los prefijos de ancho del CTA (`md:w-auto`), se limita su contenedor al ancho disponible y se permite envolver las cabeceras de educación. El diálogo usa altura dinámica del viewport y el panel conserva scroll interno.
+
+### Validación y límites
+
+Se ejecutaron ESLint, TypeScript, las **49 pruebas automatizadas** (32 de contacto y 17 nuevas) y el build de producción. En este entorno Windows el build utiliza un worker mediante `CIRCLE_NODE_TOTAL=2`, solo para ese proceso; no se cambió la configuración de Vercel.
+
+Las nuevas regresiones comprueban HTML renderizado de acordeones, filtros y controles; ciclo de apertura/cierre y limpieza del diálogo con dobles; ancho responsive del CTA; contenido visible en el HTML inicial; contraste matemático de tokens y paletas sobre sus fondos declarados; y generación real de utilidades, opacidades y variantes oscuras con PostCSS/Tailwind. Las comprobaciones de contraste no cubren todos los estados compuestos ni sustituyen la inspección visual.
+
+No había aplicaciones ni navegadores disponibles para automatización. **No se ejecutaron pruebas visuales ni E2E en navegador**. Antes de publicar deben verificarse:
+
+- Anchos de 320, 390, 768, 1024 y 1440 px: ausencia de desbordamientos, tarjetas, etiquetas, CTA, zoom al 200 % y orientación horizontal.
+- Tab y Shift+Tab en ambos temas; abrir/cerrar menú, invertir la transición con clics rápidos, Escape, clic fuera, retorno de foco y cambio a escritorio con el menú abierto. Confirmar que las tres líneas recuperan su posición, que el botón no salta, que el fondo no recibe foco mientras el diálogo está abierto y que no queda bloqueado el scroll.
+- Expandir experiencia y abrir su enlace por separado; biografía y filtros sin controles ocultos alcanzables, sin pérdida de foco y con anuncios útiles en un lector de pantalla.
+- Alternar tema desde escritorio y menú móvil, recargar y probar almacenamiento bloqueado. Verificar presentación y foco en estados de carga, error y éxito del formulario con respuestas simuladas, sin correo real.
+- Preferencia de movimiento reducido activada antes de cargar y durante la sesión; comprobar ausencia de inclinación, flotación, cortina y paneles de entrada, además del desplazamiento inmediato. Sin esa preferencia, comprobar la cortina completa, la flotación continua y las duraciones originales.
+
+La API, validaciones, honeypot, cuota por instancia, Gmail SMTP, remitente, destinatario y archivos de entorno se conservaron. No se actualizaron dependencias. No se declara cumplimiento WCAG 2.2 AA completo: quedan pendientes las comprobaciones de navegador y tecnología asistiva.
 
 ## Pendientes de la Fase 1
 
