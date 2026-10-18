@@ -1,6 +1,15 @@
 "use client";
 
 import { motion, MotionConfig } from "framer-motion";
+import { useSyncExternalStore } from "react";
+
+const motionQuery = "(prefers-reduced-motion: reduce)";
+function subscribeMotion(notify: () => void) {
+  const query = window.matchMedia(motionQuery);
+  query.addEventListener("change", notify);
+  return () => query.removeEventListener("change", notify);
+}
+const getReducedMotion = () => window.matchMedia(motionQuery).matches;
 
 export interface MenuProps {
   active: boolean;
@@ -8,20 +17,28 @@ export interface MenuProps {
 }
 
 const Menu: React.FC<MenuProps> = ({ active, setActive }) => {
+  const reducedMotion = useSyncExternalStore(subscribeMotion, getReducedMotion, () => false);
   return (
     <MotionConfig
+      reducedMotion="never"
       transition={{
-        duration: 0.5,
+        duration: reducedMotion ? 0 : 0.5,
         ease: "easeInOut",
       }}
     >
       <motion.button
+        initial={false}
+        type="button"
+        aria-expanded={active}
+        aria-controls="mobile-navigation"
+        aria-haspopup="dialog"
         onClick={() => setActive(!active)}
-        className={`flex self-center relative h-10 w-10 rounded-full bg-transparent md:hidden text-link-active z-999 ${active ? "border-2! border-gray-200" : ""}`}
+        className="menu-toggle flex self-center relative h-10 w-10 shrink-0 rounded-full bg-transparent md:hidden text-link-active z-999"
         animate={active ? "open" : "closed"}
         aria-label={active ? "Cerrar menú" : "Abrir menú"}
       >
         <motion.span
+          aria-hidden="true"
           className="absolute z-999 h-0.75 w-5 rounded-full"
           style={{ left: "50%", top: "35%", x: "-50%", y: "-50%", backgroundColor: "currentColor" }}
           variants={{
@@ -36,6 +53,7 @@ const Menu: React.FC<MenuProps> = ({ active, setActive }) => {
           }}
         />
         <motion.span
+          aria-hidden="true"
           className="absolute z-999 h-0.75 w-5 rounded-full"
           style={{ left: "50%", top: "50%", x: "-50%", y: "-50%", backgroundColor: "currentColor" }}
           variants={{
@@ -48,6 +66,7 @@ const Menu: React.FC<MenuProps> = ({ active, setActive }) => {
           }}
         />
         <motion.span
+          aria-hidden="true"
           className="absolute z-999 h-0.75 w-2.5 rounded-full"
           style={{
             left: "calc(50% - 5px)",

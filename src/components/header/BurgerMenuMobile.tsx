@@ -36,7 +36,7 @@ const BurgerMenuMobile: React.FC<BurgerMenuMobileProps> = ({ updateMenu }) => {
       e.preventDefault();
       const element = document.getElementById("home");
       if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
+        element.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
         window.history.pushState(null, "", "#home");
       }
     }
@@ -52,7 +52,7 @@ const BurgerMenuMobile: React.FC<BurgerMenuMobileProps> = ({ updateMenu }) => {
       className="menu"
     >
       <div className="body">
-        <div className="nav">
+        <nav className="nav" aria-label="Secciones">
           <Link href="/#home" onClick={handleLogoClick}>
             <motion.div
               {...slideMotionProps}
@@ -71,7 +71,7 @@ const BurgerMenuMobile: React.FC<BurgerMenuMobileProps> = ({ updateMenu }) => {
               isActive={activeSection === data.targetId}
             />
           ))}
-        </div>
+        </nav>
 
         {/* Footer del drawer */}
         <motion.div

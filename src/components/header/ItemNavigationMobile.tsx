@@ -23,7 +23,7 @@ const ItemNavigationMobile: React.FC<ItemNavigationMobileProps> = ({ data, isAct
       e.preventDefault();
       const element = document.getElementById(targetId);
       if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
+        element.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
         window.history.pushState(null, "", `#${targetId}`);
       }
     }
@@ -43,7 +43,7 @@ const ItemNavigationMobile: React.FC<ItemNavigationMobileProps> = ({ data, isAct
         href={href}
         onClick={handleClick}
         className="link-content"
-        aria-current={isActive ? "page" : undefined}
+        aria-current={isActive ? "location" : undefined}
       >
         {Icon ? (
           <Icon

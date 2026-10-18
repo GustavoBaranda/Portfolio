@@ -14,7 +14,7 @@ const ItemMenu: React.FC = () => {
       e.preventDefault();
       const element = document.getElementById(targetId);
       if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
+        element.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
         window.history.pushState(null, "", `#${targetId}`);
       }
     }
@@ -35,7 +35,7 @@ const ItemMenu: React.FC = () => {
                     ? "text-link-active font-semibold transition-colors py-1"
                     : "text-link-muted hover:text-link-active hover:font-semibold transition-colors py-1"
                 }
-                aria-current={isActive ? "page" : undefined}
+                aria-current={isActive ? "location" : undefined}
               >
                 {item.text}
               </Link>
