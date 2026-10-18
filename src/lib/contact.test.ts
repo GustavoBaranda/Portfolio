@@ -3,6 +3,8 @@ import { test } from "node:test";
 import {
   MIN_SUBMIT_MS,
   RATE_LIMIT_MAX,
+  RATE_LIMIT_MAX_ENTRIES,
+  RATE_LIMIT_WINDOW_MS,
   allowedOrigins,
   clientIp,
   escapeHtml,
@@ -46,6 +48,25 @@ test("isRateLimited trips after max hits in the window", () => {
   assert.equal(isRateLimited("1.1.1.1", t0 + 2, store), false);
   assert.equal(isRateLimited("1.1.1.1", t0 + 3, store), true);
   assert.equal(RATE_LIMIT_MAX, 3);
+});
+
+test("rate limiter removes expired clients and allows a new window", () => {
+  const store = new Map<string, number[]>();
+  isRateLimited("expired", 0, store);
+  for (let n = 0; n < RATE_LIMIT_MAX; n++) isRateLimited("active", 10, store);
+  assert.equal(isRateLimited("active", RATE_LIMIT_WINDOW_MS + 10, store), false);
+  assert.equal(store.has("expired"), false);
+  assert.equal(store.get("active")?.length, 1);
+});
+
+test("rate limiter bounds memory without evicting active quotas", () => {
+  const store = new Map<string, number[]>();
+  for (let n = 0; n < RATE_LIMIT_MAX_ENTRIES; n++) store.set(String(n), [100]);
+  assert.equal(isRateLimited("new", 101, store), true);
+  assert.equal(store.size, RATE_LIMIT_MAX_ENTRIES);
+  assert.equal(isRateLimited("0", 102, store), false);
+  assert.equal(isRateLimited("new", RATE_LIMIT_WINDOW_MS + 102, store), false);
+  assert.equal(store.size, 1);
 });
 
 test("clientIp prefers platform headers over spoofable first forwarded hop", () => {

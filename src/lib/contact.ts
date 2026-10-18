@@ -2,7 +2,9 @@ export const RATE_LIMIT_MAX = 3;
 export const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 export const MIN_SUBMIT_MS = 2000;
 export const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+export const RATE_LIMIT_MAX_ENTRIES = 5000;
 
+// Best-effort, per process. This is not a distributed/serverless global quota.
 const rateLimitMap = new Map<string, number[]>();
 
 export function clientIp(headers: Headers): string {
@@ -19,10 +21,16 @@ export function isRateLimited(
   now: number = Date.now(),
   store: Map<string, number[]> = rateLimitMap
 ): boolean {
+  // Bound memory and remove expired clients, not just the current client's hits.
+  for (const [key, hits] of store) {
+    if (!hits.some((t) => now - t < RATE_LIMIT_WINDOW_MS)) store.delete(key);
+  }
   const timestamps = (store.get(ip) ?? []).filter(
     (t) => now - t < RATE_LIMIT_WINDOW_MS
   );
   if (timestamps.length >= RATE_LIMIT_MAX) return true;
+  // Fail closed for new clients at capacity; don't evict active quotas.
+  if (!store.has(ip) && store.size >= RATE_LIMIT_MAX_ENTRIES) return true;
   store.set(ip, [...timestamps, now]);
   return false;
 }
