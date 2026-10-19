@@ -4,32 +4,161 @@ import { readFile } from "node:fs/promises";
 import ts from "typescript";
 import { renderToStaticMarkup } from "react-dom/server";
 import ExperienceCard from "../components/about/ExperienceCard";
-import ProjectsGrid from "../components/projects/ProjectsGrid";
+import ExperienceSection, { nextExpandedExperienceId } from "../components/about/ExperienceSection";
+import EducationCard from "../components/about/EducationCard";
+import EducationSection, { sortEducationByPeriod } from "../components/about/EducationSection";
+import ProjectsGrid, {
+  filterProjects,
+  getProjectRowBlockMinHeights,
+  groupProjectsIntoRows,
+  shouldEqualizeProjectRow,
+  sortProjectsByPriority,
+  updateExpandedProjectIds,
+} from "../components/projects/ProjectsGrid";
 import Menu from "../components/header/Menu";
 import BurgerMenuMobile from "../components/header/BurgerMenuMobile";
 import ThemeToggle from "../components/common/ThemeToggle";
 import HeroBio from "../components/about/HeroBio";
-import ProjectCard from "../components/projects/ProjectCard";
+import ProjectCard, {
+  PROJECT_CARD_BLOCKS,
+  splitProjectSolution,
+} from "../components/projects/ProjectCard";
 import { FillButton } from "../components/hero/fill-button";
-import { EXPERIENCES } from "../data/aboutData";
+import { EDUCATION, EXPERIENCES } from "../data/aboutData";
 import { PROJECTS } from "../data/projectsData";
 import { closeNavigationDialogAfterExit } from "./navigation-dialog";
 
-test("experience disclosure keeps the project link outside its button and hides collapsed content", () => {
+test("the whole experience card is a native accessible disclosure independent from its link", async () => {
   const exp = EXPERIENCES.find((item) => item.url)!;
   assert.ok(exp);
+  assert.equal(nextExpandedExperienceId(null, exp.id), exp.id);
+  assert.equal(nextExpandedExperienceId(exp.id, exp.id), null);
+  assert.equal(nextExpandedExperienceId(EXPERIENCES[0].id, exp.id), exp.id);
+
   for (const expanded of [false, true]) {
     const html = renderToStaticMarkup(<ExperienceCard exp={exp} index={0} isExpanded={expanded} onToggle={() => {}} />);
     const buttons = [...html.matchAll(/<button\b[^>]*>([\s\S]*?)<\/button>/g)];
     assert.equal(buttons.length, 1);
+    assert.match(buttons[0][0], /class="[^"]*absolute inset-0[^"]*focus-visible:outline-2/);
     assert.doesNotMatch(buttons[0][1], /<(?:a|button)\b/);
     assert.match(html, /<a\b[^>]*href=/);
+    assert.match(html, /<a\b[^>]*class="[^"]*pointer-events-auto relative z-20/);
     const controlled = html.match(/aria-controls="([^"]+)"/)?.[1];
     assert.ok(controlled);
     assert.ok(html.includes(`id="${controlled}"`));
     assert.equal(/inert=""/.test(html), !expanded);
     assert.ok(html.includes(`aria-expanded="${expanded}"`));
   }
+
+  const source = await readFile("src/components/about/ExperienceCard.tsx", "utf8");
+  assert.doesNotMatch(source, /onKeyDown=/);
+  assert.match(source, /pointer-events-none relative z-10/);
+  assert.equal([...source.matchAll(/motion-reduce:transition-none/g)].length, 3);
+});
+
+test("experience roles are consistent and public technology labels omit versions", () => {
+  assert.equal(EXPERIENCES.length, 5);
+  assert.deepEqual(
+    EXPERIENCES.map(({ company, role }) => [company, role]),
+    [
+      ["SysPro Consulting", "Full Stack Python Developer"],
+      ["Fundación Maldonado", "Full Stack Laravel Developer"],
+      ["Solar Banco", "Backend Python Developer"],
+      ["Las Verde", "Frontend React Developer"],
+      ["Descubriendo Jardín Maternal", "Frontend Developer"],
+    ],
+  );
+
+  const labels = EXPERIENCES.flatMap(({ mainSkills, skills }) => [...mainSkills, ...skills]);
+  assert.ok(labels.includes("Laravel"));
+  assert.ok(labels.includes("Django"));
+  assert.ok(labels.includes("React"));
+  assert.ok(labels.includes("Python"));
+  assert.ok(labels.includes("JavaScript"));
+  assert.doesNotMatch(labels.join("\n"), /(?:\bDjango|\bLaravel|\bPHP|\bPython|\bReact(?: Router)?|\bJavaScript|\bHTML|\bCSS|\bBootstrap)(?:\.js)?\s*(?:v?\d|ES\d)/i);
+
+  const descriptions = EXPERIENCES.flatMap(({ description }) =>
+    Array.isArray(description) ? description : [description],
+  ).join("\n");
+  assert.doesNotMatch(descriptions, /\b(?:Django|Laravel|PHP|Python|React(?: Router)?|JavaScript|HTML|CSS|Bootstrap)\s*(?:v?\d|ES\d)/i);
+  const syspro = EXPERIENCES.find(({ company }) => company === "SysPro Consulting")!;
+  assert.ok(Array.isArray(syspro.description));
+  assert.equal(syspro.description.length, 4);
+  assert.match(syspro.description[0], /plataforma empresarial para la gestión integral/);
+  assert.match(syspro.description[1], /coordinación de cargas, gestión de tallys/);
+  assert.match(syspro.description[1], /portal público TURNERO_APP/);
+  assert.match(syspro.description[2], /desarrollo de Bamby/);
+  assert.match(syspro.description[2], /capacidades de integración con inteligencia artificial/);
+  assert.match(syspro.description[3], /procesamiento asíncrono/);
+  assert.doesNotMatch(syspro.description.join("\n"), /\bRAG\b/i);
+  assert.match(descriptions, /visualización web de archivos DICOM/);
+  assert.match(descriptions, /liquidez regulatoria, LCR, Value at Risk/);
+  assert.match(descriptions, /Firebase y Firestore/);
+  assert.match(descriptions, /sitio institucional responsive/);
+
+  const projectLinks = EXPERIENCES.filter(({ url }) => url).map(({ company, url }) => [company, url]);
+  assert.deepEqual(projectLinks, [
+    ["Las Verde", "https://lasverde.gustavobaranda.com/"],
+    ["Descubriendo Jardín Maternal", "https://descubriendo.gustavobaranda.com"],
+  ]);
+});
+
+test("education preserves five ordered static records with consistent academic names", async () => {
+  assert.equal(EDUCATION.length, 5);
+  assert.deepEqual(
+    sortEducationByPeriod(EDUCATION).map(({ title, institution, status, period }) => ({
+      title,
+      institution,
+      status,
+      period,
+    })),
+    [
+      {
+        title: "Licenciatura en Ciencia de Datos",
+        institution: "Universidad de la Ciudad de Buenos Aires (Udelaciudad)",
+        status: "En curso",
+        period: "Marzo 2026 — Actualidad",
+      },
+      {
+        title: "Técnico Superior en Desarrollo de Software",
+        institution: "Instituto de Formación Técnica Superior N°29",
+        status: "Finalizado",
+        period: "Julio 2023 — Diciembre 2025",
+      },
+      {
+        title: "Tramo de Formación Pedagógica",
+        institution: "Universidad FASTA",
+        status: "Finalizado",
+        period: "Agosto 2024 — Diciembre 2025",
+      },
+      {
+        title: "Python Developer",
+        institution: "Education IT",
+        status: "Finalizado",
+        period: "Agosto 2022 — Diciembre 2022",
+      },
+      {
+        title: "Frontend Developer",
+        institution: "Coderhouse",
+        status: "Finalizado",
+        period: "Diciembre 2021 — Julio 2022",
+      },
+    ],
+  );
+
+  for (const [index, education] of sortEducationByPeriod(EDUCATION).entries()) {
+    const html = renderToStaticMarkup(<EducationCard edu={education} index={index} />);
+    assert.match(html, /<h3\b/);
+    assert.ok(html.includes(education.title));
+    assert.ok(html.includes(education.status));
+    assert.doesNotMatch(html, /<(?:button|a)\b|aria-expanded=|aria-controls=/);
+  }
+
+  const section = await readFile("src/components/about/EducationSection.tsx", "utf8");
+  assert.match(section, /Una formación en constante/);
+  assert.match(section, />\s*evolución\s*</);
+  assert.match(section, /Formación técnica, universitaria y complementaria que acompaña mi desarrollo profesional\./);
+  assert.doesNotMatch(section, /Títulos y cursos que sostienen mi trabajo como desarrollador/);
 });
 
 test("collapsed technology filters are inert with a named disclosure and selected category", () => {
@@ -43,25 +172,323 @@ test("biography keeps its disclosure mounted and CTA wrapper retains responsive 
   const bio = renderToStaticMarkup(<HeroBio />);
   assert.match(bio, /id="bio-details"[^>]*inert=""[^>]*aria-hidden="true"/);
   assert.match(bio, /aria-expanded="false" aria-controls="bio-details"/);
-  const cta = renderToStaticMarkup(<FillButton href="/#projects" className="w-[min(100%,20rem)] md:w-auto">Projects</FillButton>);
+  const cta = renderToStaticMarkup(<FillButton href="#projects" className="w-[min(100%,20rem)] md:w-auto">Projects</FillButton>);
   assert.match(cta, /class="min-w-0 max-w-full w-\[min\(100%,20rem\)\] md:w-auto"/);
+  assert.match(cta, /<a\b[^>]*href="#projects"/);
   assert.doesNotMatch(cta, /<button\b/);
 });
 
-test("project disclosure keeps an accessible target and animates size without abrupt unmounting", async () => {
+test("hero projects CTA is a native hash link with the original fill layers", async () => {
+  const page = await readFile("src/app/page.tsx", "utf8");
+  const button = await readFile("src/components/hero/fill-button.tsx", "utf8");
+  const cta = renderToStaticMarkup(
+    <FillButton href="#projects" ariaLabel="Ver proyectos">Proyectos</FillButton>,
+  );
+
+  assert.match(page, /<FillButton\s+href="#projects"/);
+  assert.match(page, /<section id="projects"/);
+  assert.match(cta, /<a\b/);
+  assert.match(cta, /href="#projects"/);
+  assert.match(cta, /aria-label="Ver proyectos"/);
+  assert.doesNotMatch(button, /preventDefault|onPointerDown|onClick|useState|isFilled/);
+  assert.match(button, /before:duration-500/);
+  assert.match(button, /before:ease-out/);
+  assert.match(button, /hover:before:w-full focus-visible:before:w-full active:before:w-full/);
+  assert.match(button, /before:pointer-events-none/);
+  assert.match(button, /motion-reduce:before:transition-none/);
+  assert.match(button, /relative z-10/);
+});
+
+test("hero and biography communicate the backend-focused Python positioning", async () => {
+  const page = await readFile("src/app/page.tsx", "utf8");
+  assert.match(page, /text="Full Stack Python Developer"/);
+  assert.match(page, /Desarrollo software que conecta negocios, tecnología y datos\./);
+  assert.match(page, /Especializado en backend con Python, Django y SQL Server\./);
+  assert.match(page, /soluciones Full Stack para logística, servicios financieros y medicina laboral/);
+  assert.match(page, /proyectos open source como chatflow-agent/);
+  assert.doesNotMatch(page, /Transformo ideas en soluciones digitales con código y diseño/);
+
+  const bio = renderToStaticMarkup(<HeroBio />);
+  assert.match(bio, /Técnico Superior en Desarrollo de Software/);
+  assert.match(bio, /Licenciatura en Ciencia de Datos/);
+  assert.match(bio, /backend con Python, Django y SQL Server/);
+  assert.match(bio, /reglas de negocio, bases de datos relacionales/);
+  assert.match(bio, /logística y depósitos fiscales, servicios financieros/);
+  assert.match(bio, /chatflow-agent/);
+  assert.match(bio, /creador y mantenedor/);
+  assert.match(bio, /mantenible, escalable y fácil de evolucionar/);
+  assert.match(bio, /aprendizaje continuo, el trabajo en equipo y la comunicación clara/);
+  assert.doesNotMatch(bio, /Licenciatura en Ciencias de Datos/);
+});
+
+test("the five main section headings share hierarchy, copy and highlighted words", async () => {
+  const about = renderToStaticMarkup(<HeroBio />);
+  const experience = renderToStaticMarkup(<ExperienceSection />);
+  const education = renderToStaticMarkup(<EducationSection />);
+  const page = await readFile("src/app/page.tsx", "utf8");
+
+  for (const html of [about, experience, education]) {
+    assert.equal([...html.matchAll(/<h2\b/g)].length, 1);
+    assert.match(html, /<header\b/);
+    assert.match(html, /text-3xl sm:text-4xl md:text-5xl/);
+    assert.match(html, /leading-tight tracking-tight/);
+  }
+
+  assert.match(about, /Construyendo el puente entre el/);
+  assert.match(about, />código<\/span>/);
+  assert.match(about, />datos<\/span>/);
+  assert.match(about, /id="about-section-subtitle"/);
+  assert.match(about, /Desarrollo soluciones donde la lógica de negocio/);
+
+  assert.match(experience, /Desarrollando/);
+  assert.match(experience, />soluciones<\/span>/);
+  assert.match(experience, /para desafíos reales\./);
+  assert.match(experience, /Mi recorrido desarrollando aplicaciones empresariales, integraciones y soluciones digitales\./);
+
+  assert.match(education, /Una formación en constante/);
+  assert.match(education, />evolución<\/span>/);
+  assert.match(education, /Formación técnica, universitaria y complementaria que acompaña mi desarrollo profesional\./);
+
+  assert.match(page, /Proyectos que convierten/);
+  assert.match(page, />\s*ideas\s*</);
+  assert.match(page, /en soluciones\./);
+  assert.match(page, /Una selección de desarrollos empresariales, aplicaciones web y proyectos open source\./);
+  assert.match(page, /<header className="max-w-3xl space-y-3 sm:space-y-4">/);
+  assert.doesNotMatch(page, /Proyectos Destacados|Casos de estudio reales/);
+  assert.match(page, /¿Tenés un proyecto en mente\?/);
+  assert.match(page, />\s*Hablemos\.\s*</);
+  assert.match(page, /Estoy disponible para conversar sobre oportunidades laborales, colaboraciones y proyectos de desarrollo de software\./);
+  assert.doesNotMatch(page, /¿Tienes una idea o proyecto\?|Envíame un mensaje/);
+  assert.match(page, /<ContactForm \/>/);
+  assert.match(page, /<ContactInfo \/>/);
+  assert.match(page, /grid gap-6 lg:grid-cols-2 items-stretch/);
+
+  const sources = [
+    await readFile("src/components/about/HeroBio.tsx", "utf8"),
+    await readFile("src/components/about/ExperienceSection.tsx", "utf8"),
+    await readFile("src/components/about/EducationSection.tsx", "utf8"),
+    page,
+  ].join("\n");
+  assert.ok((sources.match(/from-violet-600 via-indigo-600 to-blue-600/g) ?? []).length >= 5);
+  assert.ok((sources.match(/dark:from-violet-400 dark:via-indigo-400 dark:to-blue-400/g) ?? []).length >= 5);
+});
+
+test("project disclosure keeps one mounted detail region and animates a reversible height", async () => {
   const project = PROJECTS.find((item) => item.solution.length > 160)!;
-  const html = renderToStaticMarkup(<ProjectCard project={project} index={0} />);
   const target = `project-solution-${project.id}`;
-  assert.ok(html.includes(`id="${target}"`));
-  assert.ok(html.includes(`aria-controls="${target}"`));
-  assert.match(html, /aria-expanded="false"/);
+  for (const expanded of [false, true]) {
+    const html = renderToStaticMarkup(
+      <ProjectCard project={project} index={0} expanded={expanded} />,
+    );
+    assert.ok(html.includes(`id="${target}"`));
+    assert.ok(html.includes(`aria-controls="${target}"`));
+    assert.ok(html.includes(`aria-expanded="${expanded}"`));
+    assert.ok(html.includes(`aria-hidden="${!expanded}"`));
+  }
+
+  const split = splitProjectSolution(project.solution);
+  assert.ok(split.summary.length > 0);
+  assert.ok(split.detail.length > 0);
+  assert.equal(`${split.summary} ${split.detail}`, project.solution);
 
   const source = await readFile("src/components/projects/ProjectCard.tsx", "utf8");
-  assert.match(source, /layout="size"/);
-  assert.match(source, /mode="popLayout"/);
-  assert.match(source, /duration: reducedMotion \? 0 : 0\.32/);
-  assert.match(source, /duration: reducedMotion \? 0 : 0\.24/);
-  assert.match(source, /className="overflow-hidden"/);
+  assert.match(source, /height: isExpanded \? "auto" : 0/);
+  assert.match(source, /duration: reducedMotion \? 0 : 0\.36/);
+  assert.match(source, /duration: reducedMotion \? 0 : 0\.22/);
+  assert.match(source, /will-change-\[height,opacity\]/);
+  assert.doesNotMatch(source, /mode="popLayout"|layout="size"|setTimeout/);
+});
+
+test("project rows derive closed alignment per block and keep mobile and odd rows natural", async () => {
+  const grid = renderToStaticMarkup(<ProjectsGrid />);
+  const gridSource = await readFile("src/components/projects/ProjectsGrid.tsx", "utf8");
+  const cardSource = await readFile("src/components/projects/ProjectCard.tsx", "utf8");
+
+  const shortCard = {
+    meta: 28,
+    heading: 62,
+    challenge: 104,
+    solution: 88,
+    control: 30,
+    stack: 76,
+    footer: 42,
+  };
+  const longCard = {
+    meta: 34,
+    heading: 98,
+    challenge: 182,
+    solution: 116,
+    control: 34,
+    stack: 112,
+    footer: 50,
+  };
+  assert.deepEqual(
+    getProjectRowBlockMinHeights([shortCard, longCard], true),
+    longCard,
+  );
+  assert.deepEqual(getProjectRowBlockMinHeights([shortCard, longCard], false), {});
+  assert.deepEqual(getProjectRowBlockMinHeights([longCard], true), {});
+
+  const djangoProjects = filterProjects(sortProjectsByPriority(PROJECTS), "all", {
+    id: "django",
+    label: "Django",
+    aliases: ["django"],
+  });
+  const djangoRows = groupProjectsIntoRows(djangoProjects);
+  assert.equal(djangoProjects.length, 3);
+  assert.deepEqual(djangoRows.map((row) => row.length), [2, 1]);
+  assert.deepEqual(getProjectRowBlockMinHeights([shortCard], true), {});
+
+  assert.equal(
+    [...grid.matchAll(/grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-start/g)].length,
+    5,
+  );
+  assert.deepEqual(PROJECT_CARD_BLOCKS, [
+    "meta",
+    "heading",
+    "challenge",
+    "solution",
+    "control",
+    "stack",
+    "footer",
+  ]);
+  assert.match(gridSource, /getBoundingClientRect\(\)\.height/);
+  assert.match(gridSource, /--project-row-\$\{block\}/);
+  assert.match(gridSource, /window\.matchMedia\("\(min-width: 768px\)"\)/);
+  assert.match(gridSource, /useLayoutEffect/);
+  assert.match(cardSource, /minHeight: `var\(--project-row-\$\{block\}\)`/);
+  assert.match(cardSource, /group relative self-start flex flex-col/);
+  assert.match(cardSource, /equalizeHeight \? "md:h-full md:self-stretch" : ""/);
+  assert.doesNotMatch(`${gridSource}\n${cardSource}`, /ResizeObserver|setTimeout|grid-rows-subgrid|row-span-3/);
+  assert.doesNotMatch(cardSource, /min-h-\[(?:\d|\d+px)/);
+  assert.doesNotMatch(cardSource, /min-h-20|sm:min-h-22|closedMinHeight/);
+});
+
+test("project rows equalize exterior height only when both cards are expanded", () => {
+  const pair = [
+    { id: "syspro-logistica" },
+    { id: "chatflow-agent" },
+  ];
+  const empty = new Set<string>();
+  const firstExpanded = updateExpandedProjectIds(empty, "syspro-logistica", true);
+  const bothExpanded = updateExpandedProjectIds(firstExpanded, "chatflow-agent", true);
+  const secondOnly = updateExpandedProjectIds(bothExpanded, "syspro-logistica", false);
+
+  assert.deepEqual([...empty], []);
+  assert.deepEqual([...firstExpanded], ["syspro-logistica"]);
+  assert.deepEqual([...bothExpanded], ["syspro-logistica", "chatflow-agent"]);
+  assert.deepEqual([...secondOnly], ["chatflow-agent"]);
+  assert.equal(shouldEqualizeProjectRow(pair, empty), false);
+  assert.equal(shouldEqualizeProjectRow(pair, firstExpanded), false);
+  assert.equal(shouldEqualizeProjectRow(pair, secondOnly), false);
+  assert.equal(shouldEqualizeProjectRow(pair, bothExpanded), true);
+  assert.equal(shouldEqualizeProjectRow(pair.slice(0, 1), bothExpanded), false);
+
+  const closedCard = renderToStaticMarkup(
+    <ProjectCard project={PROJECTS[0]} index={0} expanded={false} equalizeHeight={false} />,
+  );
+  const independentlyExpandedCard = renderToStaticMarkup(
+    <ProjectCard project={PROJECTS[0]} index={0} expanded equalizeHeight={false} />,
+  );
+  const equalizedCard = renderToStaticMarkup(
+    <ProjectCard project={PROJECTS[0]} index={0} expanded equalizeHeight />,
+  );
+
+  for (const naturalCard of [closedCard, independentlyExpandedCard]) {
+    assert.match(naturalCard, /self-start/);
+    assert.doesNotMatch(naturalCard, /md:h-full|md:self-stretch/);
+  }
+  assert.match(equalizedCard, /self-start[^\"]*md:h-full md:self-stretch/);
+});
+
+test("projects prioritize professional relevance and keep category and technology filters", () => {
+  assert.equal(PROJECTS.length, 10);
+  assert.equal(new Set(PROJECTS.map(({ id }) => id)).size, PROJECTS.length);
+  const originalProjectIds = [
+    "syspro-logistica",
+    "mhine-home",
+    "gusflow-kanban",
+    "fundacion-medicina",
+    "weatherflow-api",
+    "solar-banco-etl",
+    "portfolio-personal",
+    "las-verde-ecommerce",
+    "maternal-descubriendo",
+  ];
+  assert.ok(originalProjectIds.every((id) => PROJECTS.some((project) => project.id === id)));
+  assert.ok(
+    PROJECTS.every(({ category }) =>
+      ["full-stack", "apis", "opensource"].includes(category),
+    ),
+  );
+  const sorted = sortProjectsByPriority(PROJECTS);
+  assert.deepEqual(
+    sorted.slice(0, 4).map(({ id }) => id),
+    ["syspro-logistica", "chatflow-agent", "solar-banco-etl", "fundacion-medicina"],
+  );
+  assert.equal(new Set(PROJECTS.map(({ priority }) => priority)).size, PROJECTS.length);
+
+  assert.ok(filterProjects(sorted, "all", null).length === 10);
+  assert.ok(filterProjects(sorted, "opensource", null).some(({ id }) => id === "chatflow-agent"));
+  assert.ok(
+    filterProjects(sorted, "all", {
+      id: "python",
+      label: "Python",
+      aliases: ["python", "pytest"],
+    }).some(({ id }) => id === "chatflow-agent"),
+  );
+  assert.ok(filterProjects(sorted, "all", "SQLite").some(({ id }) => id === "chatflow-agent"));
+});
+
+test("chatflow-agent uses verified public claims and project labels omit framework versions", () => {
+  const chatflow = PROJECTS.find(({ id }) => id === "chatflow-agent")!;
+  assert.equal(chatflow.company, "Open Source · Creador y mantenedor");
+  assert.equal(chatflow.githubUrl, "https://github.com/GustavoBaranda/chatflow-agent");
+  assert.equal(chatflow.image, null);
+  assert.match(chatflow.solution, /librería Python open source/);
+  assert.match(chatflow.solution, /ejecución asíncrona/);
+  assert.match(chatflow.solution, /handoffs entre agentes/);
+  assert.match(chatflow.solution, /CLI, webhooks, WhatsApp y Telegram/);
+  assert.match(chatflow.solution, /controles de concurrencia/);
+  assert.match(chatflow.solution, /revisión de contribuciones/);
+  assert.doesNotMatch(`${chatflow.challenge} ${chatflow.solution}`, /\bRAG\b|producción|enterprise/i);
+  const html = renderToStaticMarkup(<ProjectCard project={chatflow} index={0} />);
+  assert.match(html, /href="https:\/\/github\.com\/GustavoBaranda\/chatflow-agent"/);
+  assert.match(html, /aria-controls="project-solution-chatflow-agent"/);
+
+  const publicCopy = PROJECTS.flatMap(({ solution, tags }) => [solution, ...tags]).join("\n");
+  assert.doesNotMatch(
+    publicCopy,
+    /\b(?:Next\.js|React|Django|Laravel|PHP|Python|React Router|JavaScript|HTML|CSS|Bootstrap|Tailwind CSS|NextAuth)\s*(?:v?\d|ES\d)/i,
+  );
+  assert.match(publicCopy, /OpenAPI 3/);
+});
+
+test("the three highlighted project narratives are precise and balanced", () => {
+  const syspro = PROJECTS.find(({ id }) => id === "syspro-logistica")!;
+  const chatflow = PROJECTS.find(({ id }) => id === "chatflow-agent")!;
+  const portfolio = PROJECTS.find(({ id }) => id === "portfolio-personal")!;
+
+  assert.match(syspro.challenge, /turnos, documentación y movimientos de mercadería/);
+  assert.match(syspro.solution, /participo en el diseño, la implementación y la integración/);
+  assert.match(syspro.solution, /turnero público/);
+  assert.match(syspro.solution, /procesamiento asíncrono y comunicación en tiempo real/);
+  assert.doesNotMatch(syspro.solution, /diseñé e implementé la arquitectura|pyHanko|Huawei Cloud|ReportLab/);
+
+  assert.match(chatflow.challenge, /separar la lógica de negocio de los proveedores/);
+  assert.match(chatflow.solution, /creador y responsable técnico/);
+  assert.doesNotMatch(`${chatflow.challenge} ${chatflow.solution}`, /\bframework\b/i);
+
+  assert.match(portfolio.challenge, /presencia profesional/);
+  assert.match(portfolio.challenge, /clara, accesible y adaptable/);
+  assert.match(portfolio.solution, /arquitectura de componentes reutilizables/);
+  assert.match(portfolio.solution, /diseño responsive/);
+  assert.doesNotMatch(`${portfolio.challenge} ${portfolio.solution}`, /Lighthouse|\b100\b|altamente escalable/i);
+
+  for (const project of [syspro, chatflow, portfolio]) {
+    assert.ok(project.challenge.length >= 140 && project.challenge.length <= 260);
+    assert.ok(project.solution.length >= 250 && project.solution.length <= 500);
+  }
 });
 
 test("project media uses responsive reserved ratios and content-safe presentation variants", async () => {
@@ -71,10 +498,17 @@ test("project media uses responsive reserved ratios and content-safe presentatio
   for (const project of PROJECTS) {
     const html = renderToStaticMarkup(<ProjectCard project={project} index={0} />);
     assert.match(html, /aspect-video sm:aspect-\[2\/1\]/);
-    assert.match(html, /object-contain/);
-    assert.match(html, /sizes="\(max-width: 768px\) 100vw, \(max-width: 1200px\) 50vw, 600px"/);
-    if (project.imagePresentation === "interface") assert.match(html, /object-contain object-top/);
-    else assert.match(html, /object-contain object-center/);
+    if (project.image) {
+      assert.match(html, /object-contain/);
+      assert.match(html, /sizes="\(max-width: 768px\) 100vw, \(max-width: 1200px\) 50vw, 600px"/);
+      if (project.imagePresentation === "interface") assert.match(html, /object-contain object-top/);
+      else assert.match(html, /object-contain object-center/);
+    } else {
+      assert.match(html, /role="img"/);
+      assert.match(html, /Open Source/);
+      assert.match(html, /chatflow-agent/);
+      assert.doesNotMatch(html, /<img\b/);
+    }
   }
 
   const source = await readFile("src/components/projects/ProjectCard.tsx", "utf8");
