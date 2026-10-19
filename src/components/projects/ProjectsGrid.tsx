@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useLayoutEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FolderSearch, RotateCcw, Tag, ChevronDown, ChevronUp, X } from "lucide-react";
-import { PROJECTS, PROJECT_CATEGORIES } from "@/data/projectsData";
-import ProjectCard from "./ProjectCard";
+import { PROJECTS, PROJECT_CATEGORIES, type ProjectItem } from "@/data/projectsData";
+import ProjectCard, {
+  PROJECT_CARD_BLOCKS,
+  type ProjectCardBlock,
+} from "./ProjectCard";
 
 export interface CoreTechFilter {
   id: string;
@@ -23,11 +26,192 @@ const CORE_TECH_FILTERS: CoreTechFilter[] = [
   { id: "tailwind", label: "Tailwind CSS", aliases: ["tailwind"] },
 ];
 
-const CATEGORY_ORDER: Record<string, number> = {
-  "full-stack": 1,
-  apis: 2,
-  opensource: 3,
-};
+export function sortProjectsByPriority(projects: typeof PROJECTS) {
+  return [...projects].sort((a, b) => a.priority - b.priority);
+}
+
+export function filterProjects(
+  projects: typeof PROJECTS,
+  selectedCategory: string,
+  selectedTech: CoreTechFilter | string | null,
+) {
+  return projects.filter((project) => {
+    const matchesCategory = selectedCategory === "all" || project.category === selectedCategory;
+
+    if (!selectedTech) return matchesCategory;
+
+    const projectTagsLower = project.tags.map((tag) => tag.toLowerCase());
+    if (typeof selectedTech === "string") {
+      const searchTag = selectedTech.toLowerCase();
+      return matchesCategory && projectTagsLower.some((tag) => tag.includes(searchTag));
+    }
+
+    return matchesCategory && selectedTech.aliases.some((alias) =>
+      projectTagsLower.some((tag) => tag.includes(alias)),
+    );
+  });
+}
+
+export type ProjectBlockMeasurements = Partial<Record<ProjectCardBlock, number>>;
+
+export function getProjectRowBlockMinHeights(
+  measurements: ProjectBlockMeasurements[],
+  isDesktop: boolean,
+): ProjectBlockMeasurements {
+  if (!isDesktop || measurements.length !== 2) return {};
+
+  return Object.fromEntries(
+    PROJECT_CARD_BLOCKS.map((block) => [
+      block,
+      Math.ceil(Math.max(...measurements.map((measurement) => measurement[block] ?? 0))),
+    ]),
+  );
+}
+
+export function groupProjectsIntoRows(projects: ProjectItem[]) {
+  const rows: ProjectItem[][] = [];
+  for (let index = 0; index < projects.length; index += 2) {
+    rows.push(projects.slice(index, index + 2));
+  }
+  return rows;
+}
+
+export function updateExpandedProjectIds(
+  currentIds: ReadonlySet<string>,
+  projectId: string,
+  isExpanded: boolean,
+) {
+  const nextIds = new Set(currentIds);
+  if (isExpanded) nextIds.add(projectId);
+  else nextIds.delete(projectId);
+  return nextIds;
+}
+
+export function shouldEqualizeProjectRow(
+  projects: readonly Pick<ProjectItem, "id">[],
+  expandedIds: ReadonlySet<string>,
+) {
+  return projects.length === 2 && projects.every(({ id }) => expandedIds.has(id));
+}
+
+interface ProjectRowProps {
+  projects: ProjectItem[];
+  startIndex: number;
+  selectedTechTag?: string;
+  onSelectTechTag: (tag: string) => void;
+}
+
+function ProjectRow({
+  projects,
+  startIndex,
+  selectedTechTag,
+  onSelectTechTag,
+}: ProjectRowProps) {
+  const rowRef = useRef<HTMLDivElement | null>(null);
+  const blockRefs = useRef<
+    Record<string, Partial<Record<ProjectCardBlock, HTMLElement | null>>>
+  >({});
+  const measureFrame = useRef<number | null>(null);
+  const expandedIdsRef = useRef<Set<string>>(new Set());
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(() => new Set());
+  const equalizeExteriorHeight = shouldEqualizeProjectRow(projects, expandedIds);
+
+  const clearBlockHeights = useCallback(() => {
+    const row = rowRef.current;
+    if (!row) return;
+    for (const block of PROJECT_CARD_BLOCKS) {
+      row.style.removeProperty(`--project-row-${block}`);
+    }
+  }, []);
+
+  const measureClosedBlocks = useCallback(() => {
+    const row = rowRef.current;
+    clearBlockHeights();
+    if (!row || projects.length !== 2 || !window.matchMedia("(min-width: 768px)").matches) {
+      return;
+    }
+
+    const measurements = projects.map(({ id }) =>
+      Object.fromEntries(
+        PROJECT_CARD_BLOCKS.map((block) => [
+          block,
+          blockRefs.current[id]?.[block]?.getBoundingClientRect().height ?? 0,
+        ]),
+      ),
+    );
+    const minHeights = getProjectRowBlockMinHeights(measurements, true);
+    for (const block of PROJECT_CARD_BLOCKS) {
+      const minHeight = minHeights[block];
+      if (minHeight) row.style.setProperty(`--project-row-${block}`, `${minHeight}px`);
+    }
+  }, [clearBlockHeights, projects]);
+
+  const scheduleClosedMeasurement = useCallback(() => {
+    if (measureFrame.current !== null) cancelAnimationFrame(measureFrame.current);
+    measureFrame.current = requestAnimationFrame(measureClosedBlocks);
+  }, [measureClosedBlocks]);
+
+  useLayoutEffect(() => {
+    let active = true;
+    const resetMeasurement = () => {
+      if (!active) return;
+      if (expandedIdsRef.current.size > 0) {
+        return;
+      }
+      scheduleClosedMeasurement();
+    };
+
+    measureClosedBlocks();
+    window.addEventListener("resize", resetMeasurement);
+    document.fonts?.ready.then(resetMeasurement);
+
+    return () => {
+      active = false;
+      window.removeEventListener("resize", resetMeasurement);
+      if (measureFrame.current !== null) cancelAnimationFrame(measureFrame.current);
+      clearBlockHeights();
+    };
+  }, [clearBlockHeights, measureClosedBlocks, scheduleClosedMeasurement]);
+
+  const updateExpanded = (projectId: string, isExpanded: boolean) => {
+    const next = updateExpandedProjectIds(expandedIdsRef.current, projectId, isExpanded);
+    expandedIdsRef.current = next;
+    setExpandedIds(next);
+  };
+
+  const handleCollapsed = () => {
+    if (expandedIdsRef.current.size > 0) return;
+    measureClosedBlocks();
+  };
+
+  return (
+    <div
+      ref={rowRef}
+      data-project-row={projects.map(({ id }) => id).join(":")}
+      className={`grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-start ${
+        equalizeExteriorHeight ? "md:items-stretch" : ""
+      }`}
+    >
+      {projects.map((project, rowIndex) => (
+        <ProjectCard
+          key={project.id}
+          project={project}
+          index={startIndex + rowIndex}
+          selectedTechTag={selectedTechTag}
+          onSelectTechTag={onSelectTechTag}
+          expanded={expandedIds.has(project.id)}
+          equalizeHeight={equalizeExteriorHeight}
+          onExpandedChange={(isExpanded) => updateExpanded(project.id, isExpanded)}
+          onCollapsed={handleCollapsed}
+          registerBlock={(block, element) => {
+            blockRefs.current[project.id] ??= {};
+            blockRefs.current[project.id][block] = element;
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default function ProjectsGrid() {
   const techToggleRef = useRef<HTMLButtonElement>(null);
@@ -36,37 +220,15 @@ export default function ProjectsGrid() {
   const [selectedTech, setSelectedTech] = useState<CoreTechFilter | string | null>(null);
   const [isTechFilterOpen, setIsTechFilterOpen] = useState<boolean>(false);
 
-  const sortedProjects = useMemo(() => {
-    return [...PROJECTS].sort((a, b) => {
-      const catA = CATEGORY_ORDER[a.category] || 99;
-      const catB = CATEGORY_ORDER[b.category] || 99;
-      if (catA !== catB) {
-        return catA - catB;
-      }
-      return b.dateSort.localeCompare(a.dateSort);
-    });
-  }, []);
+  const sortedProjects = useMemo(() => sortProjectsByPriority(PROJECTS), []);
 
   const filteredProjects = useMemo(() => {
-    return sortedProjects.filter((p) => {
-      const matchesCategory = selectedCategory === "all" || p.category === selectedCategory;
-
-      if (!selectedTech) return matchesCategory;
-
-      const projectTagsLower = p.tags.map((t) => t.toLowerCase());
-
-      if (typeof selectedTech === "string") {
-        const searchTag = selectedTech.toLowerCase();
-        const matchesDirectTech = projectTagsLower.some((t) => t.includes(searchTag));
-        return matchesCategory && matchesDirectTech;
-      }
-
-      const matchesCoreTech = selectedTech.aliases.some((alias) =>
-        projectTagsLower.some((t) => t.includes(alias))
-      );
-      return matchesCategory && matchesCoreTech;
-    });
+    return filterProjects(sortedProjects, selectedCategory, selectedTech);
   }, [sortedProjects, selectedCategory, selectedTech]);
+
+  const projectRows = useMemo(() => {
+    return groupProjectsIntoRows(filteredProjects);
+  }, [filteredProjects]);
 
   const handleCoreTechClick = (filter: CoreTechFilter) => {
     if (typeof selectedTech !== "string" && selectedTech?.id === filter.id) {
@@ -233,13 +395,13 @@ export default function ProjectsGrid() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8, transition: { duration: 0.15 } }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-stretch"
+            className="space-y-6 sm:space-y-8"
           >
-            {filteredProjects.map((project, index) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                index={index}
+            {projectRows.map((row, rowIndex) => (
+              <ProjectRow
+                key={row.map(({ id }) => id).join("-")}
+                projects={row}
+                startIndex={rowIndex * 2}
                 selectedTechTag={activeTechLabel}
                 onSelectTechTag={handleCardTagClick}
               />
