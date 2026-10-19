@@ -314,28 +314,30 @@ No había aplicaciones ni navegadores disponibles para automatización. **No se 
 
 La API, validaciones, honeypot, cuota por instancia, Gmail SMTP, remitente, destinatario y archivos de entorno se conservaron. No se actualizaron dependencias. No se declara cumplimiento WCAG 2.2 AA completo: quedan pendientes las comprobaciones de navegador y tecnología asistiva.
 
-## Pendientes de la Fase 1
+## Fase 4 — Estabilización y validación
 
-### Dependencias de desarrollo
+La planificación formal de la Fase 4 se encuentra en [`docs/PHASE_4_PLAN.md`](docs/PHASE_4_PLAN.md). La entrega 4.1 diagnostica la limitación de `os.userInfo()` en el sandbox de Windows y actualiza de forma controlada las herramientas de desarrollo, sin alterar el runtime, el formulario ni la interfaz.
 
-Revisión del 17 de octubre de 2026: quedan **12 paquetes señalados por npm audit (2 moderados y 10 altos)**. Ocho tienen avisos propios y cuatro están afectados por arrastre. Su actualización está diferida por decisión del responsable del proyecto; no se aplicó `audit fix --force` ni una degradación de Next.js.
+### Deuda de dependencias de desarrollo
 
-| Paquete instalado | Severidad | Corrección o pendiente |
-|---|---|---|
-| @humanfs/node 0.16.7 | Moderada | 0.16.8 |
-| ajv 6.12.6 | Moderada | 6.14.0 |
-| brace-expansion 1.1.12 / 5.0.9 | Alta | 1.1.21 / 5.0.12 |
-| braces 3.0.3 | Alta | Sin versión corregida declarada en el aviso revisado |
-| micromatch 4.0.8 | Alta, heredada | Resolver la dependencia afectada de braces |
-| fast-glob 3.3.1 | Alta, heredada | Resolver la cadena micromatch / braces |
-| @next/eslint-plugin-next 16.4.2 | Alta, heredada | Resolver la cadena fast-glob / micromatch / braces |
-| eslint-config-next 16.4.2 | Alta, heredada | Resolver la cadena del plugin anterior |
-| flatted 3.3.3 | Alta | 3.4.2 |
-| js-yaml 4.1.1 | Alta | 4.3.2 |
-| minimatch 3.1.2 | Alta | 3.1.4 |
-| picomatch 4.0.3 | Alta | 4.0.4 |
+Revisión del 19 de octubre de 2026: la entrega 4.1 redujo la auditoría de **12 alertas (2 moderadas y 10 altas)** a **5 alertas altas**. Se actualizó ESLint dentro de la rama 9 y se aplicaron únicamente parches transitivos compatibles. No se utilizó `audit fix --force` ni se degradó la configuración de Next.js.
 
-Los mínimos corregidos corresponden a los avisos consultados en esa fecha; antes de actualizar hay que volver a consultar los avisos y comprobar compatibilidad. El alcance encontrado corresponde a ESLint, sus plugins, patrones y cachés de herramientas. No se encontró una ruta desde el formulario público hacia estos paquetes; no aparecen en el trazado del endpoint compilado. Esto no elimina el riesgo al procesar configuraciones, patrones o cachés no confiables en CI. Next.js 16 no ejecuta ESLint automáticamente dentro de `next build`.
+| Paquete original | Resultado de la entrega 4.1 |
+|---|---|
+| @humanfs/node 0.16.7 | Corregido en 0.16.8 |
+| ajv 6.12.6 | Corregido en 6.15.0 |
+| brace-expansion 1.1.12 / 5.0.9 | Corregido en 1.1.21 / 5.0.12 |
+| flatted 3.3.3 | Corregido en 3.4.4 |
+| js-yaml 4.1.1 | Corregido en 4.3.2 |
+| minimatch 3.1.2 | Corregido en 3.1.5 |
+| picomatch 4.0.3 | Corregido en 4.0.7 |
+| braces 3.0.3 | Pendiente: no existe versión corregida publicada |
+| micromatch 4.0.8 | Pendiente heredado de braces |
+| fast-glob 3.3.1 | Pendiente heredado de micromatch / braces |
+| @next/eslint-plugin-next 16.4.2 | Pendiente heredado de fast-glob |
+| eslint-config-next 16.4.2 | Pendiente heredado del plugin de Next.js |
+
+Las cinco alertas residuales corresponden a una sola cadena de ESLint: `eslint-config-next → @next/eslint-plugin-next → fast-glob → micromatch → braces`. `npm audit` sugiere degradar `eslint-config-next` a 14.2.35; esa salida no es compatible con Next.js 16 y no se aplica. El alcance continúa limitado al tooling de desarrollo y CI: no se encontró una ruta desde el formulario público ni desde el bundle de producción. La actualización deberá retomarse cuando `braces` o la cadena superior publiquen una corrección compatible.
 
 ### Comprobación manual del formulario
 
