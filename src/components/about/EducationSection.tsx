@@ -2,8 +2,16 @@
 
 import { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { EDUCATION, parsePeriodEnd, textReveal } from "@/data/aboutData";
+import { EDUCATION, parsePeriodEnd, textReveal, type Education } from "@/data/aboutData";
 import EducationCard from "./EducationCard";
+
+export function sortEducationByPeriod(education: Education[]) {
+  return education.slice().sort((a, b) => {
+    const da = parsePeriodEnd(a.period).getTime();
+    const db = parsePeriodEnd(b.period).getTime();
+    return db - da;
+  });
+}
 
 export default function EducationSection() {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -18,11 +26,7 @@ export default function EducationSection() {
   });
   const eduScaleY = useTransform(eduScrollY, [0, 1], [0, 1]);
 
-  const sortedEducation = EDUCATION.slice().sort((a, b) => {
-    const da = parsePeriodEnd(a.period).getTime();
-    const db = parsePeriodEnd(b.period).getTime();
-    return db - da;
-  });
+  const sortedEducation = sortEducationByPeriod(EDUCATION);
 
   useEffect(() => {
     const calculateLine = () => {
@@ -63,17 +67,20 @@ export default function EducationSection() {
       viewport={{ once: true, amount: 0.05 }}
       className="space-y-10 mb-20"
     >
-      <motion.header className="space-y-6" variants={textReveal}>
-        <p className="text-xl sm:text-2xl font-bold uppercase tracking-[0.3em] text-foreground">
+      <motion.header className="max-w-3xl space-y-3 sm:space-y-4" variants={textReveal}>
+        <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-indigo-600 dark:text-indigo-400">
           Formación
         </p>
 
-        <h2 className="text-2xl font-extrabold leading-snug sm:text-3xl md:text-5xl text-foreground whitespace-normal">
-          Formación académica y certificaciones.
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight tracking-tight text-foreground text-balance">
+          Una formación en constante{" "}
+          <span className="bg-linear-to-r from-violet-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent dark:from-violet-400 dark:via-indigo-400 dark:to-blue-400">
+            evolución
+          </span>.
         </h2>
 
-        <p className="max-w-2xl text-foreground">
-          Títulos y cursos que sostienen mi trabajo como desarrollador.
+        <p className="max-w-2xl text-base sm:text-lg text-muted leading-relaxed">
+          Formación técnica, universitaria y complementaria que acompaña mi desarrollo profesional.
         </p>
       </motion.header>
 

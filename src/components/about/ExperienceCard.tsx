@@ -43,8 +43,18 @@ export default function ExperienceCard({
 
       {/* Card with an independent disclosure and project link. */}
       <div
-        className={`w-full text-left rounded-[0.35rem] border ${colors.border} surface-card p-4 sm:p-5 transition-all duration-300`}
+        className={`relative w-full text-left rounded-[0.35rem] border ${colors.border} surface-card p-4 sm:p-5 transition-all duration-300 motion-reduce:transition-none`}
       >
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-expanded={isExpanded}
+          aria-controls={detailsId}
+          aria-label={`${isExpanded ? "Colapsar" : "Expandir"} experiencia en ${exp.company}`}
+          className="absolute inset-0 z-0 cursor-pointer rounded-[0.35rem] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
+        />
+
+        <div className="pointer-events-none relative z-10">
         {/* Header row with logo */}
         <div className="flex items-start gap-4">
           {/* Company logo / initials */}
@@ -77,17 +87,10 @@ export default function ExperienceCard({
             <div className="flex items-start justify-between gap-2.5 sm:gap-4">
               <div className="flex-1 min-w-0">
                 <h3 className={`text-base sm:text-xl font-bold leading-snug ${colors.heading}`}>
-                  <button
-                    type="button"
-                    onClick={onToggle}
-                    aria-expanded={isExpanded}
-                    aria-controls={detailsId}
-                    aria-label={`${isExpanded ? 'Colapsar' : 'Expandir'} experiencia en ${exp.company}`}
-                    className="flex w-full items-start justify-between gap-3 text-left cursor-pointer rounded-sm"
-                  >
+                  <span className="flex w-full items-start justify-between gap-3 text-left">
                     <span>{exp.role}</span>
-                    <span aria-hidden="true" className={`shrink-0 text-sm transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}>▼</span>
-                  </button>
+                    <span aria-hidden="true" className={`shrink-0 text-sm transition-transform duration-200 motion-reduce:transition-none ${isExpanded ? "rotate-180" : ""}`}>▼</span>
+                  </span>
                 </h3>
                 <p className="text-xs sm:text-sm font-semibold text-foreground mt-0.5">
                   {exp.company}{" "}
@@ -140,19 +143,21 @@ export default function ExperienceCard({
           id={detailsId}
           inert={!isExpanded}
           aria-hidden={!isExpanded}
-          className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
+          className={`grid transition-[grid-template-rows] duration-300 ease-in-out motion-reduce:transition-none ${
             isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
           }`}
         >
           <div className="min-h-0 overflow-hidden">
             <div className="pt-5 mt-5 border-t border-soft space-y-4">
-              <p className="text-sm sm:text-base text-foreground/90 leading-relaxed">
-                {exp.description}
-              </p>
+              <div className="space-y-3 text-sm sm:text-base text-foreground/90 leading-relaxed">
+                {(Array.isArray(exp.description) ? exp.description : [exp.description]).map(
+                  (paragraph) => <p key={paragraph}>{paragraph}</p>,
+                )}
+              </div>
 
               <div className="space-y-2">
                 <p className="text-xs font-semibold uppercase tracking-wider text-muted">
-                  Tecnologías y Herramientas:
+                  Tecnologías y funcionalidades:
                 </p>
                 <div className="flex flex-wrap gap-1.5 items-center">
                   {exp.skills.map((skill) => (
@@ -172,7 +177,7 @@ export default function ExperienceCard({
                     href={exp.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`inline-flex items-center gap-1.5 text-xs font-semibold hover:underline ${colors.heading}`}
+                    className={`pointer-events-auto relative z-20 inline-flex items-center gap-1.5 text-xs font-semibold hover:underline ${colors.heading}`}
                   >
                     Ver proyecto ↗
                   </a>
@@ -180,6 +185,7 @@ export default function ExperienceCard({
               )}
             </div>
           </div>
+        </div>
         </div>
       </div>
     </motion.div>

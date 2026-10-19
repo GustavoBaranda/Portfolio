@@ -38,7 +38,7 @@ export interface Experience {
   period: string;
   duration: string;
   location: string;
-  description: string;
+  description: string | string[];
   mainSkills: string[];
   skills: string[];
   color: string;
@@ -61,24 +61,28 @@ export interface Education {
 export const EXPERIENCES: Experience[] = [
   {
     id: 1,
-    role: "Full Stack Developer Python",
+    role: "Full Stack Python Developer",
     company: "SysPro Consulting",
     initials: "/images/syspro.png",
     type: null,
     period: "may. 2025 - actualidad",
     duration: "10 meses",
     location: "Buenos Aires, Argentina",
-    description:
-      "Diseñé e implementé la arquitectura multimodular enterprise de la plataforma DepofisWEB para logística portuaria y depósitos fiscales en Django 4.2 y SQL Server. Estructuré el sistema en dos módulos interconectados: Portal Público de Turnos (TURNERO_APP) para transportistas y choferes, y Suite Operativa Interna (DEPO_2025_App) para gestión de recepciones, entregas, inspección física y trazabilidad de contenedores. Integré WebSockets (Django Channels), tareas asíncronas con Celery & Redis, firma digital criptográfica de PDFs (pyHanko, ReportLab, PyMuPDF), notificaciones Web Push (VAPID), almacenamiento en Huawei Cloud OBS y mapas interactivos (Leaflet).",
+    description: [
+      "Desarrollo y mantengo DepofisWEB, una plataforma empresarial para la gestión integral de operaciones logísticas y depósitos fiscales, utilizando principalmente Python, Django y SQL Server.",
+      "Trabajo en el desarrollo y evolución de módulos relacionados con coordinación de cargas, gestión de tallys, recepción y entrega de mercaderías, control de inventario, trazabilidad, documentación operativa y administración de turnos, incluyendo el portal público TURNERO_APP.",
+      "También participo en el desarrollo de Bamby, un asistente virtual contextual integrado en la plataforma, con resolución de intenciones, ayuda según el módulo y capacidades de integración con inteligencia artificial.",
+      "Implemento funcionalidades e integraciones que incluyen procesamiento asíncrono, comunicación en tiempo real mediante WebSockets, notificaciones, generación y firma digital de documentos, almacenamiento en la nube y servicios externos, trabajando sobre la arquitectura, las reglas de negocio y la evolución del sistema.",
+    ],
     mainSkills: ["Python", "Django", "SQL Server"],
     skills: [
-      "Django 4.2",
+      "Django",
       "SQL Server",
       "Celery",
       "Redis",
       "WebSockets",
       "Django Channels",
-      "Firma Digital",
+      "Firma digital",
       "pyHanko",
       "ReportLab",
       "PyMuPDF",
@@ -93,7 +97,7 @@ export const EXPERIENCES: Experience[] = [
   },
   {
     id: 2,
-    role: "Full Stack Developer Laravel",
+    role: "Full Stack Laravel Developer",
     company: "Fundación Maldonado",
     initials: "/images/fundacion_maldonado.png",
     type: "Freelance",
@@ -101,11 +105,11 @@ export const EXPERIENCES: Experience[] = [
     duration: "2 meses",
     location: "Córdoba, Argentina",
     description:
-      "Diseñé e implementé la plataforma clínica integral de medicina laboral en Laravel 12, PHP 8.2 y MySQL. Desarrollé el control de acceso multidominio con autenticación por roles (RBAC: Admin, Colaborador Médico y Paciente) y middleware de autorización. Integré un visor interactivo de archivos DICOM (DWV / Canvas) con soporte para manipulación en tiempo real (zoom, contraste, rotación), tablas dinámicas con Yajra DataTables, legajos médicos estructurados y exportación automatizada de reportes clínicos en PDF.",
-    mainSkills: ["Laravel 12", "PHP", "MySQL"],
+      "Desarrollé una plataforma de gestión de medicina laboral con Laravel, PHP y MySQL. Implementé autenticación y permisos por rol para administradores, colaboradores médicos y pacientes, junto con la gestión estructurada de legajos. Integré la visualización web de archivos DICOM mediante DWV y Canvas, tablas operativas con Yajra DataTables e informes clínicos en PDF.",
+    mainSkills: ["Laravel", "PHP", "MySQL"],
     skills: [
-      "Laravel 12",
-      "PHP 8.2",
+      "Laravel",
+      "PHP",
       "MySQL",
       "Visor DICOM",
       "DWV & Canvas",
@@ -122,7 +126,7 @@ export const EXPERIENCES: Experience[] = [
   },
   {
     id: 3,
-    role: "Full Stack Developer Python",
+    role: "Backend Python Developer",
     company: "Solar Banco",
     initials: "/images/solar_banco.png",
     type: "Freelance",
@@ -130,19 +134,19 @@ export const EXPERIENCES: Experience[] = [
     duration: "4 meses",
     location: "Asuncion, Paraguay",
     description:
-      "Diseñé e implementé la arquitectura backend en Django 5 con pipelines ETL automatizados en Python (Pandas, cx_Oracle, OpenPyXL) para la extracción, transformación y carga continua desde Oracle DW. Desarrollé el motor de cálculo para la medición de liquidez regulatoria (LCR), modelos parametrizables de Value at Risk (VaR de liquidez) y brecha de calce de plazos por bandas temporales. Integré autenticación Single Sign-On (SSO) mediante Active Directory (LDAP), logs de auditoría de procesos y dashboards interactivos con DataTables.",
-    mainSkills: ["Python", "Django 5", "ETL"],
+      "Desarrollé el backend con Python y Django, integrando Oracle Data Warehouse mediante procesos ETL con Pandas, cx_Oracle y OpenPyXL. Implementé cálculos para la medición de liquidez regulatoria, LCR, Value at Risk (VaR de liquidez) y brecha de calce de plazos por bandas temporales. También integré autenticación Single Sign-On (SSO) con Active Directory y LDAP, auditoría de procesos y dashboards operativos con DataTables.",
+    mainSkills: ["Python", "Django", "ETL"],
     skills: [
-      "Django 5.0",
-      "Python 3.10+",
+      "Django",
+      "Python",
       "Oracle DW",
       "ETL Pipelines",
       "Pandas",
-      "LCR & VaR",
+      "LCR y VaR",
       "Active Directory",
       "cx_Oracle",
       "OpenPyXL",
-      "Audit Logs",
+      "Auditoría de procesos",
       "DataTables",
       "Git",
       "GitHub",
@@ -152,7 +156,7 @@ export const EXPERIENCES: Experience[] = [
   },
   {
     id: 4,
-    role: "Front-end Developer React",
+    role: "Frontend React Developer",
     company: "Las Verde",
     initials: "/images/las_verde.png",
     type: "Freelance",
@@ -160,16 +164,16 @@ export const EXPERIENCES: Experience[] = [
     duration: "4 meses",
     location: "Mendoza, Argentina",
     description:
-      "Diseñé e implementé la aplicación Single Page Application (SPA) e-commerce para la fábrica de jugos naturales 'Las Verde', otorgado por Coderhouse tras quedar en el Top 10 de mejores promedios. Desarrollé el catálogo de productos con sincronización en tiempo real en Firebase Firestore, ruteo SPA con React Router v6, arquitectura de estilos modular en Sass (SCSS), custom hooks reutilizables (useForm), modales de vista detallada de producto y canal de atención directa por WhatsApp.",
-    mainSkills: ["React.js", "Firebase", "Sass"],
+      "Desarrollé una aplicación Single Page Application (SPA) para el catálogo de productos de Las Verde con React. Implementé la sincronización de datos con Firebase y Firestore, la navegación con React Router, estilos modulares con Sass, componentes y hooks reutilizables, vistas detalladas de productos e integración con WhatsApp. El proyecto fue asignado por Coderhouse tras ubicarme entre los diez mejores promedios de la cursada.",
+    mainSkills: ["React", "Firebase", "Sass"],
     skills: [
-      "React 18",
+      "React",
       "Firebase",
       "Firestore",
-      "React Router v6",
+      "React Router",
       "Sass (SCSS)",
       "Custom Hooks",
-      "JavaScript ES6+",
+      "JavaScript",
       "WhatsApp API",
       "Vercel",
       "Git",
@@ -181,7 +185,7 @@ export const EXPERIENCES: Experience[] = [
   },
   {
     id: 5,
-    role: "Front-end Developer",
+    role: "Frontend Developer",
     company: "Descubriendo Jardín Maternal",
     initials: "/images/descubriendo_jardin.svg",
     type: "Freelance",
@@ -189,16 +193,16 @@ export const EXPERIENCES: Experience[] = [
     duration: "4 meses",
     location: "Buenos Aires, Argentina",
     description:
-      "Diseñé e implementé la plataforma web institucional para el jardín maternal 'Descubriendo', asignado por Coderhouse como distinción por quedar en el Top 10 del curso de Desarrollo Web. Implementé maquetación semántica HTML5, CSS3 modular (Flexbox y Grid), Bootstrap 5 y JavaScript Vanilla (ES6+). Desarrollé componentes interactivos (slider de imágenes nativo, FAQ interactiva), validación client-side de formularios, integración con Google Maps API y optimización de SEO técnico on-page.",
-    mainSkills: ["HTML5", "CSS3", "JavaScript"],
+      "Desarrollé el sitio institucional responsive de Descubriendo Jardín Maternal con HTML semántico, CSS, Bootstrap y JavaScript. Implementé un slider de imágenes, navegación móvil, una sección de preguntas frecuentes, validación de formularios e integración con Google Maps, además de optimizaciones de SEO on-page. El proyecto fue asignado por Coderhouse como reconocimiento por ubicarme entre los diez mejores promedios del curso de Desarrollo Web.",
+    mainSkills: ["HTML", "CSS", "JavaScript"],
     skills: [
-      "JavaScript ES6+",
-      "HTML5 Semántico",
-      "CSS3",
+      "JavaScript",
+      "HTML semántico",
+      "CSS",
       "Flexbox & Grid",
-      "Bootstrap 5",
-      "UX/UI Design",
-      "SEO On-Page",
+      "Bootstrap",
+      "Diseño UX/UI",
+      "SEO on-page",
       "Google Maps API",
       "Vercel",
       "Git",
@@ -214,7 +218,7 @@ export const EXPERIENCES: Experience[] = [
 export const EDUCATION: Education[] = [
   {
     id: "edu-1",
-    title: "Licenciatura en Ciencias de Datos",
+    title: "Licenciatura en Ciencia de Datos",
     institution: "Universidad de la Ciudad de Buenos Aires (Udelaciudad)",
     period: "Marzo 2026 — Actualidad",
     location: "Ciudad Autónoma de Buenos Aires",
@@ -234,7 +238,7 @@ export const EDUCATION: Education[] = [
   },
   {
     id: "edu-3",
-    title: "Formación Pedagógica",
+    title: "Tramo de Formación Pedagógica",
     institution: "Universidad FASTA",
     period: "Agosto 2024 — Diciembre 2025",
     location: "Mar del Plata",

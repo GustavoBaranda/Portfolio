@@ -10,34 +10,42 @@ export default function HeroBio() {
   return (
     <motion.section className="space-y-10 mb-16 sm:mb-20 md:mb-28">
       <motion.header
-        className="space-y-3"
+        className="max-w-3xl space-y-3 sm:space-y-4"
         variants={textReveal}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
       >
-        <p className="text-xl sm:text-2xl font-bold uppercase tracking-[0.3em] text-foreground">
-          Sobre mi
+        <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-indigo-600 dark:text-indigo-400">
+          Sobre mí
         </p>
-        <h2 className="text-3xl font-extrabold leading-snug sm:text-4xl md:text-6xl text-foreground text-balance">
+        <h2
+          aria-describedby="about-section-subtitle"
+          className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight tracking-tight text-foreground text-balance"
+        >
           Construyendo el puente entre el{" "}
-          <span className="text-indigo-600 dark:text-indigo-400">código</span> y los{" "}
-          <span className="text-blue-600 dark:text-blue-400">datos</span>.
+          <span className="bg-linear-to-r from-violet-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent dark:from-violet-400 dark:via-indigo-400 dark:to-blue-400">
+            código
+          </span>{" "}
+          y los{" "}
+          <span className="bg-linear-to-r from-violet-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent dark:from-violet-400 dark:via-indigo-400 dark:to-blue-400">
+            datos
+          </span>.
         </h2>
       </motion.header>
 
       <div className="space-y-6 sm:space-y-7 text-lg text-muted-foreground leading-relaxed">
         <motion.p
+          id="about-section-subtitle"
           variants={paragraphReveal}
           custom={0}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
-          className="text-xl md:text-2xl"
+          className="max-w-2xl text-base sm:text-lg text-muted leading-relaxed"
         >
-          Me gusta pensar el desarrollo de software como un punto de
-          encuentro donde la lógica se transforma en soluciones y los datos
-          en decisiones.
+          Desarrollo soluciones donde la lógica de negocio, los datos y las integraciones
+          forman parte de un mismo sistema.
         </motion.p>
 
         <motion.p
@@ -51,13 +59,11 @@ export default function HeroBio() {
           <span className="font-semibold text-foreground">
             Técnico Superior en Desarrollo de Software
           </span>{" "}
-          y estudiante de la{" "}
+          y actualmente estudio la{" "}
           <span className="font-semibold italic text-foreground">
-            Licenciatura en Ciencias de Datos
+            Licenciatura en Ciencia de Datos
           </span>{" "}
-          en la Universidad de la Ciudad de Buenos Aires (Udelaciudad). Comencé
-          creando aplicaciones y, con el tiempo, incorporé una mirada
-          analítica que hoy guía cómo afronto cada proyecto.
+          en la Universidad de la Ciudad de Buenos Aires.
         </motion.p>
 
         <div className="space-y-6">
@@ -68,16 +74,13 @@ export default function HeroBio() {
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
           >
-            En el{" "}
-            <span className="text-indigo-600 dark:text-indigo-400 font-semibold uppercase tracking-wider text-sm">
-              Backend
-            </span>
-            , busco solidez y escalabilidad. Trabajo principalmente con{" "}
+            Mi especialización está en el{" "}
             <span className="font-semibold text-foreground">
-              Python y Django
-            </span>
-            . Me interesa diseñar soluciones claras y mantenibles,
-            equilibrando simplicidad y rendimiento desde la arquitectura.
+              backend con Python, Django y SQL Server
+            </span>, desarrollando aplicaciones empresariales que integran reglas de negocio, bases
+            de datos relacionales, procesos asíncronos y diferentes servicios. Mi experiencia
+            abarca sistemas de logística y depósitos fiscales, servicios financieros y
+            medicina laboral.
           </motion.p>
 
           <motion.p
@@ -87,30 +90,11 @@ export default function HeroBio() {
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
           >
-            En el{" "}
-            <span className="text-blue-600 dark:text-blue-400 font-semibold uppercase tracking-wider text-sm">
-              Frontend
-            </span>
-            , utilizo React para crear interfaces limpias y funcionales.
-            Creo que la experiencia de usuario no es un extra: si algo
-            es potente pero confuso, todavía no está terminado.
-          </motion.p>
-
-          <motion.p
-            variants={paragraphReveal}
-            custom={4}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-          >
-            La{" "}
-            <span className="text-cyan-700 dark:text-cyan-400 font-semibold uppercase tracking-wider text-sm">
-              Ciencia de Datos
-            </span>{" "}
-            me aporta una forma distinta de decidir. Analizo información
-            para entender qué ocurre realmente y elegir caminos con
-            criterio. No se trata de acumular datos, sino de usarlos para
-            mejorar procesos y construir soluciones más inteligentes.
+            También tengo experiencia{" "}
+            <span className="font-semibold text-foreground">
+              Full Stack
+            </span>, trabajando con tecnologías como React, Next.js, Laravel y PHP para desarrollar
+            soluciones que conectan el backend con interfaces funcionales y accesibles.
           </motion.p>
         </div>
 
@@ -125,24 +109,45 @@ export default function HeroBio() {
           <div className="min-h-0 overflow-hidden space-y-6">
             <div className={step === 2 ? "pt-0" : ""}>
               <p>
-                Creo profundamente en el{" "}
-                <span className="font-semibold text-foreground">aprendizaje constante</span>.
-                La tecnología cambia todo el tiempo y eso es parte de lo que hace interesante
-                este rubro; para mí, la curiosidad es una herramienta de trabajo fundamental.
+                Me interesa construir software que no solamente funcione, sino que también
+                sea{" "}
+                <span className="font-semibold text-foreground">
+                  mantenible, escalable y fácil de evolucionar
+                </span>. Por eso presto especial atención a la arquitectura, la organización del
+                código, las pruebas y la claridad de las soluciones que implemento.
               </p>
               <p className="mt-6">
-                Valoro el{" "}
-                <span className="font-semibold text-foreground">trabajo en equipo</span> y la
-                comunicación clara. Compartir ideas, escuchar otras miradas y construir en
-                conjunto suele llevar a resultados más sólidos y completos que el trabajo
-                aislado.
+                Además de mi experiencia profesional, soy{" "}
+                <span className="font-semibold text-foreground">
+                  creador y mantenedor de chatflow-agent
+                </span>, una librería Python open source orientada al desarrollo de agentes
+                conversacionales. Este proyecto me permite profundizar en arquitectura de
+                software, programación asíncrona, documentación, testing y colaboración con
+                otros desarrolladores.
               </p>
               <p className="mt-6">
-                Busco que exista un{" "}
-                <span className="font-semibold text-foreground">propósito en cada entrega</span>.
-                No me interesa hacer cosas por inercia, sino aportar algo concreto: optimizar
-                un proceso, mejorar una experiencia o resolver un problema real en el cruce
-                entre datos y software.
+                Considero que el desarrollo Full Stack no consiste únicamente en conocer
+                tecnologías de frontend y backend, sino en comprender cómo se relacionan las
+                distintas partes de una aplicación para ofrecer una experiencia consistente a
+                quienes la utilizan.
+              </p>
+              <p className="mt-6">
+                Mi formación en{" "}
+                <span className="font-semibold text-foreground">Ciencia de Datos</span>{" "}
+                complementa esta perspectiva, aportándome herramientas para analizar
+                información, comprender procesos y tomar decisiones fundamentadas.
+              </p>
+              <p className="mt-6">
+                Valoro especialmente el{" "}
+                <span className="font-semibold text-foreground">
+                  aprendizaje continuo, el trabajo en equipo y la comunicación clara
+                </span>. Me gusta compartir conocimientos, recibir diferentes perspectivas y
+                encontrar soluciones que equilibren las necesidades del negocio con la
+                calidad técnica.
+              </p>
+              <p className="mt-6">
+                Mi objetivo es seguir desarrollando soluciones que resuelvan problemas reales,
+                aporten valor y puedan mantenerse y mejorar con el tiempo.
               </p>
             </div>
           </div>
