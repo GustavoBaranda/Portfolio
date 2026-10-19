@@ -164,15 +164,18 @@ export default function HomePage() {
 
         {/* SECCIÓN 4: CONTACTO */}
         <section id="contact" className="scroll-mt-28 max-w-5xl mx-auto space-y-10 sm:space-y-12">
-          <header className="text-center space-y-3 sm:space-y-4">
+          <header className="max-w-3xl space-y-3 sm:space-y-4">
             <p className="text-xs sm:text-sm font-bold tracking-[0.2em] sm:tracking-[0.3em] text-indigo-600 dark:text-indigo-400 uppercase">
               Contacto
             </p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-foreground text-balance">
-              ¿Tienes una idea o proyecto? <span className="text-indigo-600 dark:text-indigo-400">Hablemos.</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight tracking-tight text-foreground text-balance">
+              ¿Tenés un proyecto en mente?{" "}
+              <span className="bg-linear-to-r from-violet-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent dark:from-violet-400 dark:via-indigo-400 dark:to-blue-400">
+                Hablemos.
+              </span>
             </h2>
-            <p className="mt-2 text-muted max-w-2xl mx-auto leading-relaxed text-sm sm:text-base md:text-lg">
-              Envíame un mensaje y me pondré en contacto contigo a la brevedad para conversar sobre requerimientos, oportunidades o proyectos.
+            <p className="max-w-2xl text-base sm:text-lg text-muted leading-relaxed">
+              Estoy disponible para conversar sobre oportunidades laborales, colaboraciones y proyectos de desarrollo de software.
             </p>
           </header>
 
