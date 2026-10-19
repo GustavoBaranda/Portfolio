@@ -15,7 +15,7 @@
 
 ---
 
-Portfolio personal de **Gustavo Baranda**, Full Stack Developer. Sitio de una sola página construido con Next.js 16 App Router, React 19 y TypeScript: protección anti-spam sin CAPTCHA, SEO técnico, sistema de temas sin hydration flash y layout de proyectos con CSS subgrid.
+Portfolio personal de **Gustavo Baranda**, Full Stack Python Developer con foco en backend, Django y SQL Server. Sitio de una sola página construido con Next.js 16 App Router, React 19 y TypeScript: protección anti-spam sin CAPTCHA, SEO técnico, sistema de temas sin hydration flash y presentación responsive de proyectos.
 
 ---
 
@@ -50,21 +50,9 @@ El script lee `localStorage` sincrónicamente y aplica la clase `dark` al `<html
 
 ---
 
-### Layout con CSS Subgrid
+### Tarjetas de proyectos por filas
 
-Las tarjetas de proyectos usan `grid-rows-subgrid` de CSS Grid Level 2 para alinear secciones homólogas (contenido / stack técnico / links) entre columnas sin JavaScript:
-
-```css
-/* ProjectsGrid — contenedor con 3 filas implícitas por fila de cards */
-grid-template-rows: auto auto auto;
-
-/* ProjectCard — hereda las filas del padre */
-grid-row: span 3;
-display: grid;
-grid-template-rows: subgrid;
-```
-
-Cuando una tarjeta expande su sección de solución, la fila del grid se estira y las tarjetas vecinas alinean automáticamente su STACK TÉCNICO y sus links al mismo nivel sin ningún cálculo de altura en JS.
+Las tarjetas se distribuyen en una grilla responsive y conservan su altura natural cuando están cerradas o solo una está expandida. En escritorio, una pareja iguala su altura exterior únicamente mientras ambas tarjetas tienen abierto «Leer más»; en móvil y en filas impares nunca se activa esa igualación. El detalle de cada caso de estudio anima una única región de altura y opacidad sin desmontar el contenido antes de completar el cierre. La preferencia `prefers-reduced-motion` conserva el estado final y lleva la duración a cero.
 
 ---
 
@@ -87,7 +75,7 @@ Cuando una tarjeta expande su sección de solución, la fila del grid se estira 
 | Next.js App Router | 16.4.2 | App Router, `POST /api/contact`, sitemap y robots |
 | React | 19.2.3 | UI, `AnimatePresence` en el formulario y diálogo de navegación móvil |
 | TypeScript | 6.0.3 | `strict: true` en `tsconfig.json` |
-| Tailwind CSS | v4 | Design tokens, subgrid, `@custom-variant` para dark mode |
+| Tailwind CSS | v4 | Design tokens y `@custom-variant` para dark mode |
 | Framer Motion | 12 | Cortina de carga, drawer mobile, transiciones del formulario |
 
 ### Backend / API
@@ -125,7 +113,7 @@ GusDev/
     │   ├── contact/           # ContactForm.tsx (validación accesible y honeypot), ContactInfo.tsx
     │   ├── header/            # Header sticky, menú mobile con drawer, ThemeToggle
     │   ├── hero/              # TiltImage, FillButton, TransitionEffect
-    │   ├── projects/          # ProjectsGrid.tsx (filtros), ProjectCard.tsx (subgrid)
+    │   ├── projects/          # ProjectsGrid.tsx (filtros y prioridad), ProjectCard.tsx
     │   ├── about/             # HeroBio, ExperienceSection, EducationSection
     │   ├── common/            # SocialLinks, ThemeToggle
     │   ├── utils/             # AnimatedText, useActiveSection
@@ -235,6 +223,65 @@ MIT — ver [LICENSE](./LICENSE).
   Desarrollado por <a href="https://github.com/GustavoBaranda"><strong>Gustavo Baranda</strong></a>
 </div>
 
+## Fase 3 — Posicionamiento profesional y contenido
+
+### Etapa 1: hero y biografía
+
+- El hero presenta el rol **Full Stack Python Developer** y explicita la especialización en Python, Django y SQL Server.
+- La descripción resume la experiencia en logística y depósitos fiscales, servicios financieros y medicina laboral, con foco en backend, datos e integraciones.
+- La biografía diferencia la especialización principal de la experiencia Full Stack complementaria y mantiene visibles la formación como Técnico Superior en Desarrollo de Software y la cursada de la Licenciatura en Ciencia de Datos.
+- El contenido ampliado conserva el control accesible «Ver más» y presenta el trabajo como creador y mantenedor de `chatflow-agent`, sin modificar sus animaciones ni el comportamiento del acordeón.
+- Esta etapa no modifica proyectos, experiencia profesional, versiones tecnológicas, metadata, SEO, imágenes Open Graph, formulario, correo ni dependencias.
+
+### Validación de la etapa
+
+Se ejecutaron ESLint, TypeScript, las **59 pruebas automatizadas**, el build de producción y `git diff --check`. Las regresiones comprueban el posicionamiento del hero, el contenido profesional de la biografía y los ajustes de experiencia, formación, proyectos, encabezados y navegación principal; las 49 pruebas anteriores continúan aprobadas.
+
+### Etapa 2: experiencia profesional
+
+- Toda la superficie no interactiva de cada tarjeta funciona como un control desplegable nativo, con activación mediante clic, Enter y Espacio, foco visible y estados `aria-expanded` y `aria-controls`.
+- Los enlaces de proyectos permanecen como controles independientes y fuera del botón que activa la tarjeta.
+- La apertura y el cierre conservan la transición existente; `prefers-reduced-motion` elimina las transiciones CSS sin ocultar el cambio de estado.
+- El encabezado presenta la sección como experiencia desarrollando soluciones para desafíos reales, sin cambiar su jerarquía visual ni sus animaciones.
+- Las cinco descripciones distinguen responsabilidades, contexto y particularidades técnicas con una redacción profesional en primera persona.
+- La experiencia actual en SysPro resume en cuatro párrafos el alcance de DepofisWEB: operaciones logísticas, módulos empresariales, el asistente contextual Bamby y las integraciones de la plataforma.
+- Los puestos utilizan nombres profesionales consistentes y las etiquetas tecnológicas públicas omiten números de versión, sin cambiar dependencias ni configuraciones.
+- El detalle se denomina «Tecnologías y funcionalidades» para representar frameworks, herramientas, integraciones y capacidades sin tratarlos como una única categoría técnica.
+
+### Etapa 3: formación
+
+- La sección conserva sus cinco tarjetas y distingue por orden una carrera universitaria en curso, un título técnico superior finalizado, un tramo de formación pedagógica finalizado y dos cursos complementarios.
+- Se unificó la denominación «Licenciatura en Ciencia de Datos» y se precisó «Tramo de Formación Pedagógica» según la nomenclatura institucional.
+- El nuevo subtítulo relaciona la formación técnica, universitaria y complementaria con el desarrollo profesional, sin modificar el timeline, los estados, las fechas, la interacción ni la presentación visual.
+
+### Etapa 4: proyectos
+
+- Los proyectos se ordenan por relevancia profesional: DepofisWEB, `chatflow-agent`, Solar Banco y Fundación Maldonado encabezan la sección; los seis proyectos existentes restantes se conservan.
+- `chatflow-agent` se presenta como proyecto open source creado y mantenido por Gustavo, con un resumen acotado a sus capacidades documentadas: ejecución asíncrona, herramientas, handoffs, memoria de sesiones, proveedores y conectores.
+- La nueva tarjeta usa una identidad tipográfica dentro del mismo marco responsive porque el repositorio no contiene una imagen propia aprobada; no se generó ni sustituyó ningún recurso visual.
+- Las etiquetas públicas omiten versiones de frameworks y lenguajes cuando no aportan al relato profesional. Estándares relevantes como OpenAPI 3 conservan su denominación.
+- «Leer más» mantiene el resumen estable y anima únicamente el detalle entre altura cero y automática durante 0,36 s, con una transición de opacidad de 0,22 s. El panel permanece montado, los clics rápidos invierten la transición y movimiento reducido elimina las duraciones.
+- Los filtros por categoría y tecnología conservan su comportamiento y el orden de prioridad dentro de cada resultado.
+
+La validación de esta etapa es estructural y automatizada. No se declara verificación visual en navegador porque el entorno no expuso ningún navegador disponible; quedan pendientes los anchos de 320, 390, 768, 1024 y 1440 px, la inversión mediante clics rápidos y la preferencia de movimiento reducido.
+
+### Etapa 5: encabezados de sección
+
+- Sobre mí, Experiencia, Formación y Proyectos comparten escala tipográfica responsive, altura de línea, espaciado y ancho máximo.
+- Los títulos destacan únicamente sus conceptos principales con el mismo degradado violeta, índigo y azul, incluidas variantes claras para el tema oscuro.
+- Proyectos adopta alineación izquierda para sostener la misma jerarquía editorial que las otras secciones; sus filtros continúan centrados en un bloque independiente.
+- El texto introductorio existente de Sobre mí funciona como subtítulo mediante su relación semántica con el título, sin reescribir la biografía ni alterar su control «Ver más».
+
+### Etapa 6: composición de proyectos y CTA principal
+
+- En escritorio, cada pareja calcula desde el contenido cerrado las alturas de metadatos, título, desafío, solución, control, stack y pie. Cada bloque adopta únicamente el mínimo de su pareja mediante variables CSS locales, sin valores globales fijos ni truncado.
+- Una expansión supera el mínimo del bloque de solución de la tarjeta activa; la vecina conserva todas sus posiciones. Al cerrar se recupera la alineación. En móvil y en la última fila impar no se aplican mínimos compartidos.
+- La medición se realiza antes de pintar con `useLayoutEffect`, se actualiza ante cambios de ancho y fuentes, y no utiliza `ResizeObserver`, `setTimeout` ni un segundo sistema de altura exterior.
+- Cada pareja de proyectos activa el estiramiento natural de su fila CSS Grid exclusivamente cuando ambas tarjetas están expandidas. Con ninguna o una sola abierta usa alturas exteriores independientes; en móvil y en filas impares conserva siempre la altura natural. Las mediciones JavaScript quedan limitadas a alinear los bloques internos.
+- Los casos de DepofisWEB, `chatflow-agent` y este portfolio presentan desafíos y responsabilidades con una profundidad comparable, sin atribuciones amplias ni inventarios de bibliotecas dentro de la descripción.
+- El CTA «Proyectos» vuelve a ser un enlace directo a `#projects`. Su capa de relleno original responde a hover, foco y pulsación sin estado persistente, no captura eventos y elimina su transición cuando el usuario solicita movimiento reducido.
+- Contacto comparte la alineación, escala y degradado de los otros encabezados y presenta el texto «¿Tenés un proyecto en mente? Hablemos.» sin modificar el formulario ni su distribución.
+
 ## Fase 2 — Estilos, accesibilidad y navegación
 
 ### Correcciones implementadas
@@ -247,7 +294,7 @@ MIT — ver [LICENSE](./LICENSE).
 - Menú móvil: un `<dialog>` abierto con `showModal()` proporciona el comportamiento modal nativo, Escape, contención y devolución de foco. El único botón hamburguesa conserva sus tres líneas, tamaño y posición: las tres utilizan exactamente los keyframes originales de Framer Motion para formar y desarmar la X. El mismo botón permanece montado mediante un portal estable, se incorpora al diálogo abierto y vuelve al encabezado al cerrar, sin duplicación ni icono X independiente. El espacio de 40 × 40 px del encabezado permanece reservado. Se conservan la secuencia de desplazamiento y rotación original, la duración de 0,5 s y `easeInOut`. El panel y sus elementos recuperan el desplazamiento original de 0,8 s, su easing y sus demoras escalonadas; el diálogo se cierra recién al terminar la salida y una reapertura rápida cancela ese cierre. Con movimiento reducido las duraciones pasan a cero, conservando los estados finales. El disparador expone `aria-expanded`, `aria-controls` y etiqueta de apertura/cierre. Seleccionar una opción cierra el menú. Al pasar a escritorio se cierra, libera el bloqueo de scroll y mueve el foco a la navegación visible.
 - Foco y tamaños: indicador común de foco, destino enfocable para el enlace de salto y áreas de interacción mayores para tema, redes sociales y etiquetas técnicas.
 - Movimiento: `MotionConfig reducedMotion="user"`, reducción de transiciones CSS y desplazamiento sin animación cuando se solicita movimiento reducido. Para el resto de los usuarios se conservan las animaciones originales completas: cortina de tres paneles de 0,8 s con demoras de 0/0,2/0,4 s, flotación continua del logo, inclinación interactiva, entradas con opacidad y desplazamiento, demoras escalonadas de textos, secciones y tarjetas, y transiciones de biografía y filtros. La preferencia reducida omite la cortina y detiene transformaciones continuas sin alterar el estado final ni la accesibilidad del contenido.
-- Tarjetas de proyectos: “Leer más” conserva el crossfade original y suma una transición de tamaño de 0,32 s con easing suave. El contenedor accesible permanece montado durante apertura y cierre; `AnimatePresence` gestiona la sustitución del texto y movimiento reducido elimina ambas duraciones.
+- Tarjetas de proyectos: “Leer más” mantiene el resumen visible y anima una única región de detalle entre altura cero y automática, junto con su opacidad. El contenido permanece montado durante apertura y cierre, los clics rápidos revierten la transición y movimiento reducido elimina ambas duraciones.
 - Imágenes de proyectos: cada proyecto declara una presentación `interface`, `wide-logo` o `square-logo`. El marco reserva una proporción 16:9 en móvil y 2:1 desde `sm`, evitando saltos durante la carga. Las capturas de sitios, dashboards y documentación usan `object-contain` alineado arriba para conservar navegación, textos y controles; los logos se centran con padding específico. SysPro y las capturas panorámicas aprovechan casi todo el marco. Solar Banco conserva espacio lateral porque su recurso es cuadrado y llenarlo exigiría recorte o deformación.
 - Responsive: se preservan los prefijos de ancho del CTA (`md:w-auto`), se limita su contenedor al ancho disponible y se permite envolver las cabeceras de educación. El diálogo usa altura dinámica del viewport y el panel conserva scroll interno.
 
