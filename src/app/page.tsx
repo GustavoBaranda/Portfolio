@@ -75,7 +75,7 @@ export default function HomePage() {
 
                 {/* Rol */}
                 <AnimatedText
-                  text="Full Stack Developer"
+                  text="Full Stack Python Developer"
                   as="h2"
                   align="responsive"
                   className="text-base md:text-xl font-semibold opacity-90 mt-1 md:mt-2"
@@ -83,7 +83,7 @@ export default function HomePage() {
 
                 {/* Headline */}
                 <AnimatedText
-                  text="Transformo ideas en soluciones digitales con código y diseño."
+                  text="Desarrollo software que conecta negocios, tecnología y datos."
                   as="h2"
                   align="responsive"
                   className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mt-4 md:mt-6 leading-snug md:leading-[1.05] pb-1 md:pb-2!"
@@ -92,7 +92,7 @@ export default function HomePage() {
 
                 {/* Descripción */}
                 <AnimatedText
-                  text="Enfocado en construir sistemas robustos que combinan eficiencia técnica y claridad visual."
+                  text="Especializado en backend con Python, Django y SQL Server. Desarrollo soluciones Full Stack para logística, servicios financieros y medicina laboral. También creo y mantengo proyectos open source como chatflow-agent."
                   as="p"
                   align="responsive"
                   className="text-sm sm:text-base md:text-lg font-medium mt-3 md:mt-4 max-w-xl opacity-80"
@@ -102,7 +102,7 @@ export default function HomePage() {
                 {/* Botones: mobile solo Proyectos; Contacto desde md */}
                 <div className="flex flex-col md:flex-row items-center md:items-center mt-5 md:mt-6 gap-3 md:gap-5 w-full md:w-auto justify-center md:justify-start">
                   <FillButton
-                    href="/#projects"
+                    href="#projects"
                     ariaLabel="Ver proyectos"
                     motionProps={{
                       initial: { opacity: 0, x: 0, y: -8 },
@@ -143,15 +143,19 @@ export default function HomePage() {
 
         {/* SECCIÓN 3: PROYECTOS */}
         <section id="projects" className="scroll-mt-28 space-y-10 sm:space-y-14">
-          <header className="text-center space-y-3 sm:space-y-4 max-w-3xl mx-auto">
+          <header className="max-w-3xl space-y-3 sm:space-y-4">
             <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-indigo-600 dark:text-indigo-400">
               Portafolio
             </p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-foreground tracking-tight">
-              Proyectos Destacados
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight tracking-tight text-foreground text-balance">
+              Proyectos que convierten{" "}
+              <span className="bg-linear-to-r from-violet-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent dark:from-violet-400 dark:via-indigo-400 dark:to-blue-400">
+                ideas
+              </span>{" "}
+              en soluciones.
             </h2>
-            <p className="text-sm sm:text-base md:text-lg text-muted max-w-2xl mx-auto">
-              Casos de estudio reales de desarrollo Full Stack, arquitecturas escalables, integraciones de APIs y análisis de datos.
+            <p className="max-w-2xl text-base sm:text-lg text-muted leading-relaxed">
+              Una selección de desarrollos empresariales, aplicaciones web y proyectos open source.
             </p>
           </header>
 

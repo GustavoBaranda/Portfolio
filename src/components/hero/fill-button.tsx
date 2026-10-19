@@ -2,7 +2,7 @@
 
 import { motion, MotionProps } from "framer-motion";
 import Link from "next/link";
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 
 export interface FillButtonProps {
   href: string;
@@ -23,8 +23,6 @@ export function FillButton({
   variant = "primary",
   motionProps = {},
 }: FillButtonProps) {
-  const [isFilled, setIsFilled] = useState(false);
-
   const baseDirectionStyles = {
     left: "before:left-0 before:top-0 before:h-full",
     right: "before:right-0 before:top-0 before:h-full",
@@ -32,27 +30,21 @@ export function FillButton({
     top: "before:top-0 before:left-0 before:w-full",
   };
 
-  const restFillStyles = {
-    left: "before:w-0 md:hover:before:w-full",
-    right: "before:w-0 md:hover:before:w-full",
-    bottom: "before:h-0 md:hover:before:h-full",
-    top: "before:h-0 md:hover:before:h-full",
-  };
-
-  const activeFillStyles = {
-    left: "before:w-full",
-    right: "before:w-full",
-    bottom: "before:h-full",
-    top: "before:h-full",
+  const animatedFillStyles = {
+    left: "before:w-0 hover:before:w-full focus-visible:before:w-full active:before:w-full",
+    right: "before:w-0 hover:before:w-full focus-visible:before:w-full active:before:w-full",
+    bottom: "before:h-0 hover:before:h-full focus-visible:before:h-full active:before:h-full",
+    top: "before:h-0 hover:before:h-full focus-visible:before:h-full active:before:h-full",
   };
 
   const directionStyles = `
     ${baseDirectionStyles[fillDirection]}
-    ${isFilled ? activeFillStyles[fillDirection] : restFillStyles[fillDirection]}
+    ${animatedFillStyles[fillDirection]}
   `;
 
   const baseStyles = `
     group
+    isolate
     relative
     inline-flex
     items-center
@@ -76,10 +68,12 @@ export function FillButton({
     bg-[#f8fafc]
     before:absolute
     before:z-0
+    before:pointer-events-none
     before:bg-[#0f172a]
     before:transition-all
     before:duration-500
     before:ease-out
+    motion-reduce:before:transition-none
     before:content-['']
     ${directionStyles}
     hover:border-[#0f172a]
@@ -89,9 +83,8 @@ export function FillButton({
     dark:hover:border-[#f8fafc]
   `;
 
-  const primaryTextStyles = isFilled
-    ? "text-[#f8fafc] dark:text-[#0f172a]"
-    : "text-[#0f172a] dark:text-[#f8fafc] md:hover:text-[#f8fafc] md:dark:hover:text-[#0f172a]";
+  const primaryTextStyles =
+    "text-[#0f172a] hover:text-[#f8fafc] focus-visible:text-[#f8fafc] active:text-[#f8fafc] dark:text-[#f8fafc] dark:hover:text-[#0f172a] dark:focus-visible:text-[#0f172a] dark:active:text-[#0f172a]";
 
   const ghostStyles = `
     text-[var(--muted)]
@@ -120,10 +113,6 @@ export function FillButton({
 
   const hasWidthClass = /\bw-(full|\[)/.test(className);
 
-  const triggerFill = () => {
-    if (variant === "primary") setIsFilled(true);
-  };
-
   return (
     <motion.div
       {...mergedMotion}
@@ -132,8 +121,6 @@ export function FillButton({
       <Link
         href={href}
         aria-label={ariaLabel}
-        onPointerDown={triggerFill}
-        onClick={triggerFill}
         className={`
           ${baseStyles}
           ${
