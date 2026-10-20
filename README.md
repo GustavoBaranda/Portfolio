@@ -334,6 +334,8 @@ El SVG conserva su contenedor, proporciones, transparencia y referencia pública
 
 Los textos animados conservan una única alternativa accesible sin aplicar atributos ARIA prohibidos a párrafos. El logotipo decorativo mantiene su flotación y hover fuera del orden de teclado, y los campos de contacto utilizan bordes locales con contraste no textual mínimo de 3:1 en ambos temas, sin alterar foco, errores ni envío.
 
+Los enlaces externos de las tarjetas de proyectos se presentan sin subrayado persistente y conservan cambios de color, movimiento de iconos y foco visible como señales de interacción.
+
 ### Deuda de dependencias de desarrollo
 
 Revisión del 19 de octubre de 2026: la entrega 4.1 redujo la auditoría de **12 alertas (2 moderadas y 10 altas)** a **5 alertas altas**. Se actualizó ESLint dentro de la rama 9 y se aplicaron únicamente parches transitivos compatibles. No se utilizó `audit fix --force` ni se degradó la configuración de Next.js.

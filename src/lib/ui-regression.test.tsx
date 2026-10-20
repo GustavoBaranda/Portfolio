@@ -553,6 +553,22 @@ test("project media uses responsive reserved ratios and content-safe presentatio
   assert.match(source, /satisfies Record<ProjectItem\["imagePresentation"\], string>/);
 });
 
+test("project links avoid persistent underlines and retain hover and focus affordances", async () => {
+  const project = PROJECTS.find(({ demoUrl, githubUrl }) => demoUrl && githubUrl)!;
+  const html = renderToStaticMarkup(<ProjectCard project={project} index={0} />);
+  const source = await readFile("src/components/projects/ProjectCard.tsx", "utf8");
+
+  assert.equal((source.match(/no-underline/g) ?? []).length, 2);
+  assert.doesNotMatch(source, /hover:underline|underline-offset/);
+  assert.match(source, /hover:text-indigo-800 dark:hover:text-indigo-300/);
+  assert.match(source, /text-muted hover:text-foreground/);
+  assert.ok((source.match(/focus-visible:ring-2 focus-visible:ring-indigo-500/g) ?? []).length >= 2);
+  assert.ok((source.match(/group-hover\/(?:link|github):translate-x-0\.5/g) ?? []).length >= 2);
+  assert.ok(html.includes(`href="${project.demoUrl}"`));
+  assert.ok(html.includes(`href="${project.githubUrl}"`));
+  assert.equal((html.match(/target="_blank"/g) ?? []).length, 2);
+});
+
 
 test("mobile trigger exposes its dialog relationship and toggle state", () => {
   for (const active of [false, true]) {
