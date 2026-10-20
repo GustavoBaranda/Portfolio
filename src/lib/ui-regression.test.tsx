@@ -28,6 +28,7 @@ import { EDUCATION, EXPERIENCES } from "../data/aboutData";
 import { PROJECTS } from "../data/projectsData";
 import { closeNavigationDialogAfterExit } from "./navigation-dialog";
 import { createHomeMetadata, createRootMetadata, SITE_CONFIG } from "../config/site";
+import { createPortfolioStructuredData, serializeJsonLd } from "./structured-data";
 
 test("home metadata uses the centralized professional identity", async () => {
   const root = JSON.parse(JSON.stringify(createRootMetadata(SITE_CONFIG.url))) as {
@@ -87,6 +88,60 @@ test("home metadata uses the centralized professional identity", async () => {
     `${layout}\n${page}\n${site}`,
     /Full Stack Developer & Data Science Student|Transformo ideas en soluciones digitales|Portafolio profesional de Gustavo Baranda/,
   );
+});
+
+test("JSON-LD represents one coherent Person and WebSite with safe serialization", async () => {
+  const structuredData = createPortfolioStructuredData();
+  assert.equal(structuredData["@context"], "https://schema.org");
+  assert.equal(structuredData["@graph"].length, 2);
+
+  const person = structuredData["@graph"][0];
+  const website = structuredData["@graph"][1];
+  assert.equal(person["@type"], "Person");
+  assert.equal(person["@id"], `${SITE_CONFIG.url}/#person`);
+  assert.equal(person.name, SITE_CONFIG.name);
+  assert.equal(person.jobTitle, "Full Stack Python Developer");
+  assert.equal(person.url, SITE_CONFIG.url);
+  assert.equal(person.description, SITE_CONFIG.description);
+  assert.match(person.description, /backend con Django y SQL Server/);
+  assert.deepEqual(person.sameAs, [SITE_CONFIG.links.github, SITE_CONFIG.links.linkedin]);
+  assert.ok(person.knowsAbout.includes("Python"));
+  assert.ok(person.knowsAbout.includes("Django"));
+  assert.ok(person.knowsAbout.includes("SQL Server"));
+
+  const completedInstitutions = EDUCATION
+    .filter(({ status }) => status === "Finalizado")
+    .map(({ institution }) => institution);
+  assert.deepEqual(person.alumniOf.map(({ name }) => name), completedInstitutions);
+  assert.ok(person.alumniOf.every(({ "@type": type }) => type === "EducationalOrganization"));
+  assert.doesNotMatch(
+    person.alumniOf.map(({ name }) => name).join("\n"),
+    /Universidad de la Ciudad de Buenos Aires/,
+  );
+
+  assert.equal(website["@type"], "WebSite");
+  assert.equal(website["@id"], `${SITE_CONFIG.url}/#website`);
+  assert.equal(website.url, person.url);
+  assert.equal(website.inLanguage, "es");
+  assert.equal(website.author["@id"], person["@id"]);
+  assert.equal(new Set(structuredData["@graph"].map(({ "@id": id }) => id)).size, 2);
+  assert.doesNotMatch(
+    JSON.stringify(structuredData),
+    /SearchAction|SoftwareApplication|"@type":"Organization"/,
+  );
+
+  const unsafeValue = { text: "</script><script>alert('x')</script>" };
+  const serializedUnsafeValue = serializeJsonLd(unsafeValue);
+  assert.doesNotMatch(serializedUnsafeValue, /</);
+  assert.match(serializedUnsafeValue, /\\u003c\/script>/);
+  assert.deepEqual(JSON.parse(serializedUnsafeValue), unsafeValue);
+  assert.deepEqual(JSON.parse(serializeJsonLd(structuredData)), structuredData);
+
+  const layout = await readFile("src/app/layout.tsx", "utf8");
+  assert.match(layout, /createPortfolioStructuredData\(\)/);
+  assert.match(layout, /serializeJsonLd\(structuredData\)/);
+  assert.equal((layout.match(/application\/ld\+json/g) ?? []).length, 1);
+  assert.doesNotMatch(layout, /const jsonLdPerson|JSON\.stringify\(jsonLdPerson\)/);
 });
 
 test("the whole experience card is a native accessible disclosure independent from its link", async () => {

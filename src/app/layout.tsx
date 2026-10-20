@@ -5,7 +5,8 @@ import MotionProvider from '@/components/common/MotionProvider';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import { ReactNode } from 'react';
-import { createRootMetadata, getSiteUrl, SITE_CONFIG } from '@/config/site';
+import { createRootMetadata, getSiteUrl } from '@/config/site';
+import { createPortfolioStructuredData, serializeJsonLd } from '@/lib/structured-data';
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -16,6 +17,7 @@ const montserrat = Montserrat({
 const baseUrl = getSiteUrl();
 
 export const metadata = createRootMetadata(baseUrl);
+const structuredData = createPortfolioStructuredData();
 
 const themeScript = `(() => {
   try {
@@ -29,44 +31,6 @@ const themeScript = `(() => {
   }
 })();`;
 
-const jsonLdPerson = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Gustavo Baranda',
-  jobTitle: 'Full Stack Developer',
-  url: baseUrl,
-  sameAs: [
-    'https://github.com/GustavoBaranda',
-    SITE_CONFIG.links.linkedin,
-  ],
-  knowsAbout: [
-    'Full Stack Software Development',
-    'Python',
-    'Django',
-    'React.js',
-    'TypeScript',
-    'Node.js',
-    'SQL Server',
-    'Oracle ETL',
-    'Data Science'
-  ],
-  alumniOf: [
-    {
-      '@type': 'EducationalOrganization',
-      name: 'Instituto de Formación Técnica Superior N°29',
-    },
-    {
-      '@type': 'EducationalOrganization',
-      name: 'Universidad de la Ciudad de Buenos Aires (Udelaciudad)',
-    }
-  ],
-  address: {
-    '@type': 'PostalAddress',
-    addressLocality: 'Buenos Aires',
-    addressCountry: 'Argentina'
-  }
-};
-
 export interface RootLayoutProps {
   children: ReactNode;
 }
@@ -78,7 +42,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         <Script id="theme-toggle" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdPerson) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }}
         />
       </head>
       <body
