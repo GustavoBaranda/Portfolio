@@ -322,6 +322,10 @@ La planificación formal de la Fase 4 se encuentra en [`docs/PHASE_4_PLAN.md`](d
 
 La grilla de Contacto declara una columna móvil reducible y sus tarjetas respetan el ancho disponible. La insignia de disponibilidad puede ajustarse en pantallas pequeñas sin forzar el ancho del contenedor. La corrección conserva la distribución de escritorio y no modifica la lógica, validaciones ni configuración de correo del formulario.
 
+### Entrega 4.2.2 — Accesibilidad del formulario móvil
+
+Los cuatro controles editables del formulario utilizan un tamaño de fuente de 16 px para mejorar su legibilidad y evitar el zoom automático provocado por textos menores en Safari/iOS. El ajuste no modifica el viewport, la escala tipográfica global, las validaciones ni el envío de correo.
+
 ### Deuda de dependencias de desarrollo
 
 Revisión del 19 de octubre de 2026: la entrega 4.1 redujo la auditoría de **12 alertas (2 moderadas y 10 altas)** a **5 alertas altas**. Se actualizó ESLint dentro de la rama 9 y se aplicaron únicamente parches transitivos compatibles. No se utilizó `audit fix --force` ni se degradó la configuración de Next.js.

@@ -287,6 +287,13 @@ test("contact cards can shrink within the mobile grid without clipping", async (
   assert.match(info, /<span className="min-w-0">Disponible para nuevas oportunidades<\/span>/);
 });
 
+test("editable contact controls keep a zoom-safe font size", async () => {
+  const form = await readFile("src/components/contact/ContactForm.tsx", "utf8");
+
+  assert.equal((form.match(/px-3\.5 py-2\.5 text-base/g) ?? []).length, 4);
+  assert.doesNotMatch(form, /px-3\.5 py-2\.5 text-xs sm:text-sm/);
+});
+
 test("project disclosure keeps one mounted detail region and animates a reversible height", async () => {
   const project = PROJECTS.find((item) => item.solution.length > 160)!;
   const target = `project-solution-${project.id}`;

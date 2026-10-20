@@ -173,7 +173,7 @@ export default function ContactForm() {
                     value={formData.nombre}
                     onChange={handleChange}
                     placeholder="Tu nombre"
-                    className="rounded-[0.35rem] border border-soft surface px-3.5 py-2.5 text-xs sm:text-sm text-foreground placeholder:text-muted focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20 focus:outline-none"
+                    className="rounded-[0.35rem] border border-soft surface px-3.5 py-2.5 text-base text-foreground placeholder:text-muted focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20 focus:outline-none"
                   />
                   <FieldError name="nombre" errors={fieldErrors} />
                 </div>
@@ -196,7 +196,7 @@ export default function ContactForm() {
                     onChange={handleChange}
                     onBlur={() => setFieldErrors((prev) => ({ ...prev, email: validateContactFields(formData).email }))}
                     placeholder="tu@email.com"
-                    className={`rounded-[0.35rem] border surface px-3.5 py-2.5 text-xs sm:text-sm text-foreground placeholder:text-muted focus:outline-none transition-colors ${
+                    className={`rounded-[0.35rem] border surface px-3.5 py-2.5 text-base text-foreground placeholder:text-muted focus:outline-none transition-colors ${
                       fieldErrors.email
                         ? "border-rose-500/70 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20"
                         : "border-soft focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20"
@@ -223,7 +223,7 @@ export default function ContactForm() {
                   value={formData.asunto}
                   onChange={handleChange}
                   placeholder="Ej. Oportunidad laboral / Consulta de proyecto"
-                  className="rounded-[0.35rem] border border-soft surface px-3.5 py-2.5 text-xs sm:text-sm text-foreground placeholder:text-muted focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20 focus:outline-none"
+                  className="rounded-[0.35rem] border border-soft surface px-3.5 py-2.5 text-base text-foreground placeholder:text-muted focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20 focus:outline-none"
                 />
                   <FieldError name="asunto" errors={fieldErrors} />
               </div>
@@ -246,7 +246,7 @@ export default function ContactForm() {
                   value={formData.mensaje}
                   onChange={handleChange}
                   placeholder="Cuéntame sobre tu proyecto o propuesta..."
-                  className="rounded-[0.35rem] border border-soft surface px-3.5 py-2.5 text-xs sm:text-sm text-foreground placeholder:text-muted resize-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20 focus:outline-none"
+                  className="rounded-[0.35rem] border border-soft surface px-3.5 py-2.5 text-base text-foreground placeholder:text-muted resize-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20 focus:outline-none"
                 />
                   <FieldError name="mensaje" errors={fieldErrors} />
               </div>
