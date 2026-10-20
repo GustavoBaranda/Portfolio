@@ -326,6 +326,10 @@ La grilla de Contacto declara una columna móvil reducible y sus tarjetas respet
 
 Los cuatro controles editables del formulario utilizan un tamaño de fuente de 16 px para mejorar su legibilidad y evitar el zoom automático provocado por textos menores en Safari/iOS. El ajuste no modifica el viewport, la escala tipográfica global, las validaciones ni el envío de correo.
 
+### Entrega 4.2.3 — Optimización del logotipo de Descubriendo Jardín
+
+El SVG conserva su contenedor, proporciones, transparencia y referencia pública, pero reduce el JPEG incrustado a una resolución adecuada para su presentación de 60 px y escalas de alta densidad. La optimización elimina metadatos innecesarios y disminuye el recurso de 1.936.242 a 180.274 bytes sin modificar las tarjetas ni otros recursos gráficos.
+
 ### Deuda de dependencias de desarrollo
 
 Revisión del 19 de octubre de 2026: la entrega 4.1 redujo la auditoría de **12 alertas (2 moderadas y 10 altas)** a **5 alertas altas**. Se actualizó ESLint dentro de la rama 9 y se aplicaron únicamente parches transitivos compatibles. No se utilizó `audit fix --force` ni se degradó la configuración de Next.js.
