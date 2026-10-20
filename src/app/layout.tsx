@@ -4,9 +4,8 @@ import './globals.css';
 import MotionProvider from '@/components/common/MotionProvider';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
-import { Metadata } from 'next';
 import { ReactNode } from 'react';
-import { getSiteUrl, SITE_CONFIG } from '@/config/site';
+import { createRootMetadata, getSiteUrl, SITE_CONFIG } from '@/config/site';
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -16,87 +15,7 @@ const montserrat = Montserrat({
 
 const baseUrl = getSiteUrl();
 
-export const metadata: Metadata = {
-  metadataBase: new URL(baseUrl),
-  title: {
-    default: 'Gustavo Baranda | Full Stack Developer & Data Science Student',
-    template: '%s | Gustavo Baranda',
-  },
-  description: 'Full Stack Developer enfocado en construir sistemas robustos con Python, Django y React. Estudiante de Licenciatura en Ciencias de Datos (Udelaciudad).',
-  keywords: [
-    'Full Stack Developer',
-    'Python',
-    'Django',
-    'React',
-    'TypeScript',
-    'Ciencia de Datos',
-    'ETL',
-    'APIs REST',
-    'Software Engineer',
-    'Buenos Aires',
-    'Argentina'
-  ],
-  authors: [{ name: 'Gustavo Baranda', url: baseUrl }],
-  creator: 'Gustavo Baranda',
-  publisher: 'Gustavo Baranda',
-  alternates: {
-    canonical: baseUrl,
-  },
-  icons: {
-    icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-    ],
-    shortcut: '/favicon.ico',
-    apple: '/apple-touch-icon.png',
-  },
-  manifest: '/site.webmanifest',
-  appleWebApp: {
-    title: 'Gustavo Baranda',
-  },
-  openGraph: {
-    title: 'Gustavo Baranda | Full Stack Developer & Data Science Student',
-    description: 'Transformo ideas en soluciones digitales con código limpio, arquitectura escalable y las mejores prácticas de desarrollo web.',
-    url: baseUrl,
-    siteName: 'Gustavo Baranda Portfolio',
-    images: [
-      {
-        url: `${baseUrl}/images/opengraph.png`,
-        width: 1200,
-        height: 630,
-        alt: 'Gustavo Baranda - Full Stack Developer & Data Science Student',
-        type: 'image/png',
-      },
-    ],
-    locale: 'es_AR',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Gustavo Baranda | Full Stack Developer',
-    description: 'Transformo ideas en soluciones digitales con código y diseño.',
-    images: [
-      {
-        url: `${baseUrl}/images/opengraph.png`,
-        width: 1200,
-        height: 630,
-        alt: 'Gustavo Baranda - Full Stack Developer',
-      },
-    ],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-};
+export const metadata = createRootMetadata(baseUrl);
 
 const themeScript = `(() => {
   try {

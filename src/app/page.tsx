@@ -9,35 +9,11 @@ import EducationSection from '@/components/about/EducationSection';
 import ProjectsGrid from '@/components/projects/ProjectsGrid';
 import ContactForm from '@/components/contact/ContactForm';
 import ContactInfo from '@/components/contact/ContactInfo';
-import { Metadata } from 'next';
-import { getSiteUrl } from '@/config/site';
+import { createHomeMetadata, getSiteUrl } from '@/config/site';
 
 const baseUrl = getSiteUrl();
 
-export const metadata: Metadata = {
-  title: 'Gustavo Baranda | Full Stack Developer & Data Science Student',
-  description: 'Portafolio profesional de Gustavo Baranda. Desarrollador Full Stack especializado en Python, Django, React y Ciencia de Datos con enfoque en arquitectura limpia y sistemas robustos.',
-  alternates: {
-    canonical: baseUrl,
-  },
-  openGraph: {
-    title: 'Gustavo Baranda | Full Stack Developer & Data Science Student',
-    description: 'Transformo ideas en soluciones digitales con código limpio, arquitectura escalable y las mejores prácticas de desarrollo web.',
-    url: baseUrl,
-    siteName: 'Gustavo Baranda Portfolio',
-    locale: 'es_AR',
-    type: 'website',
-    images: [
-      {
-        url: `${baseUrl}/images/opengraph.png`,
-        width: 1200,
-        height: 630,
-        alt: 'Gustavo Baranda - Full Stack Developer',
-        type: 'image/png',
-      },
-    ],
-  },
-};
+export const metadata = createHomeMetadata(baseUrl);
 
 export default function HomePage() {
   return (

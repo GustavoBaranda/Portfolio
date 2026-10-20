@@ -27,6 +27,67 @@ import { FillButton } from "../components/hero/fill-button";
 import { EDUCATION, EXPERIENCES } from "../data/aboutData";
 import { PROJECTS } from "../data/projectsData";
 import { closeNavigationDialogAfterExit } from "./navigation-dialog";
+import { createHomeMetadata, createRootMetadata, SITE_CONFIG } from "../config/site";
+
+test("home metadata uses the centralized professional identity", async () => {
+  const root = JSON.parse(JSON.stringify(createRootMetadata(SITE_CONFIG.url))) as {
+    title: { default: string; template: string };
+  };
+  const effective = JSON.parse(JSON.stringify(createHomeMetadata(SITE_CONFIG.url))) as {
+    title: { absolute: string };
+    description: string;
+    alternates: { canonical: string };
+    openGraph: {
+      title: string;
+      description: string;
+      url: string;
+      images: Array<{ url: string; width: number; height: number }>;
+    };
+    twitter: {
+      title: string;
+      description: string;
+      images: Array<{ url: string; width: number; height: number }>;
+    };
+  };
+
+  assert.deepEqual(root.title, {
+    default: "Gustavo Baranda | Full Stack Python Developer",
+    template: "%s | Gustavo Baranda",
+  });
+  assert.deepEqual(effective.title, {
+    absolute: "Gustavo Baranda | Full Stack Python Developer",
+  });
+  assert.equal(
+    effective.description,
+    "Full Stack Python Developer especializado en backend con Django y SQL Server. Desarrollo aplicaciones empresariales, integraciones y proyectos open source.",
+  );
+  assert.equal(effective.alternates.canonical, "https://gustavobaranda.com");
+  assert.equal(effective.openGraph.title, effective.title.absolute);
+  assert.equal(effective.twitter.title, effective.title.absolute);
+  assert.equal(effective.openGraph.description, SITE_CONFIG.socialDescription);
+  assert.equal(effective.twitter.description, SITE_CONFIG.socialDescription);
+  assert.equal(effective.openGraph.url, SITE_CONFIG.url);
+  assert.equal(effective.openGraph.images[0].url, `${SITE_CONFIG.url}${SITE_CONFIG.ogImage}`);
+  assert.equal(effective.twitter.images[0].url, `${SITE_CONFIG.url}${SITE_CONFIG.ogImage}`);
+  assert.deepEqual(
+    [effective.openGraph.images[0].width, effective.openGraph.images[0].height],
+    [1200, 630],
+  );
+
+  const [layout, page, site] = await Promise.all([
+    readFile("src/app/layout.tsx", "utf8"),
+    readFile("src/app/page.tsx", "utf8"),
+    readFile("src/config/site.ts", "utf8"),
+  ]);
+  assert.match(layout, /export const metadata = createRootMetadata\(baseUrl\)/);
+  assert.match(page, /export const metadata = createHomeMetadata\(baseUrl\)/);
+  const pageMetadataSetup = page.slice(0, page.indexOf("export default function HomePage"));
+  assert.doesNotMatch(pageMetadataSetup, /Full Stack Python Developer especializado|chatflow-agent/);
+  assert.doesNotMatch(
+    `${layout}\n${page}\n${site}`,
+    /Full Stack Developer & Data Science Student|Transformo ideas en soluciones digitales|Portafolio profesional de Gustavo Baranda/,
+  );
+});
 
 test("the whole experience card is a native accessible disclosure independent from its link", async () => {
   const exp = EXPERIENCES.find((item) => item.url)!;
