@@ -318,6 +318,10 @@ La API, validaciones, honeypot, cuota por instancia, Gmail SMTP, remitente, dest
 
 La planificación formal de la Fase 4 se encuentra en [`docs/PHASE_4_PLAN.md`](docs/PHASE_4_PLAN.md). La entrega 4.1 diagnostica la limitación de `os.userInfo()` en el sandbox de Windows y actualiza de forma controlada las herramientas de desarrollo, sin alterar el runtime, el formulario ni la interfaz.
 
+### Entrega 4.2.1 — Contacto responsive
+
+La grilla de Contacto declara una columna móvil reducible y sus tarjetas respetan el ancho disponible. La insignia de disponibilidad puede ajustarse en pantallas pequeñas sin forzar el ancho del contenedor. La corrección conserva la distribución de escritorio y no modifica la lógica, validaciones ni configuración de correo del formulario.
+
 ### Deuda de dependencias de desarrollo
 
 Revisión del 19 de octubre de 2026: la entrega 4.1 redujo la auditoría de **12 alertas (2 moderadas y 10 altas)** a **5 alertas altas**. Se actualizó ESLint dentro de la rama 9 y se aplicaron únicamente parches transitivos compatibles. No se utilizó `audit fix --force` ni se degradó la configuración de Next.js.

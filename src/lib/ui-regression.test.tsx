@@ -261,7 +261,7 @@ test("the five main section headings share hierarchy, copy and highlighted words
   assert.doesNotMatch(page, /¿Tienes una idea o proyecto\?|Envíame un mensaje/);
   assert.match(page, /<ContactForm \/>/);
   assert.match(page, /<ContactInfo \/>/);
-  assert.match(page, /grid gap-6 lg:grid-cols-2 items-stretch/);
+  assert.match(page, /grid min-w-0 grid-cols-1 gap-6 items-stretch lg:grid-cols-2/);
 
   const sources = [
     await readFile("src/components/about/HeroBio.tsx", "utf8"),
@@ -271,6 +271,20 @@ test("the five main section headings share hierarchy, copy and highlighted words
   ].join("\n");
   assert.ok((sources.match(/from-violet-600 via-indigo-600 to-blue-600/g) ?? []).length >= 5);
   assert.ok((sources.match(/dark:from-violet-400 dark:via-indigo-400 dark:to-blue-400/g) ?? []).length >= 5);
+});
+
+test("contact cards can shrink within the mobile grid without clipping", async () => {
+  const [page, form, info] = await Promise.all([
+    readFile("src/app/page.tsx", "utf8"),
+    readFile("src/components/contact/ContactForm.tsx", "utf8"),
+    readFile("src/components/contact/ContactInfo.tsx", "utf8"),
+  ]);
+
+  assert.match(page, /grid min-w-0 grid-cols-1 gap-6 items-stretch lg:grid-cols-2/);
+  assert.match(form, /className="min-w-0 w-full rounded-\[0\.35rem\]/);
+  assert.match(info, /className="min-w-0 w-full rounded-\[0\.35rem\]/);
+  assert.match(info, /inline-flex w-fit max-w-full/);
+  assert.match(info, /<span className="min-w-0">Disponible para nuevas oportunidades<\/span>/);
 });
 
 test("project disclosure keeps one mounted detail region and animates a reversible height", async () => {

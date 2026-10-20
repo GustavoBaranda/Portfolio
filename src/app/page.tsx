@@ -179,7 +179,7 @@ export default function HomePage() {
             </p>
           </header>
 
-          <div className="grid gap-6 lg:grid-cols-2 items-stretch">
+          <div className="grid min-w-0 grid-cols-1 gap-6 items-stretch lg:grid-cols-2">
             <ContactForm />
             <ContactInfo />
           </div>

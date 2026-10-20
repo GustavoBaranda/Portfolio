@@ -84,7 +84,7 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="rounded-[0.35rem] border border-soft surface-card p-4 sm:p-8 shadow-sm flex flex-col justify-between h-full">
+    <div className="min-w-0 w-full rounded-[0.35rem] border border-soft surface-card p-4 sm:p-8 shadow-sm flex flex-col justify-between h-full">
       <div>
         <p role="status" aria-live="polite" aria-atomic="true" className="sr-only">
           {status === "loading" ? "Enviando mensaje." : status === "success" ? "El servicio de correo aceptó tu mensaje." : ""}
