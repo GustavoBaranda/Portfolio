@@ -330,6 +330,10 @@ Los cuatro controles editables del formulario utilizan un tamaño de fuente de 1
 
 El SVG conserva su contenedor, proporciones, transparencia y referencia pública, pero reduce el JPEG incrustado a una resolución adecuada para su presentación de 60 px y escalas de alta densidad. La optimización elimina metadatos innecesarios y disminuye el recurso de 1.936.242 a 180.274 bytes sin modificar las tarjetas ni otros recursos gráficos.
 
+### Entrega 4.2.4 — Correcciones finales de accesibilidad
+
+Los textos animados conservan una única alternativa accesible sin aplicar atributos ARIA prohibidos a párrafos. El logotipo decorativo mantiene su flotación y hover fuera del orden de teclado, y los campos de contacto utilizan bordes locales con contraste no textual mínimo de 3:1 en ambos temas, sin alterar foco, errores ni envío.
+
 ### Deuda de dependencias de desarrollo
 
 Revisión del 19 de octubre de 2026: la entrega 4.1 redujo la auditoría de **12 alertas (2 moderadas y 10 altas)** a **5 alertas altas**. Se actualizó ESLint dentro de la rama 9 y se aplicaron únicamente parches transitivos compatibles. No se utilizó `audit fix --force` ni se degradó la configuración de Next.js.

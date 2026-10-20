@@ -38,6 +38,7 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({
   const reducedMotion = useReducedMotion();
   const words = text.split(" ");
   const Component = (motion[as] || motion.h2) as React.ElementType;
+  const usesAccessibleLabel = as === "h1" || as === "h2";
 
   const alignClasses =
     align === "left"
@@ -53,8 +54,9 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({
         variants={quote}
         initial={reducedMotion ? false : "initial"}
         animate="animate"
-        aria-label={text}
+        aria-label={usesAccessibleLabel ? text : undefined}
       >
+        {!usesAccessibleLabel && <span className="sr-only">{text}</span>}
         {words.map((word, index) => (
           <React.Fragment key={`${word}-${index}`}>
             <motion.span className="inline-block" variants={singleWord} aria-hidden="true">

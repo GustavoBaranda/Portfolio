@@ -88,8 +88,7 @@ export default function TiltImage({
           translateX: reducedMotion ? 0 : translateX,
           translateY: reducedMotion ? 0 : translateY,
         }}
-          whileHover={reducedMotion ? undefined : { scale: 1.05 }}
-          whileTap={reducedMotion ? undefined : { scale: 0.98 }}
+        whileHover={reducedMotion ? undefined : { scale: 1.05 }}
       >
         <motion.div
           animate={{ y: reducedMotion ? 0 : [0, -12, 0] }}

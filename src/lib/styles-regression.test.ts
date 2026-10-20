@@ -42,15 +42,20 @@ test("experience and education text palettes meet 4.5:1 on their declared card a
 test("semantic text and input boundaries retain contrast on both theme surfaces", async () => {
   const css = postcss.parse(await readFile(resolve("src/app/globals.css"), "utf8"));
   const themes: Map<string, string>[] = [];
+  const contactBorders: string[] = [];
   css.walkRules((rule) => {
     if (rule.selector === ":root" || rule.selector.startsWith(":root.dark")) {
       const vars = new Map<string, string>();
       rule.walkDecls((decl) => { vars.set(decl.prop, decl.value); });
       themes.push(vars);
     }
+    if (rule.selector === "#contact" || rule.selector.endsWith(' #contact')) {
+      rule.walkDecls("--contact-field-border", (decl) => { contactBorders.push(decl.value); });
+    }
   });
   assert.equal(themes.length, 2);
-  for (const theme of themes) {
+  assert.deepEqual(contactBorders, ["#8491a3", "#64748b"]);
+  for (const [index, theme] of themes.entries()) {
     for (const background of ["--canvas", "--surface", "--surface-card"]) {
       for (const foreground of ["--text", "--muted"]) {
         const ratio = contrast(rgb(theme.get(foreground)!), rgb(theme.get(background)!));
@@ -58,6 +63,10 @@ test("semantic text and input boundaries retain contrast on both theme surfaces"
       }
     }
     assert.ok(contrast(rgb(theme.get("--muted")!), rgb(theme.get("--surface")!)) >= 3);
+    for (const background of ["--surface", "--surface-card"]) {
+      const ratio = contrast(rgb(contactBorders[index]), rgb(theme.get(background)!));
+      assert.ok(ratio >= 3, `contact border on ${background}: ${ratio.toFixed(2)}`);
+    }
   }
 });
 
@@ -73,11 +82,11 @@ test("contact fields use soft semantic borders with distinct interaction states"
   });
 
   const base = declarations.get('#contact form :is(input, textarea):not([name="company"])');
-  assert.equal(base?.get("border-color"), "var(--border-strong)");
+  assert.equal(base?.get("border-color"), "var(--contact-field-border)");
   assert.match(base?.get("transition") ?? "", /border-color 180ms ease/);
 
   const hover = [...declarations].find(([selector]) => selector.includes(":hover:not(:focus):not(:disabled)"))?.[1];
-  assert.equal(hover?.get("border-color"), "color-mix(in srgb, var(--border-strong) 75%, var(--accent))");
+  assert.equal(hover?.get("border-color"), "color-mix(in srgb, var(--contact-field-border) 75%, var(--accent))");
   const focus = [...declarations].find(([selector]) => selector.includes(":focus:not([aria-invalid"))?.[1];
   assert.equal(focus?.get("border-color"), "var(--accent)");
   const disabled = [...declarations].find(([selector]) => selector.endsWith(":disabled"))?.[1];
