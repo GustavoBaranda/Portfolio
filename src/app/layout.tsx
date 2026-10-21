@@ -5,7 +5,7 @@ import MotionProvider from '@/components/common/MotionProvider';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import { ReactNode } from 'react';
-import { createRootMetadata, getSiteUrl } from '@/config/site';
+import { createRootMetadata } from '@/config/site';
 import { createPortfolioStructuredData, serializeJsonLd } from '@/lib/structured-data';
 
 const montserrat = Montserrat({
@@ -14,9 +14,7 @@ const montserrat = Montserrat({
   display: 'swap',
 });
 
-const baseUrl = getSiteUrl();
-
-export const metadata = createRootMetadata(baseUrl);
+export const metadata = createRootMetadata();
 const structuredData = createPortfolioStructuredData();
 
 const themeScript = `(() => {

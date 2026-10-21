@@ -9,11 +9,9 @@ import EducationSection from '@/components/about/EducationSection';
 import ProjectsGrid from '@/components/projects/ProjectsGrid';
 import ContactForm from '@/components/contact/ContactForm';
 import ContactInfo from '@/components/contact/ContactInfo';
-import { createHomeMetadata, getSiteUrl } from '@/config/site';
+import { createHomeMetadata } from '@/config/site';
 
-const baseUrl = getSiteUrl();
-
-export const metadata = createHomeMetadata(baseUrl);
+export const metadata = createHomeMetadata();
 
 export default function HomePage() {
   return (

@@ -15,8 +15,8 @@ export const SITE_CONFIG = {
   },
 };
 
-export const createRootMetadata = (baseUrl: string): Metadata => ({
-  metadataBase: new URL(baseUrl),
+export const createRootMetadata = (): Metadata => ({
+  metadataBase: new URL(SITE_CONFIG.url),
   title: {
     default: SITE_CONFIG.title,
     template: `%s | ${SITE_CONFIG.name}`,
@@ -34,7 +34,7 @@ export const createRootMetadata = (baseUrl: string): Metadata => ({
     "Buenos Aires",
     "Argentina",
   ],
-  authors: [{ name: SITE_CONFIG.name, url: baseUrl }],
+  authors: [{ name: SITE_CONFIG.name, url: SITE_CONFIG.url }],
   creator: SITE_CONFIG.name,
   publisher: SITE_CONFIG.name,
   icons: {
@@ -63,22 +63,22 @@ export const createRootMetadata = (baseUrl: string): Metadata => ({
   },
 });
 
-export const createHomeMetadata = (baseUrl: string): Metadata => ({
+export const createHomeMetadata = (): Metadata => ({
   title: {
     absolute: SITE_CONFIG.title,
   },
   description: SITE_CONFIG.description,
   alternates: {
-    canonical: baseUrl,
+    canonical: SITE_CONFIG.url,
   },
   openGraph: {
     title: SITE_CONFIG.title,
     description: SITE_CONFIG.socialDescription,
-    url: baseUrl,
+    url: SITE_CONFIG.url,
     siteName: `${SITE_CONFIG.name} Portfolio`,
     images: [
       {
-        url: `${baseUrl}${SITE_CONFIG.ogImage}`,
+        url: `${SITE_CONFIG.url}${SITE_CONFIG.ogImage}`,
         width: 1200,
         height: 630,
         alt: `${SITE_CONFIG.name} - Full Stack Python Developer`,
@@ -94,7 +94,7 @@ export const createHomeMetadata = (baseUrl: string): Metadata => ({
     description: SITE_CONFIG.socialDescription,
     images: [
       {
-        url: `${baseUrl}${SITE_CONFIG.ogImage}`,
+        url: `${SITE_CONFIG.url}${SITE_CONFIG.ogImage}`,
         width: 1200,
         height: 630,
         alt: `${SITE_CONFIG.name} - Full Stack Python Developer`,
@@ -103,18 +103,35 @@ export const createHomeMetadata = (baseUrl: string): Metadata => ({
   },
 });
 
-export const getSiteUrl = (): string => {
-  if (process.env.NEXT_PUBLIC_BASE_URL) {
-    const url = process.env.NEXT_PUBLIC_BASE_URL.replace(/\/$/, "");
-    if (process.env.NODE_ENV === "production" && url.startsWith("http://")) {
-      return url.replace("http://", "https://");
+interface SiteUrlEnvironment {
+  NEXT_PUBLIC_BASE_URL?: string;
+  VERCEL_URL?: string;
+  NODE_ENV?: string;
+}
+
+const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
+
+export const resolveSiteUrl = (environment: SiteUrlEnvironment): string => {
+  if (environment.NEXT_PUBLIC_BASE_URL) {
+    const url = new URL(environment.NEXT_PUBLIC_BASE_URL);
+    if (
+      environment.NODE_ENV === "production" &&
+      url.protocol === "http:" &&
+      !LOCAL_HOSTS.has(url.hostname)
+    ) {
+      url.protocol = "https:";
     }
-    return url;
+    return url.origin;
   }
 
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL.replace(/\/$/, "")}`;
+  if (environment.VERCEL_URL) {
+    const deploymentUrl = environment.VERCEL_URL.replace(/^https?:\/\//, "");
+    return new URL(`https://${deploymentUrl}`).origin;
   }
 
-  return SITE_CONFIG.url;
+  return environment.NODE_ENV === "production"
+    ? SITE_CONFIG.url
+    : "http://localhost:3000";
 };
+
+export const getSiteUrl = (): string => resolveSiteUrl(process.env);

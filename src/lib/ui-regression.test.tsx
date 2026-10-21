@@ -27,14 +27,22 @@ import { FillButton } from "../components/hero/fill-button";
 import { EDUCATION, EXPERIENCES } from "../data/aboutData";
 import { PROJECTS } from "../data/projectsData";
 import { closeNavigationDialogAfterExit } from "./navigation-dialog";
-import { createHomeMetadata, createRootMetadata, SITE_CONFIG } from "../config/site";
+import {
+  createHomeMetadata,
+  createRootMetadata,
+  resolveSiteUrl,
+  SITE_CONFIG,
+} from "../config/site";
 import { createPortfolioStructuredData, serializeJsonLd } from "./structured-data";
+import robots from "../app/robots";
+import sitemap from "../app/sitemap";
 
 test("home metadata uses the centralized professional identity", async () => {
-  const root = JSON.parse(JSON.stringify(createRootMetadata(SITE_CONFIG.url))) as {
+  const root = JSON.parse(JSON.stringify(createRootMetadata())) as {
+    metadataBase: string;
     title: { default: string; template: string };
   };
-  const effective = JSON.parse(JSON.stringify(createHomeMetadata(SITE_CONFIG.url))) as {
+  const effective = JSON.parse(JSON.stringify(createHomeMetadata())) as {
     title: { absolute: string };
     description: string;
     alternates: { canonical: string };
@@ -56,6 +64,7 @@ test("home metadata uses the centralized professional identity", async () => {
     default: "Gustavo Baranda | Full Stack Python Developer",
     template: "%s | Gustavo Baranda",
   });
+  assert.equal(root.metadataBase, new URL(SITE_CONFIG.url).href);
   assert.deepEqual(effective.title, {
     absolute: "Gustavo Baranda | Full Stack Python Developer",
   });
@@ -100,14 +109,64 @@ test("home metadata uses the centralized professional identity", async () => {
     readFile("src/app/page.tsx", "utf8"),
     readFile("src/config/site.ts", "utf8"),
   ]);
-  assert.match(layout, /export const metadata = createRootMetadata\(baseUrl\)/);
-  assert.match(page, /export const metadata = createHomeMetadata\(baseUrl\)/);
+  assert.match(layout, /export const metadata = createRootMetadata\(\)/);
+  assert.match(page, /export const metadata = createHomeMetadata\(\)/);
   const pageMetadataSetup = page.slice(0, page.indexOf("export default function HomePage"));
   assert.doesNotMatch(pageMetadataSetup, /Full Stack Python Developer especializado|chatflow-agent/);
   assert.doesNotMatch(
     `${layout}\n${page}\n${site}`,
     /Full Stack Developer & Data Science Student|Transformo ideas en soluciones digitales|Portafolio profesional de Gustavo Baranda/,
   );
+});
+
+test("canonical, robots and sitemap stay on the public domain across environments", async () => {
+  assert.equal(
+    resolveSiteUrl({
+      NEXT_PUBLIC_BASE_URL: "http://localhost:3000/",
+      NODE_ENV: "production",
+    }),
+    "http://localhost:3000",
+  );
+  assert.equal(
+    resolveSiteUrl({
+      NEXT_PUBLIC_BASE_URL: "http://example.test/",
+      NODE_ENV: "production",
+    }),
+    "https://example.test",
+  );
+  assert.equal(
+    resolveSiteUrl({ VERCEL_URL: "portfolio-preview.vercel.app", NODE_ENV: "production" }),
+    "https://portfolio-preview.vercel.app",
+  );
+  assert.equal(resolveSiteUrl({ NODE_ENV: "development" }), "http://localhost:3000");
+  assert.equal(resolveSiteUrl({ NODE_ENV: "production" }), SITE_CONFIG.url);
+
+  const robotsConfig = robots();
+  assert.deepEqual(robotsConfig.rules, {
+    userAgent: "*",
+    allow: "/",
+    disallow: ["/api/"],
+  });
+  assert.equal(robotsConfig.sitemap, `${SITE_CONFIG.url}/sitemap.xml`);
+
+  const sitemapEntries = sitemap();
+  assert.deepEqual(sitemapEntries, [
+    {
+      url: SITE_CONFIG.url,
+      changeFrequency: "monthly",
+      priority: 1,
+    },
+  ]);
+  assert.ok(sitemapEntries.every((entry) => !("lastModified" in entry)));
+
+  const [layout, page, robotsSource, sitemapSource] = await Promise.all([
+    readFile("src/app/layout.tsx", "utf8"),
+    readFile("src/app/page.tsx", "utf8"),
+    readFile("src/app/robots.ts", "utf8"),
+    readFile("src/app/sitemap.ts", "utf8"),
+  ]);
+  assert.doesNotMatch(`${layout}\n${page}\n${robotsSource}\n${sitemapSource}`, /getSiteUrl/);
+  assert.doesNotMatch(sitemapSource, /new Date\(|lastModified/);
 });
 
 test("JSON-LD represents one coherent Person and WebSite with safe serialization", async () => {

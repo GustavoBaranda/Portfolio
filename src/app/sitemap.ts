@@ -1,13 +1,10 @@
 import { MetadataRoute } from 'next';
-import { getSiteUrl } from '@/config/site';
+import { SITE_CONFIG } from '@/config/site';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = getSiteUrl();
-
   return [
     {
-      url: baseUrl,
-      lastModified: new Date(),
+      url: SITE_CONFIG.url,
       changeFrequency: 'monthly',
       priority: 1.0,
     },
