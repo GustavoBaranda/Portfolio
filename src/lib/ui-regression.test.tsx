@@ -42,12 +42,13 @@ test("home metadata uses the centralized professional identity", async () => {
       title: string;
       description: string;
       url: string;
-      images: Array<{ url: string; width: number; height: number }>;
+      images: Array<{ url: string; width: number; height: number; alt: string; type: string }>;
     };
     twitter: {
+      card: string;
       title: string;
       description: string;
-      images: Array<{ url: string; width: number; height: number }>;
+      images: Array<{ url: string; width: number; height: number; alt: string }>;
     };
   };
 
@@ -68,12 +69,31 @@ test("home metadata uses the centralized professional identity", async () => {
   assert.equal(effective.openGraph.description, SITE_CONFIG.socialDescription);
   assert.equal(effective.twitter.description, SITE_CONFIG.socialDescription);
   assert.equal(effective.openGraph.url, SITE_CONFIG.url);
+  assert.equal(effective.twitter.card, "summary_large_image");
+  assert.equal(effective.openGraph.images.length, 1);
+  assert.equal(effective.twitter.images.length, 1);
   assert.equal(effective.openGraph.images[0].url, `${SITE_CONFIG.url}${SITE_CONFIG.ogImage}`);
   assert.equal(effective.twitter.images[0].url, `${SITE_CONFIG.url}${SITE_CONFIG.ogImage}`);
   assert.deepEqual(
     [effective.openGraph.images[0].width, effective.openGraph.images[0].height],
     [1200, 630],
   );
+  assert.deepEqual(
+    [effective.twitter.images[0].width, effective.twitter.images[0].height],
+    [1200, 630],
+  );
+  assert.equal(effective.openGraph.images[0].type, "image/png");
+  assert.equal(
+    effective.openGraph.images[0].alt,
+    "Gustavo Baranda - Full Stack Python Developer",
+  );
+  assert.equal(effective.twitter.images[0].alt, effective.openGraph.images[0].alt);
+
+  const socialImage = await readFile("public/images/opengraph.png");
+  assert.equal(socialImage.subarray(0, 8).toString("hex"), "89504e470d0a1a0a");
+  assert.equal(socialImage.readUInt32BE(16), 1200);
+  assert.equal(socialImage.readUInt32BE(20), 630);
+  await assert.rejects(readFile("src/app/opengraph-image.png"), { code: "ENOENT" });
 
   const [layout, page, site] = await Promise.all([
     readFile("src/app/layout.tsx", "utf8"),
