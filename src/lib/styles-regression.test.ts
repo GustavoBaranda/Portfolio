@@ -17,6 +17,9 @@ function contrast(a: number[], b: number[]) {
   const x = luminance(a), y = luminance(b);
   return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
 }
+function mix(a: number[], b: number[], aWeight: number) {
+  return a.map((value, index) => value * aWeight + b[index] * (1 - aWeight));
+}
 function colorClass(classes: string, kind: string, dark: boolean) {
   const tokens = classes.split(" ");
   const token = tokens.find((s) => s.startsWith(`${dark ? "dark:" : ""}${kind}-`)) ?? tokens.find((s) => s.startsWith(`${kind}-`))!;
@@ -42,7 +45,7 @@ test("experience and education text palettes meet 4.5:1 on their declared card a
 test("semantic text and input boundaries retain contrast on both theme surfaces", async () => {
   const css = postcss.parse(await readFile(resolve("src/app/globals.css"), "utf8"));
   const themes: Map<string, string>[] = [];
-  const contactBorders: string[] = [];
+  const contactBoundaries: string[] = [];
   css.walkRules((rule) => {
     if (rule.selector === ":root" || rule.selector.startsWith(":root.dark")) {
       const vars = new Map<string, string>();
@@ -50,11 +53,11 @@ test("semantic text and input boundaries retain contrast on both theme surfaces"
       themes.push(vars);
     }
     if (rule.selector === "#contact" || rule.selector.endsWith(' #contact')) {
-      rule.walkDecls("--contact-field-border", (decl) => { contactBorders.push(decl.value); });
+      rule.walkDecls("--contact-field-boundary", (decl) => { contactBoundaries.push(decl.value); });
     }
   });
   assert.equal(themes.length, 2);
-  assert.deepEqual(contactBorders, ["#8491a3", "#64748b"]);
+  assert.deepEqual(contactBoundaries, ["#8592a4", "#58687e"]);
   for (const [index, theme] of themes.entries()) {
     for (const background of ["--canvas", "--surface", "--surface-card"]) {
       for (const foreground of ["--text", "--muted"]) {
@@ -63,9 +66,16 @@ test("semantic text and input boundaries retain contrast on both theme surfaces"
       }
     }
     assert.ok(contrast(rgb(theme.get("--muted")!), rgb(theme.get("--surface")!)) >= 3);
+    const boundary = rgb(contactBoundaries[index]);
+    const focus = rgb(theme.get("--accent")!);
+    const error = rgb(index === 0 ? "#e11d48" : "#fb7185");
+    const hoverBoundary = mix(boundary, focus, 0.7);
     for (const background of ["--surface", "--surface-card"]) {
-      const ratio = contrast(rgb(contactBorders[index]), rgb(theme.get(background)!));
-      assert.ok(ratio >= 3, `contact border on ${background}: ${ratio.toFixed(2)}`);
+      const surface = rgb(theme.get(background)!);
+      for (const [state, color] of [["normal", boundary], ["hover", hoverBoundary], ["focus", focus], ["error", error]] as const) {
+        const ratio = contrast(color, surface);
+        assert.ok(ratio >= 3, `contact ${state} border on ${background}: ${ratio.toFixed(2)}`);
+      }
     }
   }
 });
@@ -82,11 +92,19 @@ test("contact fields use soft semantic borders with distinct interaction states"
   });
 
   const base = declarations.get('#contact form :is(input, textarea):not([name="company"])');
-  assert.equal(base?.get("border-color"), "var(--contact-field-border)");
+  assert.equal(base?.get("border-color"), "var(--border)");
+  assert.equal(base?.get("border-bottom-color"), "var(--contact-field-boundary)");
+  assert.equal(base?.get("background-color"), "var(--contact-field-surface)");
   assert.match(base?.get("transition") ?? "", /border-color 180ms ease/);
 
   const hover = [...declarations].find(([selector]) => selector.includes(":hover:not(:focus):not(:disabled)"))?.[1];
-  assert.equal(hover?.get("border-color"), "color-mix(in srgb, var(--contact-field-border) 75%, var(--accent))");
+  assert.equal(hover?.get("border-color"), "color-mix(in srgb, var(--border) 65%, var(--accent))");
+  assert.equal(hover?.get("border-bottom-color"), "color-mix(in srgb, var(--contact-field-boundary) 70%, var(--accent))");
+  const focused = declarations.get('#contact form :is(input, textarea):not([name="company"]):focus');
+  assert.equal(focused?.get("border-width"), "2px");
+  assert.equal(focused?.get("padding"), "calc(0.625rem - 1px) calc(0.875rem - 1px)");
+  assert.equal(focused?.get("outline"), "none");
+  assert.equal(focused?.get("box-shadow"), "none");
   const focus = [...declarations].find(([selector]) => selector.includes(":focus:not([aria-invalid"))?.[1];
   assert.equal(focus?.get("border-color"), "var(--accent)");
   const disabled = [...declarations].find(([selector]) => selector.endsWith(":disabled"))?.[1];
@@ -96,6 +114,10 @@ test("contact fields use soft semantic borders with distinct interaction states"
   assert.doesNotMatch(source, /not\(\[aria-invalid="true"\]\):not\(:focus\)[^{]*\{[\s\S]*?border-color:\s*var\(--muted\)/);
   assert.match(source, /\[aria-invalid="true"\][^{]*\{\s*border-color: #e11d48;/);
   assert.match(source, /data-theme="dark"[^{]*aria-invalid="true"[^{]*\{[\s\S]*?border-color: #fb7185;/);
+
+  const form = await readFile(resolve("src/components/contact/ContactForm.tsx"), "utf8");
+  assert.doesNotMatch(form, /focus:ring-2 focus:ring-(?:indigo-600|rose-500)\/20/);
+  assert.doesNotMatch(form, /focus:border-(?:indigo-600|rose-500)/);
 });
 
 test("hamburger keeps its header slot geometry without CSS overriding its Motion keyframes", async () => {

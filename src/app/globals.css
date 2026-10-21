@@ -467,22 +467,33 @@ body::-webkit-scrollbar-thumb {
   }
 }
 
-/* Contact field boundaries meet non-text contrast without darkening shared borders. */
+/* Keep contact fields visually soft while retaining a 3:1 persistent boundary cue. */
 #contact {
-  --contact-field-border: #8491a3;
+  --contact-field-boundary: #8592a4;
+  --contact-field-surface: color-mix(in srgb, var(--surface) 55%, var(--surface-card));
 }
 
 :is(:root.dark, :root[data-theme="dark"]) #contact {
-  --contact-field-border: #64748b;
+  --contact-field-boundary: #58687e;
 }
 
 #contact form :is(input, textarea):not([name="company"]) {
-  border-color: var(--contact-field-border);
+  border-color: var(--border);
+  border-bottom-color: var(--contact-field-boundary);
+  background-color: var(--contact-field-surface);
   transition: border-color 180ms ease, background-color 180ms ease, opacity 180ms ease;
 }
 
 #contact form :is(input, textarea):not([name="company"]):hover:not(:focus):not(:disabled):not([aria-invalid="true"]) {
-  border-color: color-mix(in srgb, var(--contact-field-border) 75%, var(--accent));
+  border-color: color-mix(in srgb, var(--border) 65%, var(--accent));
+  border-bottom-color: color-mix(in srgb, var(--contact-field-boundary) 70%, var(--accent));
+}
+
+#contact form :is(input, textarea):not([name="company"]):focus {
+  border-width: 2px;
+  padding: calc(0.625rem - 1px) calc(0.875rem - 1px);
+  outline: none;
+  box-shadow: none;
 }
 
 #contact form :is(input, textarea):not([name="company"]):focus:not([aria-invalid="true"]) {
