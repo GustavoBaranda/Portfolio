@@ -115,7 +115,7 @@ Estas medidas mejoran el uso con tecnologías asistivas, pero no constituyen por
 
 ### SEO y cabeceras
 
-La URL base se resuelve a partir de `NEXT_PUBLIC_BASE_URL`, `VERCEL_URL` o el dominio de producción. Esa URL se reutiliza para canonical, Open Graph, Twitter Cards, sitemap y robots.
+`SITE_CONFIG.url` es la fuente de la URL canónica pública utilizada por canonical, Open Graph, Twitter Cards, sitemap y robots. `getSiteUrl()` resuelve por separado la URL operativa del entorno que necesita el formulario para validar el encabezado `Origin`.
 
 El layout publica datos estructurados `Person` en JSON-LD. `robots.txt` permite indexar el sitio y bloquea `/api/`; el sitemap describe la ruta principal. La configuración de Next.js agrega las cabeceras `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options` y `Permissions-Policy`.
 
