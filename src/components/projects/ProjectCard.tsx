@@ -99,7 +99,7 @@ export default function ProjectCard({
   const { summary, detail } = splitProjectSolution(project.solution);
   const hasExpandableSolution = detail.length > 0;
   const blockStyle = (block: ProjectCardBlock) => ({
-    minHeight: `var(--project-row-${block})`,
+    minHeight: isDesktop ? `var(--project-row-${block})` : undefined,
   });
 
   const toggleExpanded = () => {
@@ -122,7 +122,7 @@ export default function ProjectCard({
         equalizeHeight ? "md:h-full md:self-stretch" : ""
       }`}
     >
-      <div>
+      <div className={equalizeHeight ? "md:flex-1" : undefined}>
         <div
           ref={(element) => registerBlock?.("meta", element)}
           style={blockStyle("meta")}

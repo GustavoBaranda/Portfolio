@@ -587,7 +587,7 @@ test("project rows derive closed alignment per block and keep mobile and odd row
   assert.match(gridSource, /--project-row-\$\{block\}/);
   assert.match(gridSource, /window\.matchMedia\("\(min-width: 768px\)"\)/);
   assert.match(gridSource, /useLayoutEffect/);
-  assert.match(cardSource, /minHeight: `var\(--project-row-\$\{block\}\)`/);
+  assert.match(cardSource, /minHeight: isDesktop \? `var\(--project-row-\$\{block\}\)` : undefined/);
   assert.match(cardSource, /group relative self-start flex flex-col/);
   assert.match(cardSource, /equalizeHeight \? "md:h-full md:self-stretch" : ""/);
   assert.doesNotMatch(`${gridSource}\n${cardSource}`, /ResizeObserver|setTimeout|grid-rows-subgrid|row-span-3/);
@@ -615,6 +615,14 @@ test("project rows equalize exterior height only when both cards are expanded", 
   assert.equal(shouldEqualizeProjectRow(pair, bothExpanded), true);
   assert.equal(shouldEqualizeProjectRow(pair.slice(0, 1), bothExpanded), false);
 
+  const filteredPair = [
+    { id: "chatflow-agent" },
+    { id: "fundacion-medicina" },
+  ];
+  assert.equal(shouldEqualizeProjectRow(filteredPair, bothExpanded), false);
+  const filteredPairExpanded = new Set(filteredPair.map(({ id }) => id));
+  assert.equal(shouldEqualizeProjectRow(filteredPair, filteredPairExpanded), true);
+
   const closedCard = renderToStaticMarkup(
     <ProjectCard project={PROJECTS[0]} index={0} expanded={false} equalizeHeight={false} />,
   );
@@ -628,8 +636,11 @@ test("project rows equalize exterior height only when both cards are expanded", 
   for (const naturalCard of [closedCard, independentlyExpandedCard]) {
     assert.match(naturalCard, /self-start/);
     assert.doesNotMatch(naturalCard, /md:h-full|md:self-stretch/);
+    assert.doesNotMatch(naturalCard, /md:flex-1/);
   }
   assert.match(equalizedCard, /self-start[^\"]*md:h-full md:self-stretch/);
+  assert.match(equalizedCard, /<div class="md:flex-1">/);
+  assert.match(equalizedCard, /<\/div><section[^>]*class="mt-4 pt-4 border-t border-soft"/);
 });
 
 test("projects prioritize professional relevance and keep category and technology filters", () => {
