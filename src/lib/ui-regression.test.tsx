@@ -18,6 +18,11 @@ import ProjectsGrid, {
 import Menu from "../components/header/Menu";
 import BurgerMenuMobile from "../components/header/BurgerMenuMobile";
 import ThemeToggle from "../components/common/ThemeToggle";
+import BackToTopButton, {
+  BackToTopControl,
+  returnToPageTop,
+  shouldShowBackToTop,
+} from "../components/common/BackToTopButton";
 import HeroBio from "../components/about/HeroBio";
 import ProjectCard, {
   PROJECT_CARD_BLOCKS,
@@ -36,6 +41,59 @@ import {
 import { createPortfolioStructuredData, serializeJsonLd } from "./structured-data";
 import robots from "../app/robots";
 import sitemap from "../app/sitemap";
+
+test("back-to-top control appears after one viewport and preserves native keyboard behavior", async () => {
+  assert.equal(shouldShowBackToTop(0, 800), false);
+  assert.equal(shouldShowBackToTop(799, 800), false);
+  assert.equal(shouldShowBackToTop(800, 800), true);
+  assert.equal(shouldShowBackToTop(1600, 800), true);
+  assert.equal(shouldShowBackToTop(100, 0), false);
+
+  assert.equal(renderToStaticMarkup(<BackToTopControl visible={false} onActivate={() => {}} />), "");
+  const control = renderToStaticMarkup(
+    <BackToTopControl visible onActivate={() => {}} />,
+  );
+  assert.match(control, /<button[^>]+type="button"/);
+  assert.match(control, /aria-label="Volver arriba"/);
+  assert.match(control, /h-11 w-11 min-h-11 min-w-11/);
+  assert.match(control, /right-4 sm:right-6 z-40/);
+  assert.match(control, /focus-visible:ring-2/);
+  assert.match(control, /<svg[^>]+aria-hidden="true"/);
+  const liftedControl = renderToStaticMarkup(
+    <BackToTopControl visible liftedAboveFooter onActivate={() => {}} />,
+  );
+  assert.match(liftedControl, /bottom-\[calc\(8rem\+env\(safe-area-inset-bottom\)\)\]/);
+  assert.match(liftedControl, /sm:bottom-\[calc\(5\.5rem\+env\(safe-area-inset-bottom\)\)\]/);
+
+  const source = await readFile("src/components/common/BackToTopButton.tsx", "utf8");
+  assert.match(source, /addEventListener\("scroll", updateVisibility, \{ passive: true \}\)/);
+  assert.match(source, /removeEventListener\("scroll", updateVisibility\)/);
+  assert.match(source, /observer\.disconnect\(\)/);
+  assert.match(source, /bottom-\[calc\(8rem\+env\(safe-area-inset-bottom\)\)\]/);
+  assert.doesNotMatch(source, /onKeyDown/);
+
+  const layout = await readFile("src/app/layout.tsx", "utf8");
+  assert.match(layout, /<Footer \/>\s*<BackToTopButton \/>/);
+  assert.equal(renderToStaticMarkup(<BackToTopButton />), "");
+});
+
+test("back-to-top activation scrolls with the user motion preference and restores focus", () => {
+  for (const [reducedMotion, expectedBehavior] of [[false, "smooth"], [true, "auto"]] as const) {
+    let scrollOptions: ScrollToOptions | undefined;
+    let focusOptions: FocusOptions | undefined;
+    returnToPageTop(
+      {
+        matchMedia: () => ({ matches: reducedMotion }),
+        scrollTo: (options) => { scrollOptions = options; },
+      },
+      {
+        focus: (options) => { focusOptions = options; },
+      },
+    );
+    assert.deepEqual(scrollOptions, { top: 0, behavior: expectedBehavior });
+    assert.deepEqual(focusOptions, { preventScroll: true });
+  }
+});
 
 test("home metadata uses the centralized professional identity", async () => {
   const root = JSON.parse(JSON.stringify(createRootMetadata())) as {

@@ -4,6 +4,7 @@ import './globals.css';
 import MotionProvider from '@/components/common/MotionProvider';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
+import BackToTopButton from '@/components/common/BackToTopButton';
 import { ReactNode } from 'react';
 import { createRootMetadata } from '@/config/site';
 import { createPortfolioStructuredData, serializeJsonLd } from '@/lib/structured-data';
@@ -60,6 +61,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
               <div className="mx-auto w-full max-w-7xl px-6 py-10">{children}</div>
             </main>
             <Footer />
+            <BackToTopButton />
           </div>
         </MotionProvider>
       </body>
