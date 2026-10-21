@@ -8,7 +8,7 @@ export const SITE_CONFIG = {
   socialDescription:
     "Gustavo Baranda desarrolla aplicaciones empresariales con Python, Django y SQL Server, y mantiene la librería open source chatflow-agent.",
   url: "https://gustavobaranda.com",
-  ogImage: "/images/opengraph.png",
+  ogImage: "/images/opengraph-v2.png",
   links: {
     github: "https://github.com/GustavoBaranda",
     linkedin: "https://www.linkedin.com/in/gustavobaranda/",
