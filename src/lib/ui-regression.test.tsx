@@ -357,9 +357,9 @@ test("experience roles are consistent and public technology labels omit versions
 });
 
 test("Descubriendo Jardín keeps its lightweight SVG logo and existing presentation", async () => {
-  const [logo, data, card] = await Promise.all([
+  const [logo, facts, card] = await Promise.all([
     readFile("public/images/descubriendo_jardin.svg", "utf8"),
-    readFile("src/data/aboutData.ts", "utf8"),
+    readFile("src/data/portfolioFacts.ts", "utf8"),
     readFile("src/components/about/ExperienceCard.tsx", "utf8"),
   ]);
 
@@ -367,7 +367,7 @@ test("Descubriendo Jardín keeps its lightweight SVG logo and existing presentat
   assert.match(logo, /viewBox="0 0 204 193"/);
   assert.match(logo, /<ellipse[^>]+fill="url\(#pattern0\)"/);
   assert.match(logo, /data:image\/jpeg;base64,/);
-  assert.match(data, /initials: "\/images\/descubriendo_jardin\.svg"/);
+  assert.match(facts, /initials: "\/images\/descubriendo_jardin\.svg"/);
   assert.match(card, /width=\{60\}[\s\S]+height=\{60\}[\s\S]+object-contain w-full h-full/);
 });
 

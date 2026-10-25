@@ -1,4 +1,13 @@
 import { Variants } from "framer-motion";
+import { DEFAULT_LOCALE } from "@/i18n/config";
+import { esARDictionary } from "@/i18n/dictionaries/es-AR";
+import { formatDuration, periodEndDate, type YearMonth } from "@/i18n/format";
+import {
+  EDUCATION_FACTS,
+  EXPERIENCE_FACTS,
+  resolvePortfolioTerms,
+  type EducationStatus,
+} from "./portfolioFacts";
 
 /* ───────── animation variants ───────── */
 export const textReveal: Variants = {
@@ -31,6 +40,7 @@ export const cardVariants: Variants = {
 /* ───────── interfaces ───────── */
 export interface Experience {
   id: number;
+  contentId: (typeof EXPERIENCE_FACTS)[number]["contentId"];
   role: string;
   company: string;
   initials: string;
@@ -44,10 +54,13 @@ export interface Experience {
   color: string;
   modalidad: string;
   url?: string;
+  startDate: YearMonth;
+  endDate: YearMonth | null;
 }
 
 export interface Education {
   id: string;
+  contentId: (typeof EDUCATION_FACTS)[number]["contentId"];
   title: string;
   institution: string;
   period: string;
@@ -55,218 +68,38 @@ export interface Education {
   color: string;
   logo: string;
   status: string;
+  statusCode: EducationStatus;
+  startDate: YearMonth;
+  endDate: YearMonth | null;
 }
 
 /* ───────── experience data ───────── */
-export const EXPERIENCES: Experience[] = [
-  {
-    id: 1,
-    role: "Full Stack Python Developer",
-    company: "SysPro Consulting",
-    initials: "/images/syspro.png",
-    type: null,
-    period: "may. 2025 - actualidad",
-    duration: "10 meses",
-    location: "Buenos Aires, Argentina",
-    description: [
-      "Desarrollo y mantengo DepofisWEB, una plataforma empresarial para la gestión integral de operaciones logísticas y depósitos fiscales, utilizando principalmente Python, Django y SQL Server.",
-      "Trabajo en el desarrollo y evolución de módulos relacionados con coordinación de cargas, gestión de tallys, recepción y entrega de mercaderías, control de inventario, trazabilidad, documentación operativa y administración de turnos, incluyendo el portal público TURNERO_APP.",
-      "También participo en el desarrollo de Bamby, un asistente virtual contextual integrado en la plataforma, con resolución de intenciones, ayuda según el módulo y capacidades de integración con inteligencia artificial.",
-      "Implemento funcionalidades e integraciones que incluyen procesamiento asíncrono, comunicación en tiempo real mediante WebSockets, notificaciones, generación y firma digital de documentos, almacenamiento en la nube y servicios externos, trabajando sobre la arquitectura, las reglas de negocio y la evolución del sistema.",
-    ],
-    mainSkills: ["Python", "Django", "SQL Server"],
-    skills: [
-      "Django",
-      "SQL Server",
-      "Celery",
-      "Redis",
-      "WebSockets",
-      "Django Channels",
-      "Firma digital",
-      "pyHanko",
-      "ReportLab",
-      "PyMuPDF",
-      "Web Push",
-      "Huawei Cloud",
-      "Leaflet",
-      "Git",
-      "GitHub",
-    ],
-    color: "syspro",
-    modalidad: "Remoto",
-  },
-  {
-    id: 2,
-    role: "Full Stack Laravel Developer",
-    company: "Fundación Maldonado",
-    initials: "/images/fundacion_maldonado.png",
-    type: "Freelance",
-    period: "abr. 2025 - may. 2025",
-    duration: "2 meses",
-    location: "Córdoba, Argentina",
+const defaultDictionary = esARDictionary;
+
+export const EXPERIENCES: Experience[] = EXPERIENCE_FACTS.map((fact) => {
+  const content = defaultDictionary.experience.entries[fact.contentId];
+  return {
+    ...fact,
+    mainSkills: [...fact.mainSkills],
+    skills: resolvePortfolioTerms(fact.skills, defaultDictionary.terms),
+    role: content.role,
+    type: content.type || null,
+    period: content.period,
+    duration: content.fallbackDuration,
+    location: content.location,
     description:
-      "Desarrollé una plataforma de gestión de medicina laboral con Laravel, PHP y MySQL. Implementé autenticación y permisos por rol para administradores, colaboradores médicos y pacientes, junto con la gestión estructurada de legajos. Integré la visualización web de archivos DICOM mediante DWV y Canvas, tablas operativas con Yajra DataTables e informes clínicos en PDF.",
-    mainSkills: ["Laravel", "PHP", "MySQL"],
-    skills: [
-      "Laravel",
-      "PHP",
-      "MySQL",
-      "Visor DICOM",
-      "DWV & Canvas",
-      "DataTables",
-      "RBAC",
-      "Tailwind CSS",
-      "Alpine.js",
-      "Informes PDF",
-      "Git",
-      "GitHub",
-    ],
-    color: "fundacion",
-    modalidad: "Remoto",
-  },
-  {
-    id: 3,
-    role: "Backend Python Developer",
-    company: "Solar Banco",
-    initials: "/images/solar_banco.png",
-    type: "Freelance",
-    period: "dic. 2024 - mar. 2025",
-    duration: "4 meses",
-    location: "Asuncion, Paraguay",
-    description:
-      "Desarrollé el backend con Python y Django, integrando Oracle Data Warehouse mediante procesos ETL con Pandas, cx_Oracle y OpenPyXL. Implementé cálculos para la medición de liquidez regulatoria, LCR, Value at Risk (VaR de liquidez) y brecha de calce de plazos por bandas temporales. También integré autenticación Single Sign-On (SSO) con Active Directory y LDAP, auditoría de procesos y dashboards operativos con DataTables.",
-    mainSkills: ["Python", "Django", "ETL"],
-    skills: [
-      "Django",
-      "Python",
-      "Oracle DW",
-      "ETL Pipelines",
-      "Pandas",
-      "LCR y VaR",
-      "Active Directory",
-      "cx_Oracle",
-      "OpenPyXL",
-      "Auditoría de procesos",
-      "DataTables",
-      "Git",
-      "GitHub",
-    ],
-    color: "solar",
-    modalidad: "Remoto",
-  },
-  {
-    id: 4,
-    role: "Frontend React Developer",
-    company: "Las Verde",
-    initials: "/images/las_verde.png",
-    type: "Freelance",
-    period: "dic. 2022 - mar. 2023",
-    duration: "4 meses",
-    location: "Mendoza, Argentina",
-    description:
-      "Desarrollé una aplicación Single Page Application (SPA) para el catálogo de productos de Las Verde con React. Implementé la sincronización de datos con Firebase y Firestore, la navegación con React Router, estilos modulares con Sass, componentes y hooks reutilizables, vistas detalladas de productos e integración con WhatsApp. El proyecto fue asignado por Coderhouse tras ubicarme entre los diez mejores promedios de la cursada.",
-    mainSkills: ["React", "Firebase", "Sass"],
-    skills: [
-      "React",
-      "Firebase",
-      "Firestore",
-      "React Router",
-      "Sass (SCSS)",
-      "Custom Hooks",
-      "JavaScript",
-      "WhatsApp API",
-      "Vercel",
-      "Git",
-      "GitHub",
-    ],
-    color: "lasverde",
-    url: "https://lasverde.gustavobaranda.com/",
-    modalidad: "Remoto",
-  },
-  {
-    id: 5,
-    role: "Frontend Developer",
-    company: "Descubriendo Jardín Maternal",
-    initials: "/images/descubriendo_jardin.svg",
-    type: "Freelance",
-    period: "jun. 2022 - sept. 2022",
-    duration: "4 meses",
-    location: "Buenos Aires, Argentina",
-    description:
-      "Desarrollé el sitio institucional responsive de Descubriendo Jardín Maternal con HTML semántico, CSS, Bootstrap y JavaScript. Implementé un slider de imágenes, navegación móvil, una sección de preguntas frecuentes, validación de formularios e integración con Google Maps, además de optimizaciones de SEO on-page. El proyecto fue asignado por Coderhouse como reconocimiento por ubicarme entre los diez mejores promedios del curso de Desarrollo Web.",
-    mainSkills: ["HTML", "CSS", "JavaScript"],
-    skills: [
-      "JavaScript",
-      "HTML semántico",
-      "CSS",
-      "Flexbox & Grid",
-      "Bootstrap",
-      "Diseño UX/UI",
-      "SEO on-page",
-      "Google Maps API",
-      "Vercel",
-      "Git",
-      "GitHub",
-    ],
-    color: "blue",
-    url: "https://descubriendo.gustavobaranda.com",
-    modalidad: "Remoto",
-  },
-];
+      typeof content.description === "string"
+        ? content.description
+        : [...content.description],
+    modalidad: content.modality,
+  };
+});
 
 /* ───────── education data ───────── */
-export const EDUCATION: Education[] = [
-  {
-    id: "edu-1",
-    title: "Licenciatura en Ciencia de Datos",
-    institution: "Universidad de la Ciudad de Buenos Aires (Udelaciudad)",
-    period: "Marzo 2026 — Actualidad",
-    location: "Ciudad Autónoma de Buenos Aires",
-    color: "unicaba",
-    logo: "/images/inicaba.png",
-    status: "En curso",
-  },
-  {
-    id: "edu-2",
-    title: "Técnico Superior en Desarrollo de Software",
-    institution: "Instituto de Formación Técnica Superior N°29",
-    period: "Julio 2023 — Diciembre 2025",
-    location: "Ciudad Autónoma de Buenos Aires",
-    color: "lasverde",
-    logo: "/images/ifts29.png",
-    status: "Finalizado",
-  },
-  {
-    id: "edu-3",
-    title: "Tramo de Formación Pedagógica",
-    institution: "Universidad FASTA",
-    period: "Agosto 2024 — Diciembre 2025",
-    location: "Mar del Plata",
-    color: "fasta",
-    logo: "/images/Fasta.jpg",
-    status: "Finalizado",
-  },
-  {
-    id: "edu-4",
-    title: "Frontend Developer",
-    institution: "Coderhouse",
-    period: "Diciembre 2021 — Julio 2022",
-    location: "Ciudad Autónoma de Buenos Aires",
-    color: "dark",
-    logo: "/images/coderhouse.jpg",
-    status: "Finalizado",
-  },
-  {
-    id: "edu-5",
-    title: "Python Developer",
-    institution: "Education IT",
-    period: "Agosto 2022 — Diciembre 2022",
-    location: "Ciudad Autónoma de Buenos Aires",
-    color: "educacionit",
-    logo: "/images/educacionit.jpg",
-    status: "Finalizado",
-  },
-];
+export const EDUCATION: Education[] = EDUCATION_FACTS.map((fact) => ({
+  ...fact,
+  ...defaultDictionary.education.entries[fact.contentId],
+}));
 
 /* ───────── color maps ───────── */
 export interface ColorScheme {
@@ -494,4 +327,16 @@ export function calculateDuration(periodStr?: string, defaultDuration: string = 
   }
 
   return label || defaultDuration;
+}
+
+export function normalizedPeriodEnd(endDate: YearMonth | null): Date {
+  return periodEndDate(endDate);
+}
+
+export function calculateNormalizedDuration(
+  startDate: YearMonth,
+  endDate: YearMonth | null,
+  defaultDuration: string = "",
+): string {
+  return formatDuration(startDate, endDate, DEFAULT_LOCALE) || defaultDuration;
 }
