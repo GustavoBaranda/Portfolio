@@ -2,132 +2,127 @@
 
 **Full Stack Python Developer · Backend Engineering · Open Source**
 
-Portfolio personal desarrollado con Next.js, React y TypeScript. Un espacio para presentar mis proyectos, experiencia y contribuciones al software de código abierto.
+[English](README.md) · [Español](README.es.md)
 
-- [Ver portfolio](https://gustavobaranda.com/)
-- [Código fuente](https://github.com/GustavoBaranda/Portfolio)
+Personal portfolio built with Next.js, React, and TypeScript. It presents my professional profile, experience, education, software projects, and open-source work.
 
-## Sobre el proyecto
+- [View portfolio](https://gustavobaranda.com/)
+- [Source code](https://github.com/GustavoBaranda/Portfolio)
 
-Este repositorio contiene el código de mi portfolio profesional. Es una aplicación web de una sola página que reúne mi perfil, experiencia, formación, proyectos y medios de contacto.
+## Project status
 
-La interfaz está pensada para funcionar en distintos tamaños de pantalla, con navegación por secciones, temas claro y oscuro, contenido interactivo y una presentación accesible mediante teclado. El proyecto también incluye una ruta de servidor para procesar el formulario de contacto y recursos técnicos para indexación y publicación.
+The public website currently remains in Spanish at `/`. The repository now contains the typed internationalization model for `es-AR` and `en`, but localized public routes and a language selector are intentionally deferred to the next implementation phase.
 
-## Funcionalidades
+The current visual design, navigation, contact flow, accessibility behavior, SEO URLs, and public route remain unchanged.
 
-- Diseño responsive para móvil, tablet y escritorio.
-- Tema claro y oscuro persistido en el navegador.
-- Navegación por las secciones Inicio, Sobre mí, Proyectos y Contacto.
-- Menú móvil basado en un diálogo, con cierre mediante Escape y restauración del foco.
-- Presentación de experiencia, formación y proyectos mediante tarjetas interactivas.
-- Filtros de proyectos por categoría y tecnología.
-- Detalles expandibles con estados ARIA y animaciones reversibles.
-- Enlaces a demos y repositorios públicos cuando están disponibles.
-- Animaciones de entrada, transiciones y efectos de interacción.
-- Adaptación a `prefers-reduced-motion` para reducir o desactivar movimiento no esencial.
-- Formulario de contacto con validación en cliente y servidor, estados de carga y mensajes accesibles.
-- Medidas antispam y validaciones de origen, contenido y tamaño de solicitud.
-- Metadatos, canonical, Open Graph, Twitter Cards, JSON-LD, sitemap y robots dinámicos.
-- Páginas de error y recurso no encontrado integradas con el diseño del sitio.
+## Features
 
-## Tecnologías utilizadas
+- Responsive design for mobile, tablet, and desktop.
+- Persistent light and dark themes.
+- Section navigation for Home, About, Projects, and Contact.
+- Native mobile dialog with Escape handling and focus restoration.
+- Experience, education, and project cards with accessible disclosures.
+- Project filtering by category and technology.
+- Links to public repositories and demos when available.
+- Motion and interaction effects with reduced-motion support.
+- Contact form with shared client/server validation and accessible feedback.
+- Origin checks, body-size limits, honeypot protection, and per-process rate limiting.
+- Canonical metadata, Open Graph, Twitter Cards, JSON-LD, sitemap, and robots configuration.
+- Integrated error and not-found pages.
+- Typed Spanish and English dictionaries prepared for localized rendering.
 
-| Área | Tecnologías |
+## Technology
+
+| Area | Tools |
 |---|---|
-| Interfaz | Next.js App Router, React, TypeScript y Tailwind CSS |
-| Movimiento e iconos | Framer Motion y Lucide React |
-| Servidor y correo | Route Handlers de Next.js, Nodemailer y Gmail SMTP |
-| Calidad | ESLint, TypeScript, Node.js Test Runner y tsx |
-| Publicación | Vercel |
+| Interface | Next.js App Router, React, TypeScript, Tailwind CSS |
+| Motion and icons | Framer Motion, Lucide React |
+| Server and email | Next.js Route Handlers, Nodemailer, Gmail SMTP |
+| Quality | ESLint, TypeScript, Node.js Test Runner, tsx |
+| Deployment | Vercel |
 
-Las versiones instaladas y sus rangos se encuentran en [`package.json`](package.json) y [`package-lock.json`](package-lock.json).
+Installed versions and dependency ranges are defined in [`package.json`](package.json) and [`package-lock.json`](package-lock.json).
 
-## Arquitectura y organización
+## Architecture
 
 ```text
 Portfolio/
-├── public/                     # Recursos estáticos e imágenes
+├── public/                      # Static assets and images
 ├── src/
-│   ├── app/                    # App Router, página principal, API, metadata y errores
-│   │   └── api/contact/        # Endpoint POST del formulario de contacto
-│   ├── components/             # Componentes visuales organizados por sección
-│   │   ├── about/              # Biografía, experiencia y formación
-│   │   ├── common/             # Tema, movimiento y enlaces compartidos
-│   │   ├── contact/            # Formulario e información de contacto
-│   │   ├── header/             # Navegación de escritorio y móvil
-│   │   ├── hero/               # Presentación principal y transiciones
-│   │   ├── projects/           # Grilla, filtros y tarjetas de proyectos
-│   │   └── utils/              # Texto animado y utilidades de navegación
-│   ├── config/                 # Configuración pública y resolución de la URL base
-│   ├── data/                   # Contenido de experiencia, formación y proyectos
-│   ├── lib/                    # Validación, seguridad, flujo del formulario y pruebas
-│   └── types/                  # Tipos compartidos
-├── next.config.mjs             # Configuración de Next.js y cabeceras HTTP
-├── vercel.json                 # Identificación del framework para Vercel
-└── package.json                # Scripts y dependencias
+│   ├── app/                     # App Router, home page, API, metadata, and errors
+│   │   └── api/contact/         # Contact form POST endpoint
+│   ├── components/              # UI components grouped by section
+│   ├── config/                  # Public site configuration and URL resolution
+│   ├── data/
+│   │   ├── portfolioFacts.ts    # Locale-independent identity and technical facts
+│   │   ├── aboutData.ts         # Current Spanish compatibility view for components
+│   │   └── projectsData.ts      # Current Spanish compatibility view for components
+│   ├── i18n/
+│   │   ├── config.ts            # Supported locales and default locale
+│   │   ├── format.ts            # Locale-aware date and duration formatting
+│   │   └── dictionaries/        # Typed es-AR and en dictionaries
+│   ├── lib/                     # Validation, security, reusable logic, and tests
+│   └── types/                   # Shared application types
+├── next.config.mjs              # Next.js and HTTP header configuration
+└── package.json                 # Scripts and dependencies
 ```
 
-La interfaz, el contenido y la lógica del servidor están separados. Los componentes consumen datos tipados desde `src/data`; la configuración del sitio se centraliza en `src/config`; y las validaciones y funciones reutilizables permanecen en `src/lib`.
+The interface, content, locale-independent facts, and server logic are kept separate. Existing components continue to consume the same `EXPERIENCES`, `EDUCATION`, and `PROJECTS` contracts, so the internationalization foundation does not alter current rendering.
 
-## Implementación técnica
+## Internationalization model
 
-### Navegación, tema y movimiento
+`src/i18n/config.ts` is the source of truth for the supported locales:
 
-El sitio utiliza anclas para navegar dentro de la ruta principal. El encabezado indica la sección activa y la navegación móvil utiliza un elemento `<dialog>` con control de foco, cierre mediante Escape y bloqueo temporal del scroll.
+- `es-AR`: current default and public language.
+- `en`: prepared English content.
 
-El tema se guarda en `localStorage`. Un script previo a la hidratación aplica la preferencia antes del primer render visible para evitar cambios bruscos de color. Cuando el navegador lo permite, el cambio usa View Transitions; con movimiento reducido, el estado se actualiza sin esa transición.
+The dictionaries are TypeScript objects with a shared compile-time shape. Runtime tests also compare their complete leaf structure, preventing missing or additional translation keys.
 
-Las animaciones principales se implementan con Framer Motion. Los componentes que incluyen movimiento consultan `prefers-reduced-motion` y conservan el estado final del contenido aunque reduzcan la duración.
+`src/data/portfolioFacts.ts` stores values that must not be translated: stable identifiers, company and institution names, URLs, image paths, technology tags, category identifiers, normalized dates, and internal status codes. Presentation text remains in the dictionaries.
 
-### Proyectos
+Dates use normalized year or year-month values. `Intl.DateTimeFormat` and `Intl.NumberFormat` are used by locale-aware helpers instead of parsing translated month names. Compatibility helpers remain available while existing components continue to render the approved Spanish copy.
 
-Los proyectos se mantienen como datos tipados y se presentan en una grilla responsive. Pueden filtrarse por categoría o tecnología, y cada tarjeta expone información resumida y un detalle expandible.
+This phase does not add `/en`, locale redirects, a language selector, international canonical URLs, or localized SEO. Those changes require a separate reviewed phase.
 
-En escritorio, la grilla alinea bloques comparables dentro de cada pareja. La altura exterior solo se iguala cuando ambas tarjetas de una fila están expandidas; en móvil y en filas impares se mantiene la altura natural. Las imágenes usan `next/image`, proporciones reservadas y variantes de presentación que priorizan conservar el contenido de cada captura.
+Whenever a later phase changes user-visible behavior, both `README.md` and `README.es.md` must be updated together.
 
-### Formulario de contacto
+## Contact form
 
-El formulario envía JSON a `POST /api/contact`. La validación compartida comprueba campos obligatorios, formato del correo, longitudes máximas y caracteres no permitidos. El cliente conserva los datos ante errores y relaciona cada mensaje con su campo correspondiente.
+The form sends JSON to `POST /api/contact`. Shared validation checks required fields, email format, length limits, and unsupported control characters. The browser preserves visitor input after errors and associates messages with their fields.
 
-El servidor agrega las siguientes medidas:
+The server adds:
 
-- Verificación del origen de la solicitud.
-- Límite de 16 KiB para el cuerpo recibido.
-- Campo honeypot para detectar automatizaciones que completan indiscriminadamente todos los controles.
-- Rate limit de tres intentos por IP cada diez minutos.
-- Límite de memoria para el registro local de clientes.
-- Sanitización de cabeceras y escape del contenido HTML.
-- Respuestas sin caché y mensajes que no exponen detalles del proveedor.
+- Request origin validation.
+- A 16 KiB request-body limit.
+- A hidden honeypot field.
+- Three attempts per IP every ten minutes.
+- Bounded in-memory client tracking.
+- Header sanitization and HTML escaping.
+- No-store responses that do not expose provider details.
 
-El honeypot es un campo auxiliar oculto a la interacción normal. Se incluye en el payload y debe permanecer vacío: si el servidor lo recibe completo, considera el intento automatizado, responde con un error genérico y no llama al servicio SMTP. Después de cada respuesta, el cliente limpia únicamente ese campo y conserva nombre, correo, asunto y mensaje; cualquier nuevo envío requiere una acción manual del visitante.
+The rate limit is best-effort and process-local. It resets with a new instance and is not shared across Vercel instances. SMTP acceptance means the provider accepted the recipient; it does not guarantee final inbox delivery.
 
-El límite por IP se comprueba antes de procesar el payload, por lo que un intento rechazado por el honeypot también consume cuota. Ambas medidas complementan las validaciones de contenido y origen, pero no autentican al remitente ni eliminan completamente el spam: un bot puede evitar el campo auxiliar o distribuir solicitudes entre distintas direcciones.
+## Accessibility
 
-El rate limit se mantiene por proceso: puede reiniciarse con una nueva instancia y no comparte estado entre instancias de Vercel. Es una protección complementaria, no un límite distribuido. El formulario informa éxito cuando el servidor SMTP acepta el destinatario; esa aceptación no garantiza que el mensaje llegue finalmente a la bandeja de entrada.
+The implementation includes semantic structure, a skip link, visible focus states, labelled controls, `aria-expanded` and `aria-pressed` states, live feedback, keyboard navigation, inert collapsed content, mobile-dialog focus management, and reduced-motion behavior.
 
-Los correos se envían mediante Gmail SMTP usando la cuenta configurada en el entorno como remitente y destinatario. Las pruebas automatizadas sustituyen este envío y no se conectan a un servidor real.
+Automated regression coverage complements, but does not replace, manual testing with browsers and assistive technologies.
 
-### Accesibilidad
+## SEO and public URLs
 
-La implementación incluye estructura semántica, enlace para saltar al contenido, etiquetas de formulario, nombres accesibles, foco visible, estados `aria-expanded` y `aria-pressed`, anuncios de errores y resultados, navegación mediante teclado y contenido contraído fuera del recorrido interactivo.
+`SITE_CONFIG.url` is the canonical public URL used by metadata, Open Graph, Twitter Cards, sitemap, and robots. `getSiteUrl()` separately resolves the operational origin used by the contact endpoint for `Origin` validation.
 
-Estas medidas mejoran el uso con tecnologías asistivas, pero no constituyen por sí solas una garantía de compatibilidad con todas las combinaciones de navegador y lector de pantalla.
+The root layout publishes `Person` and `WebSite` structured data. The sitemap currently contains only `/`, and the document language remains Spanish until localized routes are approved.
 
-### SEO y cabeceras
+## Local development
 
-`SITE_CONFIG.url` es la fuente de la URL canónica pública utilizada por canonical, Open Graph, Twitter Cards, sitemap y robots. `getSiteUrl()` resuelve por separado la URL operativa del entorno que necesita el formulario para validar el encabezado `Origin`.
+### Requirements
 
-El layout publica datos estructurados `Person` en JSON-LD. `robots.txt` permite indexar el sitio y bloquea `/api/`; el sitemap describe la ruta principal. La configuración de Next.js agrega las cabeceras `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options` y `Permissions-Policy`.
-
-## Instalación y ejecución local
-
-### Requisitos
-
-- Node.js compatible con la versión de Next.js declarada en el proyecto.
+- A Node.js release supported by the declared Next.js version.
 - npm.
-- Una cuenta de Gmail con contraseña de aplicación, únicamente si se desea probar el envío manual del formulario.
+- A Gmail account with an application password only when manually testing email delivery.
 
-### Instalación
+### Setup
 
 ```bash
 git clone https://github.com/GustavoBaranda/Portfolio.git
@@ -135,55 +130,40 @@ cd Portfolio
 npm ci
 ```
 
-Crear el archivo local de configuración a partir del ejemplo:
+Create a local environment file:
 
 ```bash
 cp .env.example .env.local
 ```
 
-En PowerShell:
+PowerShell:
 
 ```powershell
 Copy-Item .env.example .env.local
 ```
 
-Iniciar el servidor de desarrollo:
+Start development:
 
 ```bash
 npm run dev
 ```
 
-La aplicación estará disponible en [http://localhost:3000](http://localhost:3000).
+The application will be available at [http://localhost:3000](http://localhost:3000).
 
-Para comprobar el build de producción localmente:
+## Environment variables
 
-```bash
-npm run build
-npm run start
-```
-
-## Variables de entorno
-
-El archivo [`.env.example`](.env.example) documenta las variables utilizadas:
-
-| Variable | Uso | Requerida |
+| Variable | Purpose | Required |
 |---|---|---|
-| `EMAIL_USER` | Cuenta de Gmail usada como remitente y destinatario del formulario | Para enviar correos |
-| `EMAIL_PASS` | Contraseña de aplicación de Gmail | Para enviar correos |
-| `NEXT_PUBLIC_BASE_URL` | URL pública utilizada por metadata, validación de origen, sitemap y robots | Recomendada |
-| `VERCEL_URL` | URL del despliegue o preview | Proporcionada por Vercel |
+| `EMAIL_USER` | Gmail account used as sender and recipient | For email delivery |
+| `EMAIL_PASS` | Gmail application password | For email delivery |
+| `NEXT_PUBLIC_BASE_URL` | Operational origin used by contact request validation | Recommended |
+| `VERCEL_URL` | Deployment or preview origin | Provided by Vercel |
 
-Ejemplo local sin credenciales reales:
+Canonical SEO URLs do not depend on `NEXT_PUBLIC_BASE_URL`; they come from `SITE_CONFIG.url`.
 
-```env
-EMAIL_USER=
-EMAIL_PASS=
-NEXT_PUBLIC_BASE_URL=http://localhost:3000
-```
+Never commit `.env.local`, application passwords, or other credentials.
 
-No se deben versionar `.env.local`, contraseñas de aplicación ni otras credenciales. En producción, `NEXT_PUBLIC_BASE_URL` debe apuntar al dominio público con HTTPS.
-
-## Pruebas y calidad
+## Validation
 
 ```bash
 npm run lint
@@ -192,32 +172,18 @@ npm test
 npm run build
 ```
 
-La suite cubre validación del formulario, límites de solicitudes, origen, honeypot, respuestas HTTP, aceptación SMTP simulada y regresiones de interfaz, estilos, navegación, accesibilidad y movimiento. Los casos del formulario usan mocks y no envían correos reales.
+The suite covers contact validation and security, SMTP acceptance with mocks, navigation and disclosure contracts, styles, accessibility, motion, dictionary parity, locale-independent data, and normalized date formatting. Tests do not send real email.
 
-## Despliegue
+In the restricted Windows sandbox, `tsx` can fail before test discovery because `os.userInfo()` returns `uv_os_get_passwd/ENOMEM`. The same `npm test` command runs normally outside that sandbox; no project monkeypatch is used.
 
-El proyecto está preparado para Vercel como aplicación Next.js:
+## Deployment
 
-1. Importar el repositorio en Vercel.
-2. Configurar `EMAIL_USER`, `EMAIL_PASS` y `NEXT_PUBLIC_BASE_URL` en el entorno correspondiente.
-3. Mantener `NEXT_PUBLIC_BASE_URL` con el dominio de producción y HTTPS.
-4. Ejecutar el build con `npm run build` o utilizar la detección automática del framework.
+The project is configured for Vercel. Configure the email variables and operational base URL for the target environment, run the production build, and verify metadata, sitemap, robots, and the contact flow before publishing.
 
-Vercel proporciona `VERCEL_URL` para los previews. Cuando el repositorio está conectado a GitHub, los pushes a la rama configurada pueden iniciar despliegues automáticos.
+## Issues
 
-Después del despliegue se pueden comprobar los recursos generados:
+Report problems through [GitHub Issues](https://github.com/GustavoBaranda/Portfolio/issues/new).
 
-```powershell
-(Invoke-WebRequest -Uri "https://gustavobaranda.com/sitemap.xml" -UseBasicParsing).Content
-(Invoke-WebRequest -Uri "https://gustavobaranda.com/robots.txt" -UseBasicParsing).Content
-(Invoke-WebRequest -Uri "https://gustavobaranda.com" -UseBasicParsing).Content |
-  Select-String "canonical|og:url|og:image"
-```
+## License
 
-## Incidencias
-
-Los errores pueden reportarse mediante [GitHub Issues](https://github.com/GustavoBaranda/Portfolio/issues/new).
-
-## Licencia
-
-Este proyecto se distribuye bajo la licencia MIT. Consultá el archivo [LICENSE](LICENSE).
+Distributed under the MIT License. See [LICENSE](LICENSE).
