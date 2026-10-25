@@ -67,7 +67,7 @@ export const createPortfolioStructuredData = (): PortfolioStructuredData => {
           "TypeScript",
           "Open source software",
         ],
-        alumniOf: EDUCATION.filter(({ status }) => status === "Finalizado").map(
+        alumniOf: EDUCATION.filter(({ statusCode }) => statusCode === "completed").map(
           ({ institution }) => ({
             "@type": "EducationalOrganization",
             name: institution,

@@ -2,13 +2,13 @@
 
 import { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { EDUCATION, parsePeriodEnd, textReveal, type Education } from "@/data/aboutData";
+import { EDUCATION, normalizedPeriodEnd, textReveal, type Education } from "@/data/aboutData";
 import EducationCard from "./EducationCard";
 
 export function sortEducationByPeriod(education: Education[]) {
   return education.slice().sort((a, b) => {
-    const da = parsePeriodEnd(a.period).getTime();
-    const db = parsePeriodEnd(b.period).getTime();
+    const da = normalizedPeriodEnd(a.endDate).getTime();
+    const db = normalizedPeriodEnd(b.endDate).getTime();
     return db - da;
   });
 }

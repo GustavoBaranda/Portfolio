@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Calendar, MapPin } from "lucide-react";
-import { COLOR_MAP, cardVariants, calculateDuration, Experience } from "@/data/aboutData";
+import { COLOR_MAP, cardVariants, calculateNormalizedDuration, Experience } from "@/data/aboutData";
 import { RefObject, useId } from "react";
 
 export interface ExperienceCardProps {
@@ -23,7 +23,11 @@ export default function ExperienceCard({
 }: ExperienceCardProps) {
   const detailsId = useId();
   const colors = COLOR_MAP[exp.color] || COLOR_MAP.syspro;
-  const displayDuration = calculateDuration(exp.period, exp.duration);
+  const displayDuration = calculateNormalizedDuration(
+    exp.startDate,
+    exp.endDate,
+    exp.duration,
+  );
 
   return (
     <motion.div
