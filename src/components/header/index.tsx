@@ -11,10 +11,14 @@ import Menu from "./Menu";
 import ThemeToggle from "@/components/common/ThemeToggle";
 import SocialLinks from "@/components/common/SocialLinks";
 import { closeNavigationDialogAfterExit } from "@/lib/navigation-dialog";
+import LanguageSwitcher from "@/components/common/LanguageSwitcher";
+import { LOCALE_BASE_PATH, localizedSectionHref } from "@/i18n/config";
+import { useI18n } from "@/i18n/LocaleProvider";
 
 const emptySubscribe = () => () => {};
 
 const Header: React.FC = () => {
+  const { locale, dictionary } = useI18n();
   const menuSlotRef = useRef<HTMLDivElement>(null);
   const [menuHost] = useState(() => {
     if (typeof document === "undefined") return null;
@@ -89,7 +93,7 @@ const Header: React.FC = () => {
   }, []);
 
   const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (window.location.pathname === "/") {
+    if (window.location.pathname === (LOCALE_BASE_PATH[locale] || "/")) {
       e.preventDefault();
       const el = document.getElementById("home");
       if (el) {
@@ -110,14 +114,14 @@ const Header: React.FC = () => {
       >
         <div className="relative mx-auto flex h-(--site-header-h) max-w-7xl items-center justify-between px-6">
           <Link
-            href="/#home"
+            href={localizedSectionHref(locale, "home")}
             onClick={handleLogoClick}
             className="group inline-flex items-center justify-center bg-transparent transition-transform cursor-pointer"
-            aria-label="Ir al inicio"
+            aria-label={dictionary.navigation.goHome}
           >
             <Image
               src="/images/logo.svg"
-              alt="Logo Gustavo Baranda"
+              alt={dictionary.common.logoAlt}
               width={36}
               height={36}
               className="w-8 h-8 sm:w-9 sm:h-9 object-contain transition-all duration-300 ease-out group-hover:scale-115 dark:invert dark:brightness-125 group-hover:drop-shadow-[0_0_10px_rgba(99,102,241,0.6)]"
@@ -135,6 +139,7 @@ const Header: React.FC = () => {
           </div>
 
           <div className="hidden md:flex items-center gap-3">
+            <LanguageSwitcher />
             <ThemeToggle />
             <SocialLinks className="flex items-center gap-3" />
           </div>
@@ -146,7 +151,7 @@ const Header: React.FC = () => {
           <dialog
             ref={dialogRef}
             id="mobile-navigation"
-            aria-label="Navegación móvil"
+            aria-label={dictionary.navigation.mobileLabel}
             className="mobile-navigation-dialog"
             onCancel={(event) => { event.preventDefault(); closeMenu(); }}
             onClose={() => { if (activeRef.current) setMenuActive(false); }}
@@ -157,7 +162,7 @@ const Header: React.FC = () => {
                 <motion.button
                   key="menu-backdrop"
                   type="button"
-                  aria-label="Cerrar menú"
+                  aria-label={dictionary.navigation.closeMenu}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}

@@ -2,6 +2,7 @@
 
 import { motion, MotionConfig } from "framer-motion";
 import { useSyncExternalStore } from "react";
+import { useI18n } from "@/i18n/LocaleProvider";
 
 const motionQuery = "(prefers-reduced-motion: reduce)";
 function subscribeMotion(notify: () => void) {
@@ -17,6 +18,7 @@ export interface MenuProps {
 }
 
 const Menu: React.FC<MenuProps> = ({ active, setActive }) => {
+  const { dictionary } = useI18n();
   const reducedMotion = useSyncExternalStore(subscribeMotion, getReducedMotion, () => false);
   return (
     <MotionConfig
@@ -35,7 +37,7 @@ const Menu: React.FC<MenuProps> = ({ active, setActive }) => {
         onClick={() => setActive(!active)}
         className="menu-toggle flex self-center relative h-10 w-10 shrink-0 rounded-full bg-transparent md:hidden text-link-active z-999"
         animate={active ? "open" : "closed"}
-        aria-label={active ? "Cerrar menú" : "Abrir menú"}
+        aria-label={active ? dictionary.navigation.closeMenu : dictionary.navigation.openMenu}
       >
         <motion.span
           aria-hidden="true"

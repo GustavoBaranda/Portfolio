@@ -1,8 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import SocialLinks from "@/components/common/SocialLinks";
+import { localizedSectionHref } from "@/i18n/config";
+import { useI18n } from "@/i18n/LocaleProvider";
 
 export default function Footer() {
+  const { locale, dictionary } = useI18n();
   const year = new Date().getFullYear();
 
   return (
@@ -11,13 +16,13 @@ export default function Footer() {
         {/* Logo & Copyright */}
         <div className="flex items-center gap-2.5 sm:gap-3">
           <Link
-            href="/"
+            href={localizedSectionHref(locale)}
             className="group flex items-center gap-2 transition-opacity hover:opacity-90 cursor-pointer"
-            aria-label="Ir al inicio"
+            aria-label={dictionary.navigation.goHome}
           >
             <Image
               src="/images/logo.svg"
-              alt="Logo Gustavo Baranda"
+              alt={dictionary.common.logoAlt}
               width={26}
               height={26}
               className="w-6 h-6 sm:w-6.5 sm:h-6.5 object-contain transition-all duration-200 grayscale brightness-0 opacity-40 group-hover:opacity-70 dark:invert"

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Moon, Sun } from "lucide-react";
+import { useI18n } from "@/i18n/LocaleProvider";
 
 const emptySubscribe = () => () => {};
 const themeEvent = "gusdev-theme-change";
@@ -19,6 +20,7 @@ function applyTheme(next: string) {
 }
 
 export default function ThemeToggle() {
+  const { dictionary } = useI18n();
   const isServer = useSyncExternalStore(emptySubscribe, () => false, () => true);
   const skipTransition = useRef<"initial" | "sync" | null>("initial");
   const [theme, setTheme] = useState<string>(() => {
@@ -63,7 +65,7 @@ export default function ThemeToggle() {
 
   if (isServer) {
     return (
-      <button type="button" className="icon-button theme-toggle cursor-pointer" aria-label="Cambiar tema">
+      <button type="button" className="icon-button theme-toggle cursor-pointer" aria-label={dictionary.navigation.changeTheme}>
         <Sun aria-hidden="true" className="w-5 h-5" />
       </button>
     );
@@ -73,7 +75,7 @@ export default function ThemeToggle() {
   return (
     <button type="button" onClick={() => setTheme((current) => (current === "dark" ? "light" : "dark"))}
       className="icon-button theme-toggle cursor-pointer"
-      aria-label={dark ? "Cambiar a tema claro" : "Cambiar a tema oscuro"} aria-pressed={dark}>
+      aria-label={dark ? dictionary.navigation.lightTheme : dictionary.navigation.darkTheme} aria-pressed={dark}>
       {dark ? <Moon aria-hidden="true" className="w-5 h-5" /> : <Sun aria-hidden="true" className="w-5 h-5" />}
     </button>
   );
