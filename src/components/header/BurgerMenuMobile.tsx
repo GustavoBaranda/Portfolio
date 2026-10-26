@@ -45,7 +45,7 @@ export default function BurgerMenuMobile({ updateMenu }: BurgerMenuMobileProps) 
           <Link href={localizedSectionHref(locale, "home")} onClick={handleLogoClick}>
             <motion.div {...slideMotionProps} custom={0} className="header border-b border-soft pb-4 cursor-pointer">
               <h2 className="text-2xl font-bold">Gustavo Baranda</h2>
-              <p className="text-lg font-semibold opacity-90">Full Stack Developer</p>
+              <p className="text-lg font-semibold opacity-90">{dictionary.hero.role}</p>
             </motion.div>
           </Link>
           {navItemsWithIndex.map((data) => (

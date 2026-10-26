@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import { renderToStaticMarkup } from "react-dom/server";
 import PortfolioPage from "../components/PortfolioPage";
 import LanguageSwitcher, { languageSwitchHref } from "../components/common/LanguageSwitcher";
+import BurgerMenuMobile from "../components/header/BurgerMenuMobile";
 import { LocaleProvider } from "../i18n/LocaleProvider";
 import {
   HTML_LANG_BY_LOCALE,
@@ -55,6 +56,18 @@ test("the same portfolio tree renders localized Spanish and English content", ()
     getProjectCategories("es-AR").map(({ id }) => id),
     getProjectCategories("en").map(({ id }) => id),
   );
+});
+
+test("the mobile menu uses localized professional content", () => {
+  for (const locale of ["es-AR", "en"] as const) {
+    const dictionary = getDictionary(locale);
+    const html = renderToStaticMarkup(
+      withLocale(locale, <BurgerMenuMobile updateMenu={() => {}} />),
+    );
+
+    assert.match(html, new RegExp(dictionary.hero.role));
+    assert.doesNotMatch(html, />Full Stack Developer</);
+  }
 });
 
 test("language links are keyboard-native and preserve section hashes", () => {
