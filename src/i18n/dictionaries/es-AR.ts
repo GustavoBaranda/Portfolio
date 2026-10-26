@@ -322,7 +322,7 @@ export const esARDictionary = {
   recognition: {
     eyebrow: "Reconocimiento Open Source",
     title: "Portfolio seleccionado por XERJ Corpus Hub",
-    description: "Mi trabajo en el repositorio Portfolio fue seleccionado como referencia para un corpus orientado a agentes de programación, destacando mejoras en la validación del formulario de contacto y su flujo de recuperación.",
+    description: "XERJ Corpus Hub seleccionó una contribución de mi portfolio como referencia para su corpus orientado a agentes de programación. El trabajo incluye mejoras en seguridad, validación de datos, accesibilidad, manejo de errores y confiabilidad del sistema de contacto.",
     status: "Selección en revisión de licencia.",
     sourceLink: "Ver reconocimiento",
     commitLink: "Ver contribución",

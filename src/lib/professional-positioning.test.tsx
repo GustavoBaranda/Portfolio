@@ -52,9 +52,11 @@ test("XERJ is represented as external recognition of one Portfolio commit", () =
   }
   assert.match(spanish, /Reconocimiento Open Source/);
   assert.match(spanish, /Portfolio seleccionado por XERJ Corpus Hub/);
+  assert.match(spanish, /mejoras en seguridad, validación de datos, accesibilidad, manejo de errores y confiabilidad del sistema de contacto/);
   assert.match(spanish, /Selección en revisión de licencia\./);
   assert.match(english, /Open Source Recognition/);
   assert.match(english, /Portfolio Selected by XERJ Corpus Hub/);
+  assert.match(english, /improvements to security, data validation, accessibility, error handling, and the reliability of the contact system/);
   assert.match(english, /Selection pending license review\./);
 });
 
