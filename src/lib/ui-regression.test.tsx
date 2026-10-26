@@ -533,7 +533,7 @@ test("the five main section headings share hierarchy, copy and highlighted words
   assert.doesNotMatch(page, /Proyectos Destacados|Casos de estudio reales/);
   assert.match(page, /¿Tenés un proyecto en mente\?/);
   assert.match(page, />\s*Hablemos\.\s*</);
-  assert.match(page, /Estoy disponible para conversar sobre oportunidades laborales, colaboraciones y proyectos de desarrollo de software\./);
+  assert.match(page, /Estoy disponible para conversar sobre oportunidades laborales, trabajos freelance y consultoría, y colaboración open source\./);
   assert.doesNotMatch(page, /¿Tienes una idea o proyecto\?|Envíame un mensaje/);
   assert.match(page, /<form aria-busy="false"/);
   assert.match(page, /baranda\.gustavo@gmail\.com/);
@@ -754,11 +754,13 @@ test("chatflow-agent uses verified public claims and project labels omit framewo
   assert.equal(chatflow.githubUrl, "https://github.com/GustavoBaranda/chatflow-agent");
   assert.equal(chatflow.image, null);
   assert.match(chatflow.solution, /librería Python open source/);
+  assert.match(chatflow.solution, /arquitectura modular y extensible/);
   assert.match(chatflow.solution, /ejecución asíncrona/);
   assert.match(chatflow.solution, /handoffs entre agentes/);
   assert.match(chatflow.solution, /CLI, webhooks, WhatsApp y Telegram/);
   assert.match(chatflow.solution, /controles de concurrencia/);
   assert.match(chatflow.solution, /revisión de contribuciones/);
+  assert.match(chatflow.solution, /colaboración comunitaria/);
   assert.doesNotMatch(`${chatflow.challenge} ${chatflow.solution}`, /\bRAG\b|producción|enterprise/i);
   const html = renderToStaticMarkup(<ProjectCard project={chatflow} index={0} />);
   assert.match(html, /href="https:\/\/github\.com\/GustavoBaranda\/chatflow-agent"/);
@@ -784,7 +786,7 @@ test("the three highlighted project narratives are precise and balanced", () => 
   assert.doesNotMatch(syspro.solution, /diseñé e implementé la arquitectura|pyHanko|Huawei Cloud|ReportLab/);
 
   assert.match(chatflow.challenge, /separar la lógica de negocio de los proveedores/);
-  assert.match(chatflow.solution, /creador y responsable técnico/);
+  assert.match(chatflow.solution, /creador y mantenedor/);
   assert.doesNotMatch(`${chatflow.challenge} ${chatflow.solution}`, /\bframework\b/i);
 
   assert.match(portfolio.challenge, /presencia profesional/);

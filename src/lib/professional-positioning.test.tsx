@@ -1,0 +1,92 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import { test } from "node:test";
+import { renderToStaticMarkup } from "react-dom/server";
+import type { ReactNode } from "react";
+import ContactInfo from "../components/contact/ContactInfo";
+import ExternalRecognition from "../components/projects/ExternalRecognition";
+import ProjectCard from "../components/projects/ProjectCard";
+import { GITHUB_SPONSORS } from "../config/openSource";
+import { XERJ_RECOGNITION } from "../config/recognition";
+import { getProjects } from "../data/projectsData";
+import { LocaleProvider } from "../i18n/LocaleProvider";
+import { getDictionary } from "../i18n/dictionaries";
+
+function withLocale(locale: "es-AR" | "en", children: ReactNode) {
+  return (
+    <LocaleProvider locale={locale} dictionary={getDictionary(locale)}>
+      {children}
+    </LocaleProvider>
+  );
+}
+
+test("chatflow-agent is clearly presented as owned open-source work in both languages", () => {
+  const spanish = getProjects("es-AR").find(({ id }) => id === "chatflow-agent")!;
+  const english = getProjects("en").find(({ id }) => id === "chatflow-agent")!;
+
+  assert.equal(spanish.githubUrl, "https://github.com/GustavoBaranda/chatflow-agent");
+  assert.equal(english.githubUrl, spanish.githubUrl);
+  assert.match(spanish.company, /Creador y mantenedor/);
+  assert.match(english.company, /Creator and maintainer/);
+  assert.match(spanish.solution, /arquitectura modular y extensible/);
+  assert.match(english.solution, /modular, extensible architecture/);
+  assert.match(spanish.solution, /colaboración comunitaria/);
+  assert.match(english.solution, /community collaboration/);
+  assert.doesNotMatch(`${spanish.solution} ${english.solution}`, /usuarios|downloads|production-ready|enterprise-grade/i);
+});
+
+test("XERJ is represented as external recognition of one Portfolio commit", () => {
+  assert.equal(XERJ_RECOGNITION.recognizedProjectId, "portfolio-personal");
+  assert.equal(XERJ_RECOGNITION.status, "license-review-pending");
+  assert.equal(XERJ_RECOGNITION.selectedCommit, "0de85332b1304e04a490b8cd4b6d133be58e28a4");
+
+  const spanish = renderToStaticMarkup(withLocale("es-AR", <ExternalRecognition />));
+  const english = renderToStaticMarkup(withLocale("en", <ExternalRecognition />));
+  for (const html of [spanish, english]) {
+    assert.match(html, /href="https:\/\/hub\.xerj\.org\/contributors\/GustavoBaranda"/);
+    assert.match(html, /href="https:\/\/github\.com\/GustavoBaranda\/Portfolio\/commit\/0de85332/);
+    assert.match(html, /<aside[^>]+aria-labelledby="external-recognition-title"/);
+    assert.doesNotMatch(html, /employer|empleador|employee|contractor|proyecto propio de XERJ/i);
+  }
+  assert.match(spanish, /Reconocimiento externo/);
+  assert.match(spanish, /revisión de licencia pendiente/);
+  assert.match(english, /External recognition/);
+  assert.match(english, /licence review pending/);
+});
+
+test("professional contact paths are equivalent, semantic and responsive", () => {
+  const spanish = renderToStaticMarkup(withLocale("es-AR", <ContactInfo />));
+  const english = renderToStaticMarkup(withLocale("en", <ContactInfo />));
+
+  assert.match(spanish, /Oportunidades laborales/);
+  assert.match(spanish, /Freelance y consultoría/);
+  assert.match(spanish, /Colaboración open source/);
+  assert.match(english, /Employment opportunities/);
+  assert.match(english, /Freelance &amp; consulting/);
+  assert.match(english, /Open-source collaboration/);
+  for (const html of [spanish, english]) {
+    assert.match(html, /<ul[^>]+aria-label=/);
+    assert.equal((html.match(/<li\b/g) ?? []).length, 3);
+    assert.match(html, /grid grid-cols-1 gap-2/);
+    assert.match(html, /href="mailto:baranda\.gustavo@gmail\.com"/);
+  }
+});
+
+test("GitHub Sponsors stays hidden while approval is pending and is config-driven", async () => {
+  assert.equal(GITHUB_SPONSORS.status, "pending-approval");
+  assert.equal(GITHUB_SPONSORS.enabled, false);
+  assert.equal(GITHUB_SPONSORS.projectId, "chatflow-agent");
+  assert.equal(GITHUB_SPONSORS.url, "https://github.com/sponsors/GustavoBaranda");
+
+  for (const locale of ["es-AR", "en"] as const) {
+    const chatflow = getProjects(locale).find(({ id }) => id === "chatflow-agent")!;
+    const html = renderToStaticMarkup(withLocale(locale, <ProjectCard project={chatflow} index={0} />));
+    assert.doesNotMatch(html, /github\.com\/sponsors\/GustavoBaranda/);
+    assert.doesNotMatch(html, /Support maintenance|Apoyar el mantenimiento/);
+  }
+
+  const source = await readFile("src/components/projects/ProjectCard.tsx", "utf8");
+  assert.match(source, /GITHUB_SPONSORS\.enabled && project\.id === GITHUB_SPONSORS\.projectId/);
+  assert.match(source, /href=\{GITHUB_SPONSORS\.url\}/);
+  assert.match(source, /dictionary\.projects\.card\.sponsorDescription/);
+});
