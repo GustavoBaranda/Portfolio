@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { DEFAULT_LOCALE, LOCALE_BASE_PATH, type Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 
 export const SITE_CONFIG = {
   name: "Gustavo Baranda",
@@ -63,18 +65,21 @@ export const createRootMetadata = (): Metadata => ({
   },
 });
 
-export const createHomeMetadata = (): Metadata => ({
+export const createHomeMetadata = (locale: Locale = DEFAULT_LOCALE): Metadata => {
+  const dictionary = getDictionary(locale);
+  const pageUrl = `${SITE_CONFIG.url}${LOCALE_BASE_PATH[locale]}`;
+  return ({
   title: {
-    absolute: SITE_CONFIG.title,
+    absolute: dictionary.metadata.title,
   },
-  description: SITE_CONFIG.description,
+  description: dictionary.metadata.description,
   alternates: {
-    canonical: SITE_CONFIG.url,
+    canonical: pageUrl,
   },
   openGraph: {
-    title: SITE_CONFIG.title,
-    description: SITE_CONFIG.socialDescription,
-    url: SITE_CONFIG.url,
+    title: dictionary.metadata.title,
+    description: dictionary.metadata.socialDescription,
+    url: pageUrl,
     siteName: `${SITE_CONFIG.name} Portfolio`,
     images: [
       {
@@ -85,13 +90,13 @@ export const createHomeMetadata = (): Metadata => ({
         type: "image/png",
       },
     ],
-    locale: "es_AR",
+    locale: locale === "en" ? "en_US" : "es_AR",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: SITE_CONFIG.title,
-    description: SITE_CONFIG.socialDescription,
+    title: dictionary.metadata.title,
+    description: dictionary.metadata.socialDescription,
     images: [
       {
         url: `${SITE_CONFIG.url}${SITE_CONFIG.ogImage}`,
@@ -101,7 +106,8 @@ export const createHomeMetadata = (): Metadata => ({
       },
     ],
   },
-});
+  });
+};
 
 interface SiteUrlEnvironment {
   NEXT_PUBLIC_BASE_URL?: string;

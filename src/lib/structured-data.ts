@@ -1,5 +1,7 @@
 import { SITE_CONFIG } from "@/config/site";
-import { EDUCATION } from "@/data/aboutData";
+import { getEducation } from "@/data/aboutData";
+import { DEFAULT_LOCALE, HTML_LANG_BY_LOCALE, LOCALE_BASE_PATH, type Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 
 interface EducationalOrganizationSchema {
   "@type": "EducationalOrganization";
@@ -28,7 +30,7 @@ export interface WebSiteSchema {
   "@id": string;
   name: string;
   url: string;
-  inLanguage: "es";
+  inLanguage: "es-AR" | "en";
   author: {
     "@id": string;
   };
@@ -39,8 +41,9 @@ export interface PortfolioStructuredData {
   "@graph": [PersonSchema, WebSiteSchema];
 }
 
-export const createPortfolioStructuredData = (): PortfolioStructuredData => {
-  const canonicalUrl = SITE_CONFIG.url;
+export const createPortfolioStructuredData = (locale: Locale = DEFAULT_LOCALE): PortfolioStructuredData => {
+  const canonicalUrl = `${SITE_CONFIG.url}${LOCALE_BASE_PATH[locale]}`;
+  const dictionary = getDictionary(locale);
   const personId = `${canonicalUrl}/#person`;
 
   return {
@@ -52,7 +55,7 @@ export const createPortfolioStructuredData = (): PortfolioStructuredData => {
         name: SITE_CONFIG.name,
         jobTitle: "Full Stack Python Developer",
         url: canonicalUrl,
-        description: SITE_CONFIG.description,
+        description: dictionary.metadata.description,
         sameAs: [SITE_CONFIG.links.github, SITE_CONFIG.links.linkedin],
         knowsAbout: [
           "Backend development",
@@ -67,7 +70,7 @@ export const createPortfolioStructuredData = (): PortfolioStructuredData => {
           "TypeScript",
           "Open source software",
         ],
-        alumniOf: EDUCATION.filter(({ statusCode }) => statusCode === "completed").map(
+        alumniOf: getEducation(locale).filter(({ statusCode }) => statusCode === "completed").map(
           ({ institution }) => ({
             "@type": "EducationalOrganization",
             name: institution,
@@ -84,7 +87,7 @@ export const createPortfolioStructuredData = (): PortfolioStructuredData => {
         "@id": `${canonicalUrl}/#website`,
         name: SITE_CONFIG.name,
         url: canonicalUrl,
-        inLanguage: "es",
+        inLanguage: HTML_LANG_BY_LOCALE[locale],
         author: {
           "@id": personId,
         },

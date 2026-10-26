@@ -1,6 +1,6 @@
 import { Variants } from "framer-motion";
-import { DEFAULT_LOCALE } from "@/i18n/config";
-import { esARDictionary } from "@/i18n/dictionaries/es-AR";
+import { DEFAULT_LOCALE, type Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 import { formatDuration, periodEndDate, type YearMonth } from "@/i18n/format";
 import {
   EDUCATION_FACTS,
@@ -74,14 +74,14 @@ export interface Education {
 }
 
 /* ───────── experience data ───────── */
-const defaultDictionary = esARDictionary;
-
-export const EXPERIENCES: Experience[] = EXPERIENCE_FACTS.map((fact) => {
-  const content = defaultDictionary.experience.entries[fact.contentId];
+export function getExperiences(locale: Locale = DEFAULT_LOCALE): Experience[] {
+  const dictionary = getDictionary(locale);
+  return EXPERIENCE_FACTS.map((fact) => {
+  const content = dictionary.experience.entries[fact.contentId];
   return {
     ...fact,
     mainSkills: [...fact.mainSkills],
-    skills: resolvePortfolioTerms(fact.skills, defaultDictionary.terms),
+    skills: resolvePortfolioTerms(fact.skills, dictionary.terms),
     role: content.role,
     type: content.type || null,
     period: content.period,
@@ -93,13 +93,21 @@ export const EXPERIENCES: Experience[] = EXPERIENCE_FACTS.map((fact) => {
         : [...content.description],
     modalidad: content.modality,
   };
-});
+  });
+}
+
+export const EXPERIENCES: Experience[] = getExperiences();
 
 /* ───────── education data ───────── */
-export const EDUCATION: Education[] = EDUCATION_FACTS.map((fact) => ({
-  ...fact,
-  ...defaultDictionary.education.entries[fact.contentId],
-}));
+export function getEducation(locale: Locale = DEFAULT_LOCALE): Education[] {
+  const dictionary = getDictionary(locale);
+  return EDUCATION_FACTS.map((fact) => ({
+    ...fact,
+    ...dictionary.education.entries[fact.contentId],
+  }));
+}
+
+export const EDUCATION: Education[] = getEducation();
 
 /* ───────── color maps ───────── */
 export interface ColorScheme {
@@ -337,6 +345,7 @@ export function calculateNormalizedDuration(
   startDate: YearMonth,
   endDate: YearMonth | null,
   defaultDuration: string = "",
+  locale: Locale = DEFAULT_LOCALE,
 ): string {
-  return formatDuration(startDate, endDate, DEFAULT_LOCALE) || defaultDuration;
+  return formatDuration(startDate, endDate, locale) || defaultDuration;
 }

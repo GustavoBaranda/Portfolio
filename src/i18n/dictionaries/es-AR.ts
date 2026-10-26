@@ -7,6 +7,7 @@ export const esARDictionary = {
     readMore: "Leer más",
     readLess: "Leer menos",
     current: "Actualidad",
+    logoAlt: "Logo de Gustavo Baranda",
   },
   terms: {
     digitalSignature: "Firma digital",
@@ -25,6 +26,14 @@ export const esARDictionary = {
     goHome: "Ir al inicio",
     skipToContent: "Saltar al contenido principal",
     backToTop: "Volver arriba",
+    languageLabel: "Seleccionar idioma",
+    spanish: "Español",
+    english: "Inglés",
+    switchToSpanish: "Ver sitio en español",
+    switchToEnglish: "View site in English",
+    changeTheme: "Cambiar tema",
+    lightTheme: "Cambiar a tema claro",
+    darkTheme: "Cambiar a tema oscuro",
   },
   hero: {
     role: "Full Stack Python Developer",
@@ -43,6 +52,16 @@ export const esARDictionary = {
     intro:
       "Desarrollo soluciones donde la lógica de negocio, los datos y las integraciones forman parte de un mismo sistema.",
     biography: {
+      highlights: {
+        qualification: "Técnico Superior en Desarrollo de Software",
+        degree: "Licenciatura en Ciencia de Datos",
+        backend: "backend con Python, Django y SQL Server",
+        fullStack: "experiencia Full Stack",
+        maintainability: "mantenible, escalable y fácil de evolucionar",
+        chatflow: "creador y mantenedor de chatflow-agent",
+        dataScience: "Ciencia de Datos",
+        values: "aprendizaje continuo, el trabajo en equipo y la comunicación clara",
+      },
       qualification: "Soy Técnico Superior en Desarrollo de Software y actualmente estudio la Licenciatura en Ciencia de Datos en la Universidad de la Ciudad de Buenos Aires.",
       backend: "Mi especialización está en el backend con Python, Django y SQL Server, desarrollando aplicaciones empresariales que integran reglas de negocio, bases de datos relacionales, procesos asíncronos y diferentes servicios. Mi experiencia abarca sistemas de logística y depósitos fiscales, servicios financieros y medicina laboral.",
       fullStack: "También tengo experiencia Full Stack, trabajando con tecnologías como React, Next.js, Laravel y PHP para desarrollar soluciones que conectan el backend con interfaces funcionales y accesibles.",
@@ -65,6 +84,7 @@ export const esARDictionary = {
     technologiesLabel: "Tecnologías y funcionalidades:",
     expand: "Expandir",
     collapse: "Colapsar",
+    viewProject: "Ver proyecto",
     entries: {
       "syspro-consulting": {
         role: "Full Stack Python Developer",
@@ -175,6 +195,16 @@ export const esARDictionary = {
     emptyDescription: "No se encontraron proyectos para los filtros seleccionados. Probá seleccionando otra categoría o tecnología.",
     showAll: "Ver todos los proyectos",
     foundSuffix: "proyectos encontrados.",
+    coreTechnologies: {
+      python: "Python",
+      django: "Django",
+      react: "React",
+      nextjs: "Next.js",
+      typescript: "TypeScript",
+      sql: "SQL y bases de datos",
+      apis: "APIs y ETL",
+      tailwind: "Tailwind CSS",
+    },
     card: {
       challenge: "Desafío",
       solution: "Solución / Rol",
@@ -183,6 +213,10 @@ export const esARDictionary = {
       viewCode: "Ver código",
       privateProject: "Proyecto corporativo · código privado",
       filterBy: "Filtrar proyectos por",
+      projectImage: "Vista del proyecto",
+      typographicIdentity: "Identidad tipográfica del proyecto",
+      openSource: "Open Source",
+      agentTagline: "Python · agentes conversacionales",
     },
     categories: {
       all: "Todos los Proyectos",
@@ -328,8 +362,21 @@ export const esARDictionary = {
       sendAnother: "Enviar otro mensaje",
       unconfirmed: "No se pudo confirmar el envío. Podés intentarlo nuevamente o escribirme por correo directo. Tus datos se conservan.",
     },
+    server: {
+      invalidBody: "El cuerpo debe ser un objeto JSON.",
+      textFields: "Los campos del formulario deben ser texto.",
+      originDenied: "Origen no permitido.",
+      rateLimited: "Demasiados intentos. Esperá 10 minutos o escribime por correo directo.",
+      jsonRequired: "El formulario debe enviarse como JSON.",
+      tooLarge: "El mensaje supera el tamaño permitido.",
+      invalidJson: "El JSON enviado no es válido.",
+      blocked: "No se pudo enviar el mensaje. Podés intentarlo nuevamente o escribirme por correo directo. Tus datos se conservan.",
+      deliveryFailed: "No pudimos confirmar el envío. Intentá más tarde o escribime por correo directo.",
+      accepted: "El servicio de correo aceptó el mensaje.",
+    },
   },
   errors: {
+    error404: "Error 404",
     notFoundTitle: "Página no encontrada",
     notFoundDescription: "La ruta que buscás no existe o fue movida. Podés volver al inicio o explorar los proyectos.",
     viewProjects: "Ver proyectos",

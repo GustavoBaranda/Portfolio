@@ -1,4 +1,5 @@
-import { esARDictionary } from "@/i18n/dictionaries/es-AR";
+import { DEFAULT_LOCALE, type Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 import type { NormalizedDate } from "@/i18n/format";
 import {
   PROJECT_FACTS,
@@ -35,24 +36,31 @@ export interface ProjectItem {
   demoUrl: string | null;
 }
 
-const defaultDictionary = esARDictionary;
+export function getProjectCategories(locale: Locale = DEFAULT_LOCALE): ProjectCategory[] {
+  const dictionary = getDictionary(locale);
+  return [
+    { id: "all", label: dictionary.projects.categories.all },
+    { id: "full-stack", label: dictionary.projects.categories["full-stack"] },
+    { id: "apis", label: dictionary.projects.categories.apis },
+    { id: "opensource", label: dictionary.projects.categories.opensource },
+  ];
+}
 
-export const PROJECT_CATEGORIES: ProjectCategory[] = [
-  { id: "all", label: defaultDictionary.projects.categories.all },
-  { id: "full-stack", label: defaultDictionary.projects.categories["full-stack"] },
-  { id: "apis", label: defaultDictionary.projects.categories.apis },
-  { id: "opensource", label: defaultDictionary.projects.categories.opensource },
-];
-
-export const PROJECTS: ProjectItem[] = PROJECT_FACTS.map((fact) => {
-  const content = defaultDictionary.projects.entries[
-    fact.id as keyof typeof defaultDictionary.projects.entries
+export function getProjects(locale: Locale = DEFAULT_LOCALE): ProjectItem[] {
+  const dictionary = getDictionary(locale);
+  return PROJECT_FACTS.map((fact) => {
+  const content = dictionary.projects.entries[
+    fact.id as keyof typeof dictionary.projects.entries
   ];
   return {
     ...fact,
-    tags: resolvePortfolioTerms(fact.tags, defaultDictionary.terms),
+    tags: resolvePortfolioTerms(fact.tags, dictionary.terms),
     ...content,
     mediaLabel: content.mediaLabel || undefined,
     dateSort: fact.sortDate ?? "9999-99",
   };
-});
+  });
+}
+
+export const PROJECT_CATEGORIES: ProjectCategory[] = getProjectCategories();
+export const PROJECTS: ProjectItem[] = getProjects();
