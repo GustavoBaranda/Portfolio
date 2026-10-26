@@ -11,9 +11,9 @@ Personal portfolio built with Next.js, React, and TypeScript. It presents my pro
 
 ## Project status
 
-The public website currently remains in Spanish at `/`. The repository now contains the typed internationalization model for `es-AR` and `en`, but localized public routes and a language selector are intentionally deferred to the next implementation phase.
+The portfolio is fully available in Spanish at `/` and English at `/en`. Both routes render the same component tree and locale-independent records through typed dictionaries.
 
-The current visual design, navigation, contact flow, accessibility behavior, SEO URLs, and public route remain unchanged.
+An accessible `ES | EN` selector preserves the active section hash when changing language. There is no automatic locale or location redirect.
 
 ## Features
 
@@ -29,7 +29,8 @@ The current visual design, navigation, contact flow, accessibility behavior, SEO
 - Origin checks, body-size limits, honeypot protection, and per-process rate limiting.
 - Canonical metadata, Open Graph, Twitter Cards, JSON-LD, sitemap, and robots configuration.
 - Integrated error and not-found pages.
-- Typed Spanish and English dictionaries prepared for localized rendering.
+- Fully localized Spanish and English rendering, including forms, server feedback, errors, ARIA labels, and metadata.
+- Accessible language selector that preserves section anchors.
 
 ## Technology
 
@@ -49,15 +50,17 @@ Installed versions and dependency ranges are defined in [`package.json`](package
 Portfolio/
 ├── public/                      # Static assets and images
 ├── src/
-│   ├── app/                     # App Router, home page, API, metadata, and errors
+│   ├── app/                     # App Router, localized routes, API, metadata, and errors
+│   │   ├── [[...locale]]/       # Shared SSG route for / and /en
 │   │   └── api/contact/         # Contact form POST endpoint
 │   ├── components/              # UI components grouped by section
 │   ├── config/                  # Public site configuration and URL resolution
 │   ├── data/
 │   │   ├── portfolioFacts.ts    # Locale-independent identity and technical facts
-│   │   ├── aboutData.ts         # Current Spanish compatibility view for components
-│   │   └── projectsData.ts      # Current Spanish compatibility view for components
+│   │   ├── aboutData.ts         # Locale-aware experience and education adapters
+│   │   └── projectsData.ts      # Locale-aware project adapters
 │   ├── i18n/
+│   │   ├── LocaleProvider.tsx   # Typed locale context for client components
 │   │   ├── config.ts            # Supported locales and default locale
 │   │   ├── format.ts            # Locale-aware date and duration formatting
 │   │   └── dictionaries/        # Typed es-AR and en dictionaries
@@ -67,28 +70,30 @@ Portfolio/
 └── package.json                 # Scripts and dependencies
 ```
 
-The interface, content, locale-independent facts, and server logic are kept separate. Existing components continue to consume the same `EXPERIENCES`, `EDUCATION`, and `PROJECTS` contracts, so the internationalization foundation does not alter current rendering.
+`src/app/[[...locale]]` is the shared statically generated route for `/` and `/en`; it owns the localized layout, page, not-found view, and error boundary. `src/i18n/LocaleProvider.tsx` supplies the selected locale and typed dictionary to client components.
+
+The interface, content, locale-independent facts, and server logic are kept separate. Locale-aware adapters preserve the existing `Experience`, `Education`, and `ProjectItem` contracts while deriving Spanish or English views from the same records.
 
 ## Internationalization model
 
 `src/i18n/config.ts` is the source of truth for the supported locales:
 
-- `es-AR`: current default and public language.
-- `en`: prepared English content.
+- `es-AR`: default language rendered at `/`.
+- `en`: English rendered at `/en`.
 
 The dictionaries are TypeScript objects with a shared compile-time shape. Runtime tests also compare their complete leaf structure, preventing missing or additional translation keys.
 
 `src/data/portfolioFacts.ts` stores values that must not be translated: stable identifiers, company and institution names, URLs, image paths, technology tags, category identifiers, normalized dates, and internal status codes. Presentation text remains in the dictionaries.
 
-Dates use normalized year or year-month values. `Intl.DateTimeFormat` and `Intl.NumberFormat` are used by locale-aware helpers instead of parsing translated month names. Compatibility helpers remain available while existing components continue to render the approved Spanish copy.
+Dates use normalized year or year-month values. `Intl.DateTimeFormat` and `Intl.NumberFormat` are used by locale-aware helpers instead of parsing translated month names.
 
-This phase does not add `/en`, locale redirects, a language selector, international canonical URLs, or localized SEO. Those changes require a separate reviewed phase.
+The optional localized route statically generates only `/` and `/en`. Unknown paths render translated not-found content. The root layout sets the server-rendered document language to `es-AR` or `en`, and the language selector maps anchors such as `/#projects` to `/en#projects`. International SEO discovery features such as `hreflang` and a bilingual sitemap remain reserved for the next phase.
 
 Whenever a later phase changes user-visible behavior, both `README.md` and `README.es.md` must be updated together.
 
 ## Contact form
 
-The form sends JSON to `POST /api/contact`. Shared validation checks required fields, email format, length limits, and unsupported control characters. The browser preserves visitor input after errors and associates messages with their fields.
+The form sends JSON to `POST /api/contact`. Shared validation checks required fields, email format, length limits, and unsupported control characters. The selected locale is sent through `Accept-Language`, so client validation, API errors, loading states, success feedback, and accessible announcements use the active language. The browser preserves visitor input after errors and associates messages with their fields.
 
 The server adds:
 
@@ -112,7 +117,7 @@ Automated regression coverage complements, but does not replace, manual testing 
 
 `SITE_CONFIG.url` is the canonical public URL used by metadata, Open Graph, Twitter Cards, sitemap, and robots. `getSiteUrl()` separately resolves the operational origin used by the contact endpoint for `Origin` validation.
 
-The root layout publishes `Person` and `WebSite` structured data. The sitemap currently contains only `/`, and the document language remains Spanish until localized routes are approved.
+The localized root layout publishes `Person` and `WebSite` structured data for the active route. Basic page metadata is localized, while the sitemap intentionally remains limited to `/` until the international SEO phase adds `hreflang` and bilingual discovery entries.
 
 ## Local development
 
@@ -172,7 +177,7 @@ npm test
 npm run build
 ```
 
-The suite covers contact validation and security, SMTP acceptance with mocks, navigation and disclosure contracts, styles, accessibility, motion, dictionary parity, locale-independent data, and normalized date formatting. Tests do not send real email.
+The suite covers contact validation and security, SMTP acceptance with mocks, both localized renders, route resolution, language switching with hash preservation, HTML language mapping, keyboard-native links, translated server feedback, not-found/error contracts, navigation and disclosures, styles, accessibility, motion, dictionary parity, locale-independent data, and normalized date formatting. Tests do not send real email.
 
 In the restricted Windows sandbox, `tsx` can fail before test discovery because `os.userInfo()` returns `uv_os_get_passwd/ENOMEM`. The same `npm test` command runs normally outside that sandbox; no project monkeypatch is used.
 

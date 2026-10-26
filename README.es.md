@@ -11,9 +11,9 @@ Portfolio personal desarrollado con Next.js, React y TypeScript. Presenta mi per
 
 ## Estado del proyecto
 
-El sitio público permanece actualmente en español y en la ruta `/`. El repositorio ya contiene el modelo tipado de internacionalización para `es-AR` y `en`, pero las rutas públicas localizadas y el selector de idioma quedan deliberadamente reservados para la siguiente fase de implementación.
+El portfolio está disponible completamente en español en `/` y en inglés en `/en`. Ambas rutas renderizan el mismo árbol de componentes y los mismos registros independientes del idioma mediante diccionarios tipados.
 
-El diseño, la navegación, el formulario, el comportamiento accesible, las URLs SEO y la ruta pública actuales no cambian.
+El selector accesible `ES | EN` conserva el hash de la sección activa al cambiar de idioma. No existe redirección automática por idioma ni ubicación.
 
 ## Funcionalidades
 
@@ -29,7 +29,8 @@ El diseño, la navegación, el formulario, el comportamiento accesible, las URLs
 - Validación de origen, límite de cuerpo, honeypot y rate limit por proceso.
 - Canonical, Open Graph, Twitter Cards, JSON-LD, sitemap y robots.
 - Páginas de error y recurso no encontrado integradas.
-- Diccionarios tipados en español e inglés preparados para el renderizado localizado.
+- Renderizado completo en español e inglés, incluidos formularios, respuestas del servidor, errores, etiquetas ARIA y metadata.
+- Selector de idioma accesible que conserva las anclas de sección.
 
 ## Tecnologías
 
@@ -49,15 +50,17 @@ Las versiones instaladas y los rangos se encuentran en [`package.json`](package.
 Portfolio/
 ├── public/                      # Recursos estáticos e imágenes
 ├── src/
-│   ├── app/                     # App Router, inicio, API, metadata y errores
+│   ├── app/                     # App Router, rutas localizadas, API, metadata y errores
+│   │   ├── [[...locale]]/       # Ruta SSG compartida para / y /en
 │   │   └── api/contact/         # Endpoint POST del formulario
 │   ├── components/              # Componentes organizados por sección
 │   ├── config/                  # Configuración pública y resolución de URL
 │   ├── data/
 │   │   ├── portfolioFacts.ts    # Identidad y datos técnicos independientes del idioma
-│   │   ├── aboutData.ts         # Vista compatible en español para los componentes
-│   │   └── projectsData.ts      # Vista compatible en español para los componentes
+│   │   ├── aboutData.ts         # Adaptadores localizados de experiencia y formación
+│   │   └── projectsData.ts      # Adaptadores localizados de proyectos
 │   ├── i18n/
+│   │   ├── LocaleProvider.tsx   # Contexto tipado para componentes cliente
 │   │   ├── config.ts            # Idiomas soportados e idioma predeterminado
 │   │   ├── format.ts            # Formato localizado de fechas y duraciones
 │   │   └── dictionaries/        # Diccionarios tipados es-AR y en
@@ -67,28 +70,30 @@ Portfolio/
 └── package.json                 # Scripts y dependencias
 ```
 
-La interfaz, el contenido, los datos independientes del idioma y la lógica de servidor están separados. Los componentes actuales continúan consumiendo los mismos contratos `EXPERIENCES`, `EDUCATION` y `PROJECTS`; la base de internacionalización no cambia el renderizado existente.
+`src/app/[[...locale]]` es la ruta compartida y generada estáticamente para `/` y `/en`; contiene el layout localizado, la página, la vista 404 y el límite de errores. `src/i18n/LocaleProvider.tsx` entrega el locale seleccionado y el diccionario tipado a los componentes cliente.
+
+La interfaz, el contenido, los datos independientes del idioma y la lógica de servidor están separados. Los adaptadores localizados conservan los contratos `Experience`, `Education` y `ProjectItem` mientras derivan las vistas española e inglesa de los mismos registros.
 
 ## Modelo de internacionalización
 
 `src/i18n/config.ts` es la fuente de verdad de los idiomas soportados:
 
-- `es-AR`: idioma público y predeterminado actual.
-- `en`: contenido inglés preparado.
+- `es-AR`: idioma predeterminado renderizado en `/`.
+- `en`: idioma inglés renderizado en `/en`.
 
 Los diccionarios son objetos TypeScript con una estructura compartida comprobada durante la compilación. Las pruebas también comparan todas sus claves y hojas en tiempo de ejecución para impedir traducciones faltantes o adicionales.
 
 `src/data/portfolioFacts.ts` conserva los valores que no deben traducirse: identificadores estables, nombres de empresas e instituciones, URLs, imágenes, tecnologías, identificadores de categoría, fechas normalizadas y estados internos. El contenido de presentación permanece en los diccionarios.
 
-Las fechas se representan mediante años o valores año-mes normalizados. Los helpers localizados utilizan `Intl.DateTimeFormat` e `Intl.NumberFormat` y no interpretan nombres de meses traducidos. Se mantienen helpers de compatibilidad mientras los componentes continúan mostrando el contenido español aprobado.
+Las fechas se representan mediante años o valores año-mes normalizados. Los helpers localizados utilizan `Intl.DateTimeFormat` e `Intl.NumberFormat` y no interpretan nombres de meses traducidos.
 
-Esta fase no incorpora `/en`, redirecciones por locale, selector de idioma, canonical internacionales ni SEO localizado. Esos cambios requieren una fase posterior revisada por separado.
+La ruta localizada opcional genera estáticamente solo `/` y `/en`. Las rutas inexistentes muestran contenido traducido. El layout establece `lang="es-AR"` o `lang="en"` durante el renderizado del servidor, y el selector transforma anclas como `/#projects` en `/en#projects`. Las funciones completas de SEO internacional, como `hreflang` y el sitemap bilingüe, quedan reservadas para la fase siguiente.
 
 Cada fase futura que modifique comportamiento visible debe actualizar conjuntamente `README.md` y `README.es.md`.
 
 ## Formulario de contacto
 
-El formulario envía JSON a `POST /api/contact`. La validación compartida comprueba campos obligatorios, formato de correo, longitudes y caracteres de control no permitidos. El navegador conserva los datos ante errores y relaciona cada mensaje con su campo.
+El formulario envía JSON a `POST /api/contact`. La validación compartida comprueba campos obligatorios, formato de correo, longitudes y caracteres de control no permitidos. El locale activo se comunica mediante `Accept-Language`, por lo que la validación cliente, los errores de la API, los estados de carga, el éxito y los anuncios accesibles utilizan el idioma seleccionado. El navegador conserva los datos ante errores y relaciona cada mensaje con su campo.
 
 El servidor agrega:
 
@@ -112,7 +117,7 @@ Las regresiones automatizadas complementan, pero no reemplazan, la validación m
 
 `SITE_CONFIG.url` es la URL pública canónica utilizada por metadata, Open Graph, Twitter Cards, sitemap y robots. `getSiteUrl()` resuelve por separado el origen operativo que el endpoint de contacto utiliza para validar `Origin`.
 
-El layout publica datos estructurados `Person` y `WebSite`. El sitemap contiene actualmente solo `/` y el idioma del documento permanece en español hasta que se aprueben las rutas localizadas.
+El layout localizado publica datos estructurados `Person` y `WebSite` para la ruta activa. La metadata básica está traducida, mientras que el sitemap permanece deliberadamente limitado a `/` hasta que la fase de SEO internacional incorpore `hreflang` y las entradas bilingües.
 
 ## Desarrollo local
 
@@ -172,7 +177,7 @@ npm test
 npm run build
 ```
 
-La suite cubre validación y seguridad del formulario, aceptación SMTP simulada, navegación y expansiones, estilos, accesibilidad, movimiento, paridad de diccionarios, datos independientes del idioma y formato de fechas normalizadas. Las pruebas no envían correo real.
+La suite cubre validación y seguridad del formulario, aceptación SMTP simulada, renderizado en ambos idiomas, resolución de rutas, cambio de idioma con conservación del hash, idioma del documento, enlaces accesibles mediante teclado, respuestas traducidas del servidor, contratos de error y 404, navegación, expansiones, estilos, accesibilidad, movimiento, paridad de diccionarios, datos independientes del idioma y fechas normalizadas. Las pruebas no envían correo real.
 
 En el sandbox restringido de Windows, `tsx` puede fallar antes de descubrir las pruebas porque `os.userInfo()` devuelve `uv_os_get_passwd/ENOMEM`. El mismo comando `npm test` funciona normalmente fuera de ese sandbox; no se incorpora ningún monkeypatch al proyecto.
 
