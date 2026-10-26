@@ -310,5 +310,6 @@ export const enDictionary = {
     title: "Gustavo Baranda | Full Stack Python Developer",
     description: "Full Stack Python Developer specializing in backend development with Django and SQL Server. I build enterprise applications, integrations, and open-source projects.",
     socialDescription: "Gustavo Baranda builds enterprise applications with Python, Django, and SQL Server and maintains the open-source chatflow-agent library.",
+    imageAlt: "Gustavo Baranda portfolio — Full Stack Python Developer",
   },
 } as const satisfies Dictionary;

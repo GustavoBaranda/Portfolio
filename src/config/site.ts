@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DEFAULT_LOCALE, LOCALE_BASE_PATH, type Locale } from "@/i18n/config";
+import { DEFAULT_LOCALE, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 
 export const SITE_CONFIG = {
@@ -16,6 +16,27 @@ export const SITE_CONFIG = {
     linkedin: "https://www.linkedin.com/in/gustavobaranda/",
   },
 };
+
+export const CANONICAL_URL_BY_LOCALE = {
+  "es-AR": new URL("/", SITE_CONFIG.url).href,
+  en: new URL("/en", SITE_CONFIG.url).href,
+} as const satisfies Readonly<Record<Locale, string>>;
+
+export const LANGUAGE_ALTERNATES = {
+  "es-AR": CANONICAL_URL_BY_LOCALE["es-AR"],
+  en: CANONICAL_URL_BY_LOCALE.en,
+  "x-default": CANONICAL_URL_BY_LOCALE["es-AR"],
+} as const;
+
+const OPEN_GRAPH_LOCALE = {
+  "es-AR": "es_AR",
+  en: "en_US",
+} as const satisfies Readonly<Record<Locale, string>>;
+
+const OPEN_GRAPH_ALTERNATE_LOCALE = {
+  "es-AR": [OPEN_GRAPH_LOCALE.en],
+  en: [OPEN_GRAPH_LOCALE["es-AR"]],
+} as const satisfies Readonly<Record<Locale, readonly string[]>>;
 
 export const createRootMetadata = (): Metadata => ({
   metadataBase: new URL(SITE_CONFIG.url),
@@ -67,46 +88,40 @@ export const createRootMetadata = (): Metadata => ({
 
 export const createHomeMetadata = (locale: Locale = DEFAULT_LOCALE): Metadata => {
   const dictionary = getDictionary(locale);
-  const pageUrl = `${SITE_CONFIG.url}${LOCALE_BASE_PATH[locale]}`;
-  return ({
-  title: {
-    absolute: dictionary.metadata.title,
-  },
-  description: dictionary.metadata.description,
-  alternates: {
-    canonical: pageUrl,
-  },
-  openGraph: {
-    title: dictionary.metadata.title,
-    description: dictionary.metadata.socialDescription,
-    url: pageUrl,
-    siteName: `${SITE_CONFIG.name} Portfolio`,
-    images: [
-      {
-        url: `${SITE_CONFIG.url}${SITE_CONFIG.ogImage}`,
-        width: 1200,
-        height: 630,
-        alt: `${SITE_CONFIG.name} - Full Stack Python Developer`,
-        type: "image/png",
-      },
-    ],
-    locale: locale === "en" ? "en_US" : "es_AR",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: dictionary.metadata.title,
-    description: dictionary.metadata.socialDescription,
-    images: [
-      {
-        url: `${SITE_CONFIG.url}${SITE_CONFIG.ogImage}`,
-        width: 1200,
-        height: 630,
-        alt: `${SITE_CONFIG.name} - Full Stack Python Developer`,
-      },
-    ],
-  },
-  });
+  const pageUrl = CANONICAL_URL_BY_LOCALE[locale];
+  const socialImage = {
+    url: `${SITE_CONFIG.url}${SITE_CONFIG.ogImage}`,
+    width: 1200,
+    height: 630,
+    alt: dictionary.metadata.imageAlt,
+  };
+
+  return {
+    title: {
+      absolute: dictionary.metadata.title,
+    },
+    description: dictionary.metadata.description,
+    alternates: {
+      canonical: pageUrl,
+      languages: LANGUAGE_ALTERNATES,
+    },
+    openGraph: {
+      title: dictionary.metadata.title,
+      description: dictionary.metadata.socialDescription,
+      url: pageUrl,
+      siteName: `${SITE_CONFIG.name} Portfolio`,
+      images: [{ ...socialImage, type: "image/png" }],
+      locale: OPEN_GRAPH_LOCALE[locale],
+      alternateLocale: [...OPEN_GRAPH_ALTERNATE_LOCALE[locale]],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: dictionary.metadata.title,
+      description: dictionary.metadata.socialDescription,
+      images: [socialImage],
+    },
+  };
 };
 
 interface SiteUrlEnvironment {

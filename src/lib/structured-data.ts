@@ -1,6 +1,6 @@
-import { SITE_CONFIG } from "@/config/site";
+import { CANONICAL_URL_BY_LOCALE, SITE_CONFIG } from "@/config/site";
 import { getEducation } from "@/data/aboutData";
-import { DEFAULT_LOCALE, HTML_LANG_BY_LOCALE, LOCALE_BASE_PATH, type Locale } from "@/i18n/config";
+import { DEFAULT_LOCALE, HTML_LANG_BY_LOCALE, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 
 interface EducationalOrganizationSchema {
@@ -42,9 +42,9 @@ export interface PortfolioStructuredData {
 }
 
 export const createPortfolioStructuredData = (locale: Locale = DEFAULT_LOCALE): PortfolioStructuredData => {
-  const canonicalUrl = `${SITE_CONFIG.url}${LOCALE_BASE_PATH[locale]}`;
+  const canonicalUrl = CANONICAL_URL_BY_LOCALE[locale];
   const dictionary = getDictionary(locale);
-  const personId = `${canonicalUrl}/#person`;
+  const personId = `${canonicalUrl}#person`;
 
   return {
     "@context": "https://schema.org",
@@ -84,7 +84,7 @@ export const createPortfolioStructuredData = (locale: Locale = DEFAULT_LOCALE): 
       },
       {
         "@type": "WebSite",
-        "@id": `${canonicalUrl}/#website`,
+        "@id": `${canonicalUrl}#website`,
         name: SITE_CONFIG.name,
         url: canonicalUrl,
         inLanguage: HTML_LANG_BY_LOCALE[locale],

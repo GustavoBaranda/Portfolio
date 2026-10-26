@@ -389,5 +389,6 @@ export const esARDictionary = {
     title: "Gustavo Baranda | Full Stack Python Developer",
     description: "Full Stack Python Developer especializado en backend con Django y SQL Server. Desarrollo aplicaciones empresariales, integraciones y proyectos open source.",
     socialDescription: "Gustavo Baranda desarrolla aplicaciones empresariales con Python, Django y SQL Server, y mantiene la librería open source chatflow-agent.",
+    imageAlt: "Portfolio de Gustavo Baranda — Full Stack Python Developer",
   },
 } as const;
