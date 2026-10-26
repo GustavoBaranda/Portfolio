@@ -3,11 +3,12 @@
 import { useState, useMemo, useRef, useLayoutEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FolderSearch, RotateCcw, Tag, ChevronDown, ChevronUp, X } from "lucide-react";
-import { PROJECTS, PROJECT_CATEGORIES, type ProjectItem } from "@/data/projectsData";
+import { PROJECTS, getProjectCategories, getProjects, type ProjectItem } from "@/data/projectsData";
 import ProjectCard, {
   PROJECT_CARD_BLOCKS,
   type ProjectCardBlock,
 } from "./ProjectCard";
+import { useI18n } from "@/i18n/LocaleProvider";
 
 export interface CoreTechFilter {
   id: string;
@@ -214,13 +215,22 @@ function ProjectRow({
 }
 
 export default function ProjectsGrid() {
+  const { locale, dictionary } = useI18n();
+  const projects = useMemo(() => getProjects(locale), [locale]);
+  const categories = useMemo(() => getProjectCategories(locale), [locale]);
+  const coreTechFilters = useMemo(() => CORE_TECH_FILTERS.map((filter) => ({
+    ...filter,
+    label: dictionary.projects.coreTechnologies[
+      filter.id as keyof typeof dictionary.projects.coreTechnologies
+    ],
+  })), [dictionary]);
   const techToggleRef = useRef<HTMLButtonElement>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const [selectedTech, setSelectedTech] = useState<CoreTechFilter | string | null>(null);
   const [isTechFilterOpen, setIsTechFilterOpen] = useState<boolean>(false);
 
-  const sortedProjects = useMemo(() => sortProjectsByPriority(PROJECTS), []);
+  const sortedProjects = useMemo(() => sortProjectsByPriority(projects), [projects]);
 
   const filteredProjects = useMemo(() => {
     return filterProjects(sortedProjects, selectedCategory, selectedTech);
@@ -241,7 +251,7 @@ export default function ProjectsGrid() {
   };
 
   const handleCardTagClick = (tag: string) => {
-    const matchedCore = CORE_TECH_FILTERS.find((filter) =>
+    const matchedCore = coreTechFilters.find((filter) =>
       filter.aliases.some((alias) => tag.toLowerCase().includes(alias))
     );
 
@@ -272,7 +282,7 @@ export default function ProjectsGrid() {
       <div className="flex flex-col items-center space-y-4">
         {/* Main Category Tabs */}
         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-          {PROJECT_CATEGORIES.map((cat) => {
+          {categories.map((cat) => {
             const isActive = selectedCategory === cat.id;
             return (
               <button
@@ -310,7 +320,7 @@ export default function ProjectsGrid() {
             }`}
           >
             <Tag className="w-3.5 h-3.5" />
-            <span>Filtrar por tecnología</span>
+            <span>{dictionary.projects.filterByTechnology}</span>
             {isTechFilterOpen ? (
               <ChevronUp className="w-3.5 h-3.5" />
             ) : (
@@ -325,7 +335,8 @@ export default function ProjectsGrid() {
               <button
                 onClick={() => { setSelectedTech(null); techToggleRef.current?.focus(); }}
                 className="hover:opacity-80 cursor-pointer ml-0.5"
-                title="Quitar filtro de tecnología"
+                title={dictionary.projects.removeTechnologyFilter}
+                aria-label={dictionary.projects.removeTechnologyFilter}
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -339,7 +350,7 @@ export default function ProjectsGrid() {
               className="inline-flex items-center gap-1 px-2.5 py-1 rounded-[0.35rem] text-xs font-medium text-muted hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
             >
               <RotateCcw className="w-3 h-3" />
-              <span>Restablecer</span>
+              <span>{dictionary.projects.resetFilters}</span>
             </button>
           )}
         </div>
@@ -361,7 +372,7 @@ export default function ProjectsGrid() {
         >
           <div className="min-h-0 overflow-hidden pt-0">
             <div className="flex flex-wrap items-center justify-center gap-2 py-2 px-1">
-              {CORE_TECH_FILTERS.map((filter) => {
+              {coreTechFilters.map((filter) => {
                 const isActive =
                   typeof selectedTech !== "string" && selectedTech?.id === filter.id;
                 return (
@@ -385,7 +396,7 @@ export default function ProjectsGrid() {
         </div>
       </div>
 
-      <p role="status" className="sr-only">{filteredProjects.length} proyectos encontrados.</p>
+      <p role="status" className="sr-only">{filteredProjects.length} {dictionary.projects.foundSuffix}</p>
 
       {/* Grid container or Empty State */}
       <AnimatePresence mode="wait">
@@ -419,17 +430,17 @@ export default function ProjectsGrid() {
               <FolderSearch className="w-7 h-7" />
             </div>
             <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2">
-              No hay proyectos coincidentes
+              {dictionary.projects.emptyTitle}
             </h3>
             <p className="text-xs sm:text-sm text-muted-foreground mb-6 max-w-md leading-relaxed">
-              No se encontraron proyectos para los filtros seleccionados. Prueba seleccionando otra categoría o tecnología.
+              {dictionary.projects.emptyDescription}
             </p>
             <button
               onClick={resetFilters}
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[0.35rem] bg-indigo-600 text-white text-xs sm:text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm cursor-pointer"
             >
               <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              <span>Ver todos los proyectos</span>
+              <span>{dictionary.projects.showAll}</span>
             </button>
           </motion.div>
         )}

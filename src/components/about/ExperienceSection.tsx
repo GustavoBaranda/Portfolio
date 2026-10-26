@@ -2,14 +2,17 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { EXPERIENCES, textReveal } from "@/data/aboutData";
+import { getExperiences, textReveal } from "@/data/aboutData";
 import ExperienceCard from "./ExperienceCard";
+import { useI18n } from "@/i18n/LocaleProvider";
 
 export function nextExpandedExperienceId(currentId: number | null, selectedId: number) {
   return currentId === selectedId ? null : selectedId;
 }
 
 export default function ExperienceSection() {
+  const { locale, dictionary } = useI18n();
+  const experiences = getExperiences(locale);
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const firstCardRef = useRef<HTMLDivElement | null>(null);
@@ -65,19 +68,19 @@ export default function ExperienceSection() {
     >
       <motion.header className="max-w-3xl space-y-3 sm:space-y-4" variants={textReveal}>
         <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-indigo-600 dark:text-indigo-400">
-          Experiencia
+          {dictionary.experience.eyebrow}
         </p>
 
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight tracking-tight text-foreground text-balance">
-          Desarrollando{" "}
+          {dictionary.experience.headingBeforeHighlight}{" "}
           <span className="bg-linear-to-r from-violet-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent dark:from-violet-400 dark:via-indigo-400 dark:to-blue-400">
-            soluciones
+            {dictionary.experience.headingHighlight}
           </span>{" "}
-          para desafíos reales.
+          {dictionary.experience.headingAfterHighlight}
         </h2>
 
         <p className="max-w-2xl text-base sm:text-lg text-muted leading-relaxed">
-          Mi recorrido desarrollando aplicaciones empresariales, integraciones y soluciones digitales.
+          {dictionary.experience.intro}
         </p>
       </motion.header>
 
@@ -109,9 +112,9 @@ export default function ExperienceSection() {
           />
         )}
 
-        {EXPERIENCES.map((exp, i) => {
+        {experiences.map((exp, i) => {
           const isFirst = i === 0;
-          const isLast = i === EXPERIENCES.length - 1;
+          const isLast = i === experiences.length - 1;
           const ref = isFirst ? firstCardRef : isLast ? lastCardRef : undefined;
 
           return (

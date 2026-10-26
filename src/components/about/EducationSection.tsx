@@ -2,8 +2,9 @@
 
 import { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { EDUCATION, normalizedPeriodEnd, textReveal, type Education } from "@/data/aboutData";
+import { getEducation, normalizedPeriodEnd, textReveal, type Education } from "@/data/aboutData";
 import EducationCard from "./EducationCard";
+import { useI18n } from "@/i18n/LocaleProvider";
 
 export function sortEducationByPeriod(education: Education[]) {
   return education.slice().sort((a, b) => {
@@ -14,6 +15,7 @@ export function sortEducationByPeriod(education: Education[]) {
 }
 
 export default function EducationSection() {
+  const { locale, dictionary } = useI18n();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const firstCardRef = useRef<HTMLDivElement | null>(null);
   const lastCardRef = useRef<HTMLDivElement | null>(null);
@@ -26,7 +28,7 @@ export default function EducationSection() {
   });
   const eduScaleY = useTransform(eduScrollY, [0, 1], [0, 1]);
 
-  const sortedEducation = sortEducationByPeriod(EDUCATION);
+  const sortedEducation = sortEducationByPeriod(getEducation(locale));
 
   useEffect(() => {
     const calculateLine = () => {
@@ -69,18 +71,18 @@ export default function EducationSection() {
     >
       <motion.header className="max-w-3xl space-y-3 sm:space-y-4" variants={textReveal}>
         <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-indigo-600 dark:text-indigo-400">
-          Formación
+          {dictionary.education.eyebrow}
         </p>
 
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight tracking-tight text-foreground text-balance">
-          Una formación en constante{" "}
+          {dictionary.education.headingBeforeHighlight}{" "}
           <span className="bg-linear-to-r from-violet-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent dark:from-violet-400 dark:via-indigo-400 dark:to-blue-400">
-            evolución
+            {dictionary.education.headingHighlight}
           </span>.
         </h2>
 
         <p className="max-w-2xl text-base sm:text-lg text-muted leading-relaxed">
-          Formación técnica, universitaria y complementaria que acompaña mi desarrollo profesional.
+          {dictionary.education.intro}
         </p>
       </motion.header>
 

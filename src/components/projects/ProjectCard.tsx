@@ -15,6 +15,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { ProjectItem } from "@/data/projectsData";
+import { useI18n } from "@/i18n/LocaleProvider";
 
 export interface ProjectCardProps {
   project: ProjectItem;
@@ -66,6 +67,7 @@ export default function ProjectCard({
   onCollapsed,
   registerBlock,
 }: ProjectCardProps) {
+  const { dictionary } = useI18n();
   const [internalExpanded, setInternalExpanded] = useState(false);
   const isExpanded = expanded ?? internalExpanded;
   const reducedMotion = useReducedMotion();
@@ -150,17 +152,17 @@ export default function ProjectCard({
           {!project.image ? (
             <div
               role="img"
-              aria-label={`Identidad tipográfica del proyecto ${project.title}`}
+              aria-label={`${dictionary.projects.card.typographicIdentity} ${project.title}`}
               className="flex h-full w-full flex-col items-center justify-center gap-1.5 px-4 text-center bg-linear-to-br from-indigo-500/10 via-transparent to-cyan-500/10"
             >
               <span className="text-[0.65rem] sm:text-xs font-bold uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-400">
-                Open Source
+                {dictionary.projects.card.openSource}
               </span>
               <strong className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-foreground">
                 {project.mediaLabel ?? project.title}
               </strong>
               <span className="text-[0.7rem] sm:text-xs font-medium text-muted">
-                Python · agentes conversacionales
+                {dictionary.projects.card.agentTagline}
               </span>
             </div>
           ) : imgFailed ? (
@@ -170,7 +172,7 @@ export default function ProjectCard({
           ) : (
             <Image
               src={project.image}
-              alt={`Vista del proyecto ${project.title}`}
+              alt={`${dictionary.projects.card.projectImage} ${project.title}`}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
               onError={() => setImgFailed(true)}
@@ -187,7 +189,7 @@ export default function ProjectCard({
         >
           <h4 className="inline-flex items-center gap-1.5 text-[0.7rem] sm:text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
             <Target className="w-3.5 h-3.5 shrink-0" aria-hidden />
-            Desafío
+            {dictionary.projects.card.challenge}
           </h4>
           <p className="text-xs sm:text-sm md:text-base text-muted-foreground leading-relaxed">
             {project.challenge}
@@ -203,7 +205,7 @@ export default function ProjectCard({
           >
             <h4 className="inline-flex items-center gap-1.5 text-[0.7rem] sm:text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
               <Lightbulb className="w-3.5 h-3.5 shrink-0" aria-hidden />
-              Solución / Rol
+              {dictionary.projects.card.solution}
             </h4>
             <p className="text-xs sm:text-sm md:text-base text-muted-foreground leading-relaxed">
               {summary}
@@ -250,7 +252,7 @@ export default function ProjectCard({
                 aria-controls={`project-solution-${project.id}`}
                 aria-expanded={isExpanded}
               >
-                <span>{isExpanded ? "Leer menos" : "Leer más"}</span>
+                <span>{isExpanded ? dictionary.common.readLess : dictionary.common.readMore}</span>
                 {isExpanded ? (
                   <ChevronUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 ) : (
@@ -269,7 +271,7 @@ export default function ProjectCard({
       >
           <h4 className="inline-flex items-center gap-1.5 text-[0.7rem] sm:text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 mb-2.5">
             <Wrench className="w-3.5 h-3.5 shrink-0" aria-hidden />
-            Stack técnico
+            {dictionary.projects.card.stack}
           </h4>
           <div className="flex flex-wrap items-center gap-1.5">
             {project.tags.map((tag) => {
@@ -280,7 +282,7 @@ export default function ProjectCard({
                   type="button"
                   onClick={() => onSelectTechTag?.(tag)}
                   aria-pressed={isSelected}
-                  title={`Filtrar proyectos por ${tag}`}
+                  title={`${dictionary.projects.card.filterBy} ${tag}`}
                   className={`inline-flex min-h-6 items-center text-[0.68rem] sm:text-xs font-semibold uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-[0.35rem] leading-normal transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                     isSelected
                       ? "bg-indigo-600 text-white shadow-xs ring-1 ring-indigo-400"
@@ -309,7 +311,7 @@ export default function ProjectCard({
                 rel="noopener noreferrer"
                 className="group/link inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 rounded-sm transition-colors"
               >
-                Ver demo
+                {dictionary.projects.card.viewDemo}
                 <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-200" />
               </a>
             )}
@@ -321,7 +323,7 @@ export default function ProjectCard({
                 className="group/github inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-muted hover:text-foreground no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 rounded-sm transition-colors"
               >
                 <Github className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/github:translate-x-0.5 group-hover/github:-translate-y-0.5 transition-transform duration-200" />
-                Ver código
+                {dictionary.projects.card.viewCode}
               </a>
             )}
           </div>
@@ -334,7 +336,7 @@ export default function ProjectCard({
         >
           <span className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-muted">
             <Lock className="w-3.5 h-3.5 shrink-0" />
-            Proyecto corporativo · código privado
+            {dictionary.projects.card.privateProject}
           </span>
         </div>
       )}

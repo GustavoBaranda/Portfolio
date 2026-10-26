@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Calendar, MapPin } from "lucide-react";
 import { COLOR_MAP, cardVariants, calculateNormalizedDuration, Experience } from "@/data/aboutData";
 import { RefObject, useId } from "react";
+import { useI18n } from "@/i18n/LocaleProvider";
 
 export interface ExperienceCardProps {
   exp: Experience;
@@ -21,12 +22,14 @@ export default function ExperienceCard({
   onToggle,
   cardRef,
 }: ExperienceCardProps) {
+  const { locale, dictionary } = useI18n();
   const detailsId = useId();
   const colors = COLOR_MAP[exp.color] || COLOR_MAP.syspro;
   const displayDuration = calculateNormalizedDuration(
     exp.startDate,
     exp.endDate,
     exp.duration,
+    locale,
   );
 
   return (
@@ -54,7 +57,7 @@ export default function ExperienceCard({
           onClick={onToggle}
           aria-expanded={isExpanded}
           aria-controls={detailsId}
-          aria-label={`${isExpanded ? "Colapsar" : "Expandir"} experiencia en ${exp.company}`}
+          aria-label={`${isExpanded ? dictionary.experience.collapse : dictionary.experience.expand} ${dictionary.experience.eyebrow.toLowerCase()} ${exp.company}`}
           className="absolute inset-0 z-0 cursor-pointer rounded-[0.35rem] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
         />
 
@@ -161,7 +164,7 @@ export default function ExperienceCard({
 
               <div className="space-y-2">
                 <p className="text-xs font-semibold uppercase tracking-wider text-muted">
-                  Tecnologías y funcionalidades:
+                  {dictionary.experience.technologiesLabel}
                 </p>
                 <div className="flex flex-wrap gap-1.5 items-center">
                   {exp.skills.map((skill) => (
@@ -183,7 +186,7 @@ export default function ExperienceCard({
                     rel="noopener noreferrer"
                     className={`pointer-events-auto relative z-20 inline-flex items-center gap-1.5 text-xs font-semibold hover:underline ${colors.heading}`}
                   >
-                    Ver proyecto ↗
+                    {dictionary.experience.viewProject} ↗
                   </a>
                 </div>
               )}
