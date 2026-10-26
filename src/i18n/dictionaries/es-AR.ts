@@ -334,13 +334,28 @@ export const esARDictionary = {
     eyebrow: "Contacto",
     headingBeforeHighlight: "¿Tenés un proyecto en mente?",
     headingHighlight: "Hablemos.",
-    intro: "Estoy disponible para conversar sobre oportunidades laborales, colaboraciones y proyectos de desarrollo de software.",
+    intro: "Estoy disponible para conversar sobre oportunidades laborales, trabajos freelance y consultoría, y colaboración open source.",
     availability: "Disponible para nuevas oportunidades",
     detailsTitle: "Detalles de Contacto",
     detailsDescription: "Podés escribirme por correo directo o mediante el formulario de la izquierda.",
     emailLabel: "Correo electrónico",
     locationLabel: "Ubicación",
     location: "Buenos Aires, Argentina",
+    professionalPathsLabel: "Opciones de contacto profesional",
+    professionalPaths: {
+      employment: {
+        title: "Oportunidades laborales",
+        description: "Roles de desarrollo de software backend o full stack.",
+      },
+      freelance: {
+        title: "Freelance y consultoría",
+        description: "Proyectos de software, integraciones y consultoría técnica.",
+      },
+      openSource: {
+        title: "Colaboración open source",
+        description: "Issues, contribuciones y colaboración en torno a chatflow-agent.",
+      },
+    },
     submit: "Enviar Mensaje",
     sending: "Enviando correo...",
     success: "¡Mensaje enviado con éxito!",
@@ -353,8 +368,8 @@ export const esARDictionary = {
     placeholders: {
       name: "Tu nombre",
       email: "tu@email.com",
-      subject: "Ej. Oportunidad laboral / Consulta de proyecto",
-      message: "Contame sobre tu proyecto o propuesta...",
+      subject: "Ej. Empleo / Consultoría / Open source",
+      message: "Contame sobre la oportunidad, el proyecto o la colaboración...",
     },
     validation: {
       nameRequired: "Ingresá tu nombre.",

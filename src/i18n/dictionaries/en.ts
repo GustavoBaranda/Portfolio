@@ -260,13 +260,28 @@ export const enDictionary = {
     eyebrow: "Contact",
     headingBeforeHighlight: "Have a project in mind?",
     headingHighlight: "Let's talk.",
-    intro: "I am available to discuss job opportunities, professional collaborations, and software development projects.",
+    intro: "I am available to discuss employment opportunities, freelance and consulting work, and open-source collaboration.",
     availability: "Available for new opportunities",
     detailsTitle: "Contact Details",
     detailsDescription: "You can email me directly or use the form on the left.",
     emailLabel: "Email",
     locationLabel: "Location",
     location: "Buenos Aires, Argentina",
+    professionalPathsLabel: "Professional contact options",
+    professionalPaths: {
+      employment: {
+        title: "Employment opportunities",
+        description: "Backend or full-stack software development roles.",
+      },
+      freelance: {
+        title: "Freelance & consulting",
+        description: "Software projects, integrations, and technical consulting.",
+      },
+      openSource: {
+        title: "Open-source collaboration",
+        description: "Issues, contributions, and collaboration around chatflow-agent.",
+      },
+    },
     submit: "Send Message",
     sending: "Sending email...",
     success: "Message sent successfully!",
@@ -274,8 +289,8 @@ export const enDictionary = {
     placeholders: {
       name: "Your name",
       email: "you@email.com",
-      subject: "E.g. Job opportunity / Project enquiry",
-      message: "Tell me about your project or proposal...",
+      subject: "E.g. Employment / Consulting / Open source",
+      message: "Tell me about the opportunity, project, or collaboration...",
     },
     validation: {
       nameRequired: "Enter your name.",

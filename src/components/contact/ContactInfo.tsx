@@ -1,10 +1,23 @@
 "use client";
 
-import { Mail, MapPin, ArrowUpRight } from "lucide-react";
+import {
+  ArrowUpRight,
+  BriefcaseBusiness,
+  GitPullRequest,
+  Handshake,
+  Mail,
+  MapPin,
+} from "lucide-react";
 import { useI18n } from "@/i18n/LocaleProvider";
 
 export default function ContactInfo() {
   const { dictionary } = useI18n();
+  const professionalPaths = [
+    { ...dictionary.contact.professionalPaths.employment, icon: BriefcaseBusiness },
+    { ...dictionary.contact.professionalPaths.freelance, icon: Handshake },
+    { ...dictionary.contact.professionalPaths.openSource, icon: GitPullRequest },
+  ];
+
   return (
     <div className="min-w-0 w-full rounded-[0.35rem] border border-soft surface-card p-5 sm:p-8 shadow-sm flex flex-col justify-between h-full">
       <div className="min-w-0 flex flex-col gap-4 sm:gap-5">
@@ -21,6 +34,23 @@ export default function ContactInfo() {
             {dictionary.contact.detailsDescription}
           </p>
         </div>
+
+        <ul
+          aria-label={dictionary.contact.professionalPathsLabel}
+          className="grid grid-cols-1 gap-2"
+        >
+          {professionalPaths.map(({ title, description, icon: Icon }) => (
+            <li key={title} className="flex min-w-0 items-start gap-3 rounded-[0.35rem] border border-soft p-3">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.35rem] bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                <Icon className="h-4 w-4" aria-hidden="true" />
+              </span>
+              <span className="min-w-0">
+                <strong className="block text-xs sm:text-sm text-foreground">{title}</strong>
+                <span className="mt-0.5 block text-xs leading-relaxed text-muted">{description}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
 
         {/* Contact List */}
         <div className="flex flex-col gap-3">
