@@ -1,11 +1,11 @@
 import type { ContactFormData } from "@/types";
+import { DEFAULT_LOCALE, type Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 import { CONTACT_FIELDS, type ContactFieldErrors } from "./contact-validation";
 
 type ContactAttemptResult =
   | { success: true }
   | { success: false; error: string; fieldErrors: ContactFieldErrors };
-
-const UNCONFIRMED = "No se pudo confirmar el envío. Podés intentarlo nuevamente o escribirme por correo directo. Tus datos se conservan.";
 
 /** One explicit submission, never an automatic retry. No SMTP or server state. */
 export async function sendContactAttempt(
@@ -13,16 +13,18 @@ export async function sendContactAttempt(
   company: string,
   clearTransientFields: () => void,
   request: typeof fetch = fetch,
+  locale: Locale = DEFAULT_LOCALE,
 ): Promise<ContactAttemptResult> {
+  const unconfirmed = getDictionary(locale).contact.feedback.unconfirmed;
   try {
     const response = await request("/api/contact", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Accept-Language": locale },
       body: JSON.stringify({ ...data, company }),
     });
     const value: unknown = await response.json();
     if (typeof value !== "object" || value === null || Array.isArray(value)) {
-      return { success: false, error: UNCONFIRMED, fieldErrors: {} };
+      return { success: false, error: unconfirmed, fieldErrors: {} };
     }
     const body = value as Record<string, unknown>;
     if (response.ok && body.success === true) return { success: true };
@@ -35,14 +37,12 @@ export async function sendContactAttempt(
     }
     return {
       success: false,
-      error: typeof body.error === "string" && body.error.trim() ? body.error : UNCONFIRMED,
+      error: typeof body.error === "string" && body.error.trim() ? body.error : unconfirmed,
       fieldErrors,
     };
   } catch {
-    return { success: false, error: UNCONFIRMED, fieldErrors: {} };
+    return { success: false, error: unconfirmed, fieldErrors: {} };
   } finally {
-    // Reset only transient fields after every outcome, without signalling which
-    // protection rejected the request. The visitor must choose to submit again.
     clearTransientFields();
   }
 }

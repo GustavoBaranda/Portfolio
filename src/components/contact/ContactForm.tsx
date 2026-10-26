@@ -6,6 +6,7 @@ import { Send, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 import type { ContactFormData } from "@/types";
 import { CONTACT_FIELDS, validateContactFields, type ContactFieldErrors } from "@/lib/contact-validation";
 import { sendContactAttempt } from "@/lib/contact-client";
+import { useI18n } from "@/i18n/LocaleProvider";
 
 function FieldError({ name, errors }: { name: keyof ContactFormData; errors: ContactFieldErrors }) {
   if (!errors[name]) return null;
@@ -17,6 +18,7 @@ function FieldError({ name, errors }: { name: keyof ContactFormData; errors: Con
 }
 
 export default function ContactForm() {
+  const { locale, dictionary } = useI18n();
   const [formData, setFormData] = useState<ContactFormData>({
     nombre: "",
     email: "",
@@ -43,18 +45,18 @@ export default function ContactForm() {
     const next = { ...formData, [name]: e.target.value };
     setFormData(next);
     if (fieldErrors[name]) {
-      setFieldErrors((prev) => ({ ...prev, [name]: validateContactFields(next)[name] }));
+      setFieldErrors((prev) => ({ ...prev, [name]: validateContactFields(next, locale)[name] }));
     }
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (submitting.current) return;
-    const errors = validateContactFields(formData);
+    const errors = validateContactFields(formData, locale);
     setFieldErrors(errors);
     const firstError = CONTACT_FIELDS.find((field) => errors[field]);
     if (firstError) {
-      setErrorMessage("Revisá los campos indicados antes de enviar.");
+      setErrorMessage(dictionary.contact.validation.reviewFields);
       setStatus("error");
       focusField(firstError);
       return;
@@ -63,7 +65,7 @@ export default function ContactForm() {
     setStatus("loading");
     setErrorMessage("");
     try {
-      const result = await sendContactAttempt(formData, company, () => setCompany(""));
+      const result = await sendContactAttempt(formData, company, () => setCompany(""), fetch, locale);
       if (result.success) {
         setStatus("success");
       } else {
@@ -87,7 +89,7 @@ export default function ContactForm() {
     <div className="min-w-0 w-full rounded-[0.35rem] border border-soft surface-card p-4 sm:p-8 shadow-sm flex flex-col justify-between h-full">
       <div>
         <p role="status" aria-live="polite" aria-atomic="true" className="sr-only">
-          {status === "loading" ? "Enviando mensaje." : status === "success" ? "El servicio de correo aceptó tu mensaje." : ""}
+          {status === "loading" ? dictionary.contact.feedback.sendingAnnouncement : status === "success" ? dictionary.contact.feedback.acceptedAnnouncement : ""}
         </p>
         <AnimatePresence mode="wait">
           {status === "success" ? (
@@ -101,10 +103,10 @@ export default function ContactForm() {
                 <CheckCircle2 className="w-10 h-10 sm:w-12 sm:h-12" />
               </div>
               <h4 tabIndex={-1} ref={(node) => { node?.focus(); }} className="text-lg sm:text-xl font-bold text-foreground">
-                ¡Mensaje enviado con éxito!
+                {dictionary.contact.success}
               </h4>
               <p className="text-xs sm:text-sm text-muted max-w-sm mx-auto">
-                Gracias por escribirme. El servicio de correo aceptó tu mensaje para su entrega. Te responderé lo antes posible.
+                {dictionary.contact.feedback.successDescription}
               </p>
               <button
                 onClick={() => {
@@ -117,7 +119,7 @@ export default function ContactForm() {
                 }}
                 className="mt-3 sm:mt-4 px-5 sm:px-6 py-2 rounded-[0.35rem] bg-indigo-600 text-white font-semibold text-xs sm:text-sm hover:bg-indigo-700 transition cursor-pointer"
               >
-                Enviar otro mensaje
+                {dictionary.contact.feedback.sendAnother}
               </button>
             </motion.div>
           ) : (
@@ -135,7 +137,7 @@ export default function ContactForm() {
               noValidate
             >
               <div className="sr-only" aria-hidden="true">
-                <label htmlFor="company">Empresa</label>
+                <label htmlFor="company">Company</label>
                 <input
                   id="company"
                   name="company"
@@ -160,7 +162,7 @@ export default function ContactForm() {
                     htmlFor="nombre"
                     className="text-[0.7rem] sm:text-xs font-bold tracking-wide text-muted uppercase"
                   >
-                    NOMBRE <span className="text-indigo-600 dark:text-indigo-400">*</span>
+                    {dictionary.contact.fields.name} <span className="text-indigo-600 dark:text-indigo-400">*</span>
                   </label>
                   <input
                     id="nombre"
@@ -172,7 +174,7 @@ export default function ContactForm() {
                     maxLength={100}
                     value={formData.nombre}
                     onChange={handleChange}
-                    placeholder="Tu nombre"
+                    placeholder={dictionary.contact.placeholders.name}
                     className="rounded-[0.35rem] border border-soft surface px-3.5 py-2.5 text-base text-foreground placeholder:text-muted"
                   />
                   <FieldError name="nombre" errors={fieldErrors} />
@@ -182,7 +184,7 @@ export default function ContactForm() {
                     htmlFor="email"
                     className="text-[0.7rem] sm:text-xs font-bold tracking-wide text-muted uppercase"
                   >
-                    CORREO ELECTRÓNICO <span className="text-indigo-600 dark:text-indigo-400">*</span>
+                    {dictionary.contact.fields.email} <span className="text-indigo-600 dark:text-indigo-400">*</span>
                   </label>
                   <input
                     id="email"
@@ -194,8 +196,8 @@ export default function ContactForm() {
                     maxLength={254}
                     value={formData.email}
                     onChange={handleChange}
-                    onBlur={() => setFieldErrors((prev) => ({ ...prev, email: validateContactFields(formData).email }))}
-                    placeholder="tu@email.com"
+                    onBlur={() => setFieldErrors((prev) => ({ ...prev, email: validateContactFields(formData, locale).email }))}
+                    placeholder={dictionary.contact.placeholders.email}
                     className={`rounded-[0.35rem] border surface px-3.5 py-2.5 text-base text-foreground placeholder:text-muted transition-colors ${
                       fieldErrors.email
                         ? "border-rose-500/70"
@@ -211,7 +213,7 @@ export default function ContactForm() {
                   htmlFor="asunto"
                   className="text-[0.7rem] sm:text-xs font-bold tracking-wide text-muted uppercase"
                 >
-                  ASUNTO
+                  {dictionary.contact.fields.subject}
                 </label>
                 <input
                   id="asunto"
@@ -222,7 +224,7 @@ export default function ContactForm() {
                   maxLength={200}
                   value={formData.asunto}
                   onChange={handleChange}
-                  placeholder="Ej. Oportunidad laboral / Consulta de proyecto"
+                  placeholder={dictionary.contact.placeholders.subject}
                   className="rounded-[0.35rem] border border-soft surface px-3.5 py-2.5 text-base text-foreground placeholder:text-muted"
                 />
                   <FieldError name="asunto" errors={fieldErrors} />
@@ -233,7 +235,7 @@ export default function ContactForm() {
                   htmlFor="mensaje"
                   className="text-[0.7rem] sm:text-xs font-bold tracking-wide text-muted uppercase"
                 >
-                  MENSAJE <span className="text-indigo-600 dark:text-indigo-400">*</span>
+                  {dictionary.contact.fields.message} <span className="text-indigo-600 dark:text-indigo-400">*</span>
                 </label>
                 <textarea
                   id="mensaje"
@@ -245,7 +247,7 @@ export default function ContactForm() {
                   maxLength={2000}
                   value={formData.mensaje}
                   onChange={handleChange}
-                  placeholder="Cuéntame sobre tu proyecto o propuesta..."
+                  placeholder={dictionary.contact.placeholders.message}
                   className="rounded-[0.35rem] border border-soft surface px-3.5 py-2.5 text-base text-foreground placeholder:text-muted resize-none"
                 />
                   <FieldError name="mensaje" errors={fieldErrors} />
@@ -259,12 +261,12 @@ export default function ContactForm() {
                 {status === "loading" ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Enviando correo...</span>
+                    <span>{dictionary.contact.sending}</span>
                   </>
                 ) : (
                   <>
                     <Send className="w-4 h-4" />
-                    <span>Enviar Mensaje</span>
+                    <span>{dictionary.contact.submit}</span>
                   </>
                 )}
               </button>

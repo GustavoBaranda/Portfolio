@@ -2,11 +2,13 @@ import nodemailer from "nodemailer";
 import { getSiteUrl } from "@/config/site";
 import { escapeHtml, sanitizeHeader } from "@/lib/contact";
 import { handleContactRequest } from "@/lib/contact-handler";
+import { localeFromLanguageHeader } from "@/i18n/config";
 
 export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   return handleContactRequest(req, {
+    locale: localeFromLanguageHeader(req.headers.get("accept-language")),
     originOptions: { baseUrl: getSiteUrl(), vercelUrl: process.env.VERCEL_URL, nodeEnv: process.env.NODE_ENV },
     send: async (data) => {
       const emailUser = process.env.EMAIL_USER;

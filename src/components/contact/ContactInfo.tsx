@@ -1,20 +1,24 @@
+"use client";
+
 import { Mail, MapPin, ArrowUpRight } from "lucide-react";
+import { useI18n } from "@/i18n/LocaleProvider";
 
 export default function ContactInfo() {
+  const { dictionary } = useI18n();
   return (
     <div className="min-w-0 w-full rounded-[0.35rem] border border-soft surface-card p-5 sm:p-8 shadow-sm flex flex-col justify-between h-full">
       <div className="min-w-0 flex flex-col gap-4 sm:gap-5">
         {/* Availability Badge */}
         <span className="inline-flex w-fit max-w-full items-center gap-2 rounded-[0.35rem] bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
           <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-500"></span>
-          <span className="min-w-0">Disponible para nuevas oportunidades</span>
+          <span className="min-w-0">{dictionary.contact.availability}</span>
         </span>
 
         {/* Title */}
         <div>
-          <h3 className="text-lg sm:text-xl font-bold text-foreground">Detalles de Contacto</h3>
+          <h3 className="text-lg sm:text-xl font-bold text-foreground">{dictionary.contact.detailsTitle}</h3>
           <p className="mt-1 text-xs sm:text-sm text-muted leading-relaxed">
-            Puedes escribirme por correo directo o mediante el formulario de la izquierda.
+            {dictionary.contact.detailsDescription}
           </p>
         </div>
 
@@ -29,7 +33,7 @@ export default function ContactInfo() {
               <Mail className="w-5 h-5" />
             </span>
             <span className="flex flex-col min-w-0 flex-1">
-              <span className="text-[0.65rem] sm:text-xs font-bold tracking-wide text-muted uppercase">CORREO ELECTRÓNICO</span>
+              <span className="text-[0.65rem] sm:text-xs font-bold tracking-wide text-muted uppercase">{dictionary.contact.emailLabel}</span>
               <span className="text-xs sm:text-sm font-semibold text-foreground truncate">baranda.gustavo@gmail.com</span>
             </span>
             <ArrowUpRight className="ml-auto w-4 h-4 text-muted transition-colors group-hover:text-indigo-600 dark:group-hover:text-indigo-400 shrink-0" />
@@ -41,8 +45,8 @@ export default function ContactInfo() {
               <MapPin className="w-5 h-5" />
             </span>
             <span className="flex flex-col min-w-0 flex-1">
-              <span className="text-[0.65rem] sm:text-xs font-bold tracking-wide text-muted uppercase">UBICACIÓN</span>
-              <span className="text-xs sm:text-sm font-semibold text-foreground">Buenos Aires, Argentina</span>
+              <span className="text-[0.65rem] sm:text-xs font-bold tracking-wide text-muted uppercase">{dictionary.contact.locationLabel}</span>
+              <span className="text-xs sm:text-sm font-semibold text-foreground">{dictionary.contact.location}</span>
             </span>
           </div>
         </div>
