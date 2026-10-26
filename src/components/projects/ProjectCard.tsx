@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import {
   Github,
+  Heart,
   Layers,
   ArrowUpRight,
   ChevronDown,
@@ -16,6 +17,7 @@ import {
 } from "lucide-react";
 import { ProjectItem } from "@/data/projectsData";
 import { useI18n } from "@/i18n/LocaleProvider";
+import { GITHUB_SPONSORS } from "@/config/openSource";
 
 export interface ProjectCardProps {
   project: ProjectItem;
@@ -98,6 +100,7 @@ export default function ProjectCard({
       "object-contain object-center p-5 sm:p-8 transition-transform duration-500 group-hover:scale-105 dark:brightness-95 dark:contrast-105",
   } satisfies Record<ProjectItem["imagePresentation"], string>;
   const hasLinks = Boolean(project.demoUrl || project.githubUrl);
+  const showSponsor = GITHUB_SPONSORS.enabled && project.id === GITHUB_SPONSORS.projectId;
   const { summary, detail } = splitProjectSolution(project.solution);
   const hasExpandableSolution = detail.length > 0;
   const blockStyle = (block: ProjectCardBlock) => ({
@@ -325,6 +328,22 @@ export default function ProjectCard({
                 <Github className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/github:translate-x-0.5 group-hover/github:-translate-y-0.5 transition-transform duration-200" />
                 {dictionary.projects.card.viewCode}
               </a>
+            )}
+            {showSponsor && (
+              <div className="basis-full pt-1">
+                <a
+                  href={GITHUB_SPONSORS.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-sm text-xs sm:text-sm font-semibold text-pink-600 hover:text-pink-700 dark:text-pink-400 dark:hover:text-pink-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:ring-offset-2"
+                >
+                  <Heart className="h-4 w-4" aria-hidden="true" />
+                  {dictionary.projects.card.sponsorCta}
+                </a>
+                <p className="mt-1 text-xs leading-relaxed text-muted">
+                  {dictionary.projects.card.sponsorDescription}
+                </p>
+              </div>
             )}
           </div>
         </section>

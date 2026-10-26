@@ -217,6 +217,8 @@ export const esARDictionary = {
       typographicIdentity: "Identidad tipográfica del proyecto",
       openSource: "Open Source",
       agentTagline: "Python · agentes conversacionales",
+      sponsorCta: "Apoyar el mantenimiento",
+      sponsorDescription: "Aporte voluntario para mantener chatflow-agent, sin beneficios ni contraprestaciones.",
     },
     categories: {
       all: "Todos los Proyectos",
@@ -286,7 +288,7 @@ export const esARDictionary = {
         period: "Proyecto activo",
         mediaLabel: "chatflow-agent",
         challenge: "Desarrollar agentes conversacionales reutilizables exige separar la lógica de negocio de los proveedores de modelos y de los canales, sin perder estado, coordinación entre agentes ni control ante ejecuciones concurrentes.",
-        solution: "Soy creador y responsable técnico de chatflow-agent, una librería Python open source para desarrollar agentes conversacionales y flujos multiagente. Desarrollo su ejecución asíncrona, herramientas, handoffs entre agentes, proveedores de modelos desacoplados, persistencia de sesiones e integraciones con CLI, webhooks, WhatsApp y Telegram; también mantengo la arquitectura, las pruebas, los controles de concurrencia, los mecanismos de recuperación y la revisión de contribuciones.",
+        solution: "Soy creador y mantenedor de chatflow-agent, una librería Python open source para agentes conversacionales y flujos multiagente. Mantengo una arquitectura modular y extensible con ejecución asíncrona, herramientas, handoffs entre agentes, proveedores desacoplados, persistencia de sesiones e integraciones CLI, webhooks, WhatsApp y Telegram. También mantengo documentación, pruebas, controles de concurrencia, recuperación y revisión de contribuciones para facilitar la colaboración comunitaria.",
       },
       "portfolio-personal": {
         title: "Portfolio Web Personal & Design System",

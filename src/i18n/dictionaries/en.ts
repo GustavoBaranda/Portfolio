@@ -188,6 +188,8 @@ export const enDictionary = {
       typographicIdentity: "Typographic identity for project",
       openSource: "Open Source",
       agentTagline: "Python · conversational agents",
+      sponsorCta: "Support maintenance",
+      sponsorDescription: "Voluntary support for maintaining chatflow-agent, without benefits or consideration.",
     },
     categories: { all: "All Projects", "full-stack": "Full Stack", apis: "APIs and Microservices", opensource: "Freelance & Open Source" },
     entries: {
@@ -224,7 +226,7 @@ export const enDictionary = {
       "chatflow-agent": {
         title: "chatflow-agent — Python Library for Conversational Agents", categoryLabel: "Freelance & Open Source", company: "Open Source · Creator and maintainer", period: "Active project", mediaLabel: "chatflow-agent",
         challenge: "Reusable conversational agents require business logic to remain independent from model providers and channels without sacrificing state, agent coordination, or concurrency control.",
-        solution: "I am the creator and technical maintainer of chatflow-agent, an open-source Python library for conversational agents and multi-agent flows. I develop its asynchronous execution, tools, agent handoffs, decoupled model providers, session persistence, and CLI, webhook, WhatsApp, and Telegram integrations; I also maintain its architecture, tests, concurrency safeguards, recovery mechanisms, and contribution reviews.",
+        solution: "I am the creator and maintainer of chatflow-agent, an open-source Python library for conversational agents and multi-agent flows. I maintain a modular, extensible architecture with asynchronous execution, tools, handoffs, decoupled providers, session persistence, and CLI, webhook, WhatsApp, and Telegram integrations. I also maintain documentation, tests, concurrency safeguards, recovery, and contribution reviews to support community collaboration.",
       },
       "portfolio-personal": {
         title: "Personal Web Portfolio & Design System", categoryLabel: "Freelance & Open Source", company: "Personal Project", period: "2025 — Present", mediaLabel: "",
