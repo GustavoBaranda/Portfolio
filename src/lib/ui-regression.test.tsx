@@ -35,6 +35,8 @@ import { closeNavigationDialogAfterExit } from "./navigation-dialog";
 import {
   createHomeMetadata,
   createRootMetadata,
+  CANONICAL_URL_BY_LOCALE,
+  LANGUAGE_ALTERNATES,
   resolveSiteUrl,
   SITE_CONFIG,
 } from "../config/site";
@@ -104,11 +106,13 @@ test("home metadata uses the centralized professional identity", async () => {
   const effective = JSON.parse(JSON.stringify(createHomeMetadata())) as {
     title: { absolute: string };
     description: string;
-    alternates: { canonical: string };
+    alternates: { canonical: string; languages: Record<string, string> };
     openGraph: {
       title: string;
       description: string;
       url: string;
+      locale: string;
+      alternateLocale: string[];
       images: Array<{ url: string; width: number; height: number; alt: string; type: string }>;
     };
     twitter: {
@@ -131,12 +135,15 @@ test("home metadata uses the centralized professional identity", async () => {
     effective.description,
     "Full Stack Python Developer especializado en backend con Django y SQL Server. Desarrollo aplicaciones empresariales, integraciones y proyectos open source.",
   );
-  assert.equal(effective.alternates.canonical, "https://gustavobaranda.com");
+  assert.equal(effective.alternates.canonical, CANONICAL_URL_BY_LOCALE["es-AR"]);
+  assert.deepEqual(effective.alternates.languages, LANGUAGE_ALTERNATES);
   assert.equal(effective.openGraph.title, effective.title.absolute);
   assert.equal(effective.twitter.title, effective.title.absolute);
   assert.equal(effective.openGraph.description, SITE_CONFIG.socialDescription);
   assert.equal(effective.twitter.description, SITE_CONFIG.socialDescription);
-  assert.equal(effective.openGraph.url, SITE_CONFIG.url);
+  assert.equal(effective.openGraph.url, CANONICAL_URL_BY_LOCALE["es-AR"]);
+  assert.equal(effective.openGraph.locale, "es_AR");
+  assert.deepEqual(effective.openGraph.alternateLocale, ["en_US"]);
   assert.equal(effective.twitter.card, "summary_large_image");
   assert.equal(effective.openGraph.images.length, 1);
   assert.equal(effective.twitter.images.length, 1);
@@ -153,7 +160,7 @@ test("home metadata uses the centralized professional identity", async () => {
   assert.equal(effective.openGraph.images[0].type, "image/png");
   assert.equal(
     effective.openGraph.images[0].alt,
-    "Gustavo Baranda - Full Stack Python Developer",
+    "Portfolio de Gustavo Baranda — Full Stack Python Developer",
   );
   assert.equal(effective.twitter.images[0].alt, effective.openGraph.images[0].alt);
 
@@ -210,13 +217,12 @@ test("canonical, robots and sitemap stay on the public domain across environment
   assert.equal(robotsConfig.sitemap, `${SITE_CONFIG.url}/sitemap.xml`);
 
   const sitemapEntries = sitemap();
-  assert.deepEqual(sitemapEntries, [
-    {
-      url: SITE_CONFIG.url,
-      changeFrequency: "monthly",
-      priority: 1,
-    },
-  ]);
+  assert.deepEqual(sitemapEntries, Object.values(CANONICAL_URL_BY_LOCALE).map((url) => ({
+    url,
+    changeFrequency: "monthly",
+    priority: 1,
+    alternates: { languages: LANGUAGE_ALTERNATES },
+  })));
   assert.ok(sitemapEntries.every((entry) => !("lastModified" in entry)));
 
   const [layout, page, robotsSource, sitemapSource] = await Promise.all([
@@ -240,7 +246,7 @@ test("JSON-LD represents one coherent Person and WebSite with safe serialization
   assert.equal(person["@id"], `${SITE_CONFIG.url}/#person`);
   assert.equal(person.name, SITE_CONFIG.name);
   assert.equal(person.jobTitle, "Full Stack Python Developer");
-  assert.equal(person.url, SITE_CONFIG.url);
+  assert.equal(person.url, CANONICAL_URL_BY_LOCALE["es-AR"]);
   assert.equal(person.description, SITE_CONFIG.description);
   assert.match(person.description, /backend con Django y SQL Server/);
   assert.deepEqual(person.sameAs, [SITE_CONFIG.links.github, SITE_CONFIG.links.linkedin]);
