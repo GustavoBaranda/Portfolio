@@ -24,6 +24,9 @@ An accessible `ES | EN` selector preserves the active section hash when changing
 - Experience, education, and project cards with accessible disclosures.
 - Project filtering by category and technology.
 - Links to public repositories and demos when available.
+- Explicit positioning of chatflow-agent as open-source work created and maintained by Gustavo Baranda.
+- A verified external-recognition note for the Portfolio commit selected by XERJ Corpus Hub.
+- Professional contact paths for employment, freelance and consulting work, and open-source collaboration.
 - Motion and interaction effects with reduced-motion support.
 - Contact form with shared client/server validation and accessible feedback.
 - Origin checks, body-size limits, honeypot protection, and per-process rate limiting.
@@ -54,7 +57,7 @@ Portfolio/
 │   │   ├── [[...locale]]/       # Shared SSG route for / and /en
 │   │   └── api/contact/         # Contact form POST endpoint
 │   ├── components/              # UI components grouped by section
-│   ├── config/                  # Public site configuration and URL resolution
+│   ├── config/                  # Public URLs, professional links, recognition, and funding state
 │   ├── data/
 │   │   ├── portfolioFacts.ts    # Locale-independent identity and technical facts
 │   │   ├── aboutData.ts         # Locale-aware experience and education adapters
@@ -90,6 +93,16 @@ Dates use normalized year or year-month values. `Intl.DateTimeFormat` and `Intl.
 The optional localized route statically generates only `/` and `/en`. Unknown paths render translated not-found content. The root layout sets the server-rendered document language to `es-AR` or `en`, and the language selector maps anchors such as `/#projects` to `/en#projects`.
 
 Whenever a later phase changes user-visible behavior, both `README.md` and `README.es.md` must be updated together.
+
+## Professional and open-source positioning
+
+chatflow-agent is presented as Gustavo Baranda's own open-source project, with the role **Creator and Maintainer**. Its description focuses on the verified scope already represented by the repository: a Python library for conversational agents, modular and extensible architecture, asynchronous execution, documentation, testing, contribution review, and community collaboration. The project card links to the official repository at `https://github.com/GustavoBaranda/chatflow-agent`.
+
+XERJ Corpus Hub is kept separate as external recognition. XERJ selected commit [`0de85332b1`](https://github.com/GustavoBaranda/Portfolio/commit/0de85332b1304e04a490b8cd4b6d133be58e28a4), `fix(contact): validate submissions and preserve recovery flow`, from `GustavoBaranda/Portfolio` as a pinned reference corpus. The public XERJ record currently marks it as **selected · in licence review** and explicitly states that it is not yet installable or live in the registry. The portfolio does not represent XERJ as an employer, client, contract, or project owned by Gustavo Baranda. Verification: `https://hub.xerj.org/contributors/GustavoBaranda`.
+
+GitHub Sponsors configuration lives in `src/config/openSource.ts`. The application URL and its association with chatflow-agent are prepared, but `enabled` remains `false` and the status remains `pending-approval`. Consequently, no Sponsor link or claim that sponsorship is available is rendered. After GitHub approves and publishes the profile, changing the configuration flag is sufficient to expose the existing component integration. Its copy defines support as voluntary maintenance funding without benefits or consideration.
+
+The existing contact form is unchanged. Its accompanying information now distinguishes employment opportunities, freelance and consulting enquiries, and open-source collaboration without adding external services.
 
 ## Contact form
 
@@ -180,7 +193,7 @@ npm run build
 npm run test:seo-build
 ```
 
-The suite covers contact validation and security, SMTP acceptance with mocks, both localized renders, route resolution, language switching with hash preservation, HTML language mapping, keyboard-native links, translated server feedback, international metadata, sitemap, robots, JSON-LD, not-found/error contracts, navigation and disclosures, styles, accessibility, motion, dictionary parity, locale-independent data, and normalized date formatting. Tests do not send real email.
+The suite covers contact validation and security, SMTP acceptance with mocks, both localized renders, route resolution, language switching with hash preservation, HTML language mapping, keyboard-native links, translated server feedback, professional positioning, authorship versus external recognition, contact paths, disabled Sponsors state, international metadata, sitemap, robots, JSON-LD, not-found/error contracts, navigation and disclosures, styles, accessibility, motion, dictionary parity, locale-independent data, and normalized date formatting. Tests do not send real email.
 
 Run `npm run test:seo-build` after `npm run build`. This additional test reads the generated production HTML, `sitemap.xml`, and `robots.txt` to verify the actual canonical, `hreflang`, Open Graph, indexability, and JSON-LD output rather than configuration objects alone.
 
