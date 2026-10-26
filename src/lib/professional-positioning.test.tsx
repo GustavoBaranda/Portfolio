@@ -46,12 +46,16 @@ test("XERJ is represented as external recognition of one Portfolio commit", () =
     assert.match(html, /href="https:\/\/hub\.xerj\.org\/contributors\/GustavoBaranda"/);
     assert.match(html, /href="https:\/\/github\.com\/GustavoBaranda\/Portfolio\/commit\/0de85332/);
     assert.match(html, /<aside[^>]+aria-labelledby="external-recognition-title"/);
+    assert.match(html, /rel="noopener noreferrer"/);
+    assert.doesNotMatch(html, /<dl\b|<section\b/);
     assert.doesNotMatch(html, /employer|empleador|employee|contractor|proyecto propio de XERJ/i);
   }
-  assert.match(spanish, /Reconocimiento externo/);
-  assert.match(spanish, /revisión de licencia pendiente/);
-  assert.match(english, /External recognition/);
-  assert.match(english, /licence review pending/);
+  assert.match(spanish, /Reconocimiento Open Source/);
+  assert.match(spanish, /Portfolio seleccionado por XERJ Corpus Hub/);
+  assert.match(spanish, /Selección en revisión de licencia\./);
+  assert.match(english, /Open Source Recognition/);
+  assert.match(english, /Portfolio Selected by XERJ Corpus Hub/);
+  assert.match(english, /Selection pending license review\./);
 });
 
 test("professional contact paths are equivalent, semantic and responsive", () => {
