@@ -319,6 +319,17 @@ export const esARDictionary = {
       },
     },
   },
+  recognition: {
+    eyebrow: "Reconocimiento externo",
+    title: "Trabajo del Portfolio seleccionado para XERJ Corpus Hub",
+    description: "XERJ seleccionó un commit fijado de este portfolio como corpus de referencia para agentes de programación. Es un reconocimiento externo al trabajo realizado en el repositorio Portfolio, no un empleo, un contrato ni la autoría del proyecto XERJ.",
+    contributionLabel: "Contribución reconocida",
+    contribution: "Validación del formulario de contacto y flujo de recuperación en el repositorio Portfolio.",
+    statusLabel: "Estado actual",
+    status: "Seleccionado · revisión de licencia pendiente · todavía no instalable",
+    sourceLink: "Ver verificación en XERJ Corpus Hub",
+    commitLink: "Ver commit seleccionado",
+  },
   contact: {
     eyebrow: "Contacto",
     headingBeforeHighlight: "¿Tenés un proyecto en mente?",

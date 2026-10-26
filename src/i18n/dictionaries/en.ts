@@ -245,6 +245,17 @@ export const enDictionary = {
       },
     },
   },
+  recognition: {
+    eyebrow: "External recognition",
+    title: "Portfolio work selected for the XERJ Corpus Hub",
+    description: "XERJ selected a pinned commit from this portfolio as a reference corpus for coding agents. This is external recognition of work on the Portfolio repository, not employment, a contract, or ownership of the XERJ project.",
+    contributionLabel: "Recognized contribution",
+    contribution: "Contact-form validation and recovery flow in the Portfolio repository.",
+    statusLabel: "Current status",
+    status: "Selected · licence review pending · not yet installable",
+    sourceLink: "View verification on XERJ Corpus Hub",
+    commitLink: "View selected commit",
+  },
   contact: {
     eyebrow: "Contact",
     headingBeforeHighlight: "Have a project in mind?",

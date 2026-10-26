@@ -7,6 +7,7 @@ import HeroBio from "@/components/about/HeroBio";
 import ExperienceSection from "@/components/about/ExperienceSection";
 import EducationSection from "@/components/about/EducationSection";
 import ProjectsGrid from "@/components/projects/ProjectsGrid";
+import ExternalRecognition from "@/components/projects/ExternalRecognition";
 import ContactForm from "@/components/contact/ContactForm";
 import ContactInfo from "@/components/contact/ContactInfo";
 import { localizedSectionHref, type Locale } from "@/i18n/config";
@@ -75,6 +76,7 @@ export default function PortfolioPage({ locale }: { locale: Locale }) {
             <p className="max-w-2xl text-base sm:text-lg text-muted leading-relaxed">{dictionary.projects.intro}</p>
           </header>
           <ProjectsGrid />
+          <ExternalRecognition />
         </section>
 
         <section id="contact" className="scroll-mt-28 max-w-5xl mx-auto space-y-10 sm:space-y-12">
