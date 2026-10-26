@@ -41,6 +41,7 @@ import {
 import { createPortfolioStructuredData, serializeJsonLd } from "./structured-data";
 import robots from "../app/robots";
 import sitemap from "../app/sitemap";
+import PortfolioPage from "../components/PortfolioPage";
 
 test("back-to-top control appears after one viewport and preserves native keyboard behavior", async () => {
   assert.equal(shouldShowBackToTop(0, 800), false);
@@ -72,7 +73,7 @@ test("back-to-top control appears after one viewport and preserves native keyboa
   assert.match(source, /bottom-\[calc\(8rem\+env\(safe-area-inset-bottom\)\)\]/);
   assert.doesNotMatch(source, /onKeyDown/);
 
-  const layout = await readFile("src/app/layout.tsx", "utf8");
+  const layout = await readFile("src/app/[[...locale]]/layout.tsx", "utf8");
   assert.match(layout, /<Footer \/>\s*<BackToTopButton \/>/);
   assert.equal(renderToStaticMarkup(<BackToTopButton />), "");
 });
@@ -163,13 +164,14 @@ test("home metadata uses the centralized professional identity", async () => {
   await assert.rejects(readFile("src/app/opengraph-image.png"), { code: "ENOENT" });
 
   const [layout, page, site] = await Promise.all([
-    readFile("src/app/layout.tsx", "utf8"),
-    readFile("src/app/page.tsx", "utf8"),
+    readFile("src/app/[[...locale]]/layout.tsx", "utf8"),
+    readFile("src/app/[[...locale]]/page.tsx", "utf8"),
     readFile("src/config/site.ts", "utf8"),
   ]);
   assert.match(layout, /export const metadata = createRootMetadata\(\)/);
-  assert.match(page, /export const metadata = createHomeMetadata\(\)/);
-  const pageMetadataSetup = page.slice(0, page.indexOf("export default function HomePage"));
+  assert.match(page, /generateMetadata/);
+  assert.match(page, /createHomeMetadata\(locale\)/);
+  const pageMetadataSetup = page.slice(0, page.indexOf("export default async function LocalizedPage"));
   assert.doesNotMatch(pageMetadataSetup, /Full Stack Python Developer especializado|chatflow-agent/);
   assert.doesNotMatch(
     `${layout}\n${page}\n${site}`,
@@ -218,8 +220,8 @@ test("canonical, robots and sitemap stay on the public domain across environment
   assert.ok(sitemapEntries.every((entry) => !("lastModified" in entry)));
 
   const [layout, page, robotsSource, sitemapSource] = await Promise.all([
-    readFile("src/app/layout.tsx", "utf8"),
-    readFile("src/app/page.tsx", "utf8"),
+    readFile("src/app/[[...locale]]/layout.tsx", "utf8"),
+    readFile("src/app/[[...locale]]/page.tsx", "utf8"),
     readFile("src/app/robots.ts", "utf8"),
     readFile("src/app/sitemap.ts", "utf8"),
   ]);
@@ -259,7 +261,7 @@ test("JSON-LD represents one coherent Person and WebSite with safe serialization
   assert.equal(website["@type"], "WebSite");
   assert.equal(website["@id"], `${SITE_CONFIG.url}/#website`);
   assert.equal(website.url, person.url);
-  assert.equal(website.inLanguage, "es");
+  assert.equal(website.inLanguage, "es-AR");
   assert.equal(website.author["@id"], person["@id"]);
   assert.equal(new Set(structuredData["@graph"].map(({ "@id": id }) => id)).size, 2);
   assert.doesNotMatch(
@@ -274,8 +276,8 @@ test("JSON-LD represents one coherent Person and WebSite with safe serialization
   assert.deepEqual(JSON.parse(serializedUnsafeValue), unsafeValue);
   assert.deepEqual(JSON.parse(serializeJsonLd(structuredData)), structuredData);
 
-  const layout = await readFile("src/app/layout.tsx", "utf8");
-  assert.match(layout, /createPortfolioStructuredData\(\)/);
+  const layout = await readFile("src/app/[[...locale]]/layout.tsx", "utf8");
+  assert.match(layout, /createPortfolioStructuredData\(locale\)/);
   assert.match(layout, /serializeJsonLd\(structuredData\)/);
   assert.equal((layout.match(/application\/ld\+json/g) ?? []).length, 1);
   assert.doesNotMatch(layout, /const jsonLdPerson|JSON\.stringify\(jsonLdPerson\)/);
@@ -422,7 +424,7 @@ test("education preserves five ordered static records with consistent academic n
     assert.doesNotMatch(html, /<(?:button|a)\b|aria-expanded=|aria-controls=/);
   }
 
-  const section = await readFile("src/components/about/EducationSection.tsx", "utf8");
+  const section = renderToStaticMarkup(<EducationSection />);
   assert.match(section, /Una formación en constante/);
   assert.match(section, />\s*evolución\s*</);
   assert.match(section, /Formación técnica, universitaria y complementaria que acompaña mi desarrollo profesional\./);
@@ -447,13 +449,13 @@ test("biography keeps its disclosure mounted and CTA wrapper retains responsive 
 });
 
 test("hero projects CTA is a native hash link with the original fill layers", async () => {
-  const page = await readFile("src/app/page.tsx", "utf8");
+  const page = await readFile("src/components/PortfolioPage.tsx", "utf8");
   const button = await readFile("src/components/hero/fill-button.tsx", "utf8");
   const cta = renderToStaticMarkup(
     <FillButton href="#projects" ariaLabel="Ver proyectos">Proyectos</FillButton>,
   );
 
-  assert.match(page, /<FillButton\s+href="#projects"/);
+  assert.match(page, /href=\{localizedSectionHref\(locale, "projects"\)\}/);
   assert.match(page, /<section id="projects"/);
   assert.match(cta, /<a\b/);
   assert.match(cta, /href="#projects"/);
@@ -468,8 +470,8 @@ test("hero projects CTA is a native hash link with the original fill layers", as
 });
 
 test("hero and biography communicate the backend-focused Python positioning", async () => {
-  const page = await readFile("src/app/page.tsx", "utf8");
-  assert.match(page, /text="Full Stack Python Developer"/);
+  const page = renderToStaticMarkup(<PortfolioPage locale="es-AR" />);
+  assert.match(page, /Full Stack Python Developer/);
   assert.match(page, /Desarrollo software que conecta negocios, tecnología y datos\./);
   assert.match(page, /Especializado en backend con Python, Django y SQL Server\./);
   assert.match(page, /soluciones Full Stack para logística, servicios financieros y medicina laboral/);
@@ -493,7 +495,7 @@ test("the five main section headings share hierarchy, copy and highlighted words
   const about = renderToStaticMarkup(<HeroBio />);
   const experience = renderToStaticMarkup(<ExperienceSection />);
   const education = renderToStaticMarkup(<EducationSection />);
-  const page = await readFile("src/app/page.tsx", "utf8");
+  const page = renderToStaticMarkup(<PortfolioPage locale="es-AR" />);
 
   for (const html of [about, experience, education]) {
     assert.equal([...html.matchAll(/<h2\b/g)].length, 1);
@@ -521,21 +523,21 @@ test("the five main section headings share hierarchy, copy and highlighted words
   assert.match(page, />\s*ideas\s*</);
   assert.match(page, /en soluciones\./);
   assert.match(page, /Una selección de desarrollos empresariales, aplicaciones web y proyectos open source\./);
-  assert.match(page, /<header className="max-w-3xl space-y-3 sm:space-y-4">/);
+  assert.match(page, /<header class="max-w-3xl space-y-3 sm:space-y-4">/);
   assert.doesNotMatch(page, /Proyectos Destacados|Casos de estudio reales/);
   assert.match(page, /¿Tenés un proyecto en mente\?/);
   assert.match(page, />\s*Hablemos\.\s*</);
   assert.match(page, /Estoy disponible para conversar sobre oportunidades laborales, colaboraciones y proyectos de desarrollo de software\./);
   assert.doesNotMatch(page, /¿Tienes una idea o proyecto\?|Envíame un mensaje/);
-  assert.match(page, /<ContactForm \/>/);
-  assert.match(page, /<ContactInfo \/>/);
+  assert.match(page, /<form aria-busy="false"/);
+  assert.match(page, /baranda\.gustavo@gmail\.com/);
   assert.match(page, /grid min-w-0 grid-cols-1 gap-6 items-stretch lg:grid-cols-2/);
 
   const sources = [
     await readFile("src/components/about/HeroBio.tsx", "utf8"),
     await readFile("src/components/about/ExperienceSection.tsx", "utf8"),
     await readFile("src/components/about/EducationSection.tsx", "utf8"),
-    page,
+    await readFile("src/components/PortfolioPage.tsx", "utf8"),
   ].join("\n");
   assert.ok((sources.match(/from-violet-600 via-indigo-600 to-blue-600/g) ?? []).length >= 5);
   assert.ok((sources.match(/dark:from-violet-400 dark:via-indigo-400 dark:to-blue-400/g) ?? []).length >= 5);
@@ -543,7 +545,7 @@ test("the five main section headings share hierarchy, copy and highlighted words
 
 test("contact cards can shrink within the mobile grid without clipping", async () => {
   const [page, form, info] = await Promise.all([
-    readFile("src/app/page.tsx", "utf8"),
+    readFile("src/components/PortfolioPage.tsx", "utf8"),
     readFile("src/components/contact/ContactForm.tsx", "utf8"),
     readFile("src/components/contact/ContactInfo.tsx", "utf8"),
   ]);
@@ -552,7 +554,7 @@ test("contact cards can shrink within the mobile grid without clipping", async (
   assert.match(form, /className="min-w-0 w-full rounded-\[0\.35rem\]/);
   assert.match(info, /className="min-w-0 w-full rounded-\[0\.35rem\]/);
   assert.match(info, /inline-flex w-fit max-w-full/);
-  assert.match(info, /<span className="min-w-0">Disponible para nuevas oportunidades<\/span>/);
+  assert.match(info, /dictionary\.contact\.availability/);
 });
 
 test("editable contact controls keep a zoom-safe font size", async () => {
