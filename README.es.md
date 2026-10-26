@@ -27,7 +27,7 @@ El selector accesible `ES | EN` conserva el hash de la sección activa al cambia
 - Animaciones e interacciones adaptadas a movimiento reducido.
 - Formulario con validación compartida entre cliente y servidor y mensajes accesibles.
 - Validación de origen, límite de cuerpo, honeypot y rate limit por proceso.
-- Canonical, Open Graph, Twitter Cards, JSON-LD, sitemap y robots.
+- Canonicals por idioma, `hreflang` recíproco, Open Graph y Twitter Cards localizados, sitemap bilingüe, JSON-LD y robots.
 - Páginas de error y recurso no encontrado integradas.
 - Renderizado completo en español e inglés, incluidos formularios, respuestas del servidor, errores, etiquetas ARIA y metadata.
 - Selector de idioma accesible que conserva las anclas de sección.
@@ -87,7 +87,7 @@ Los diccionarios son objetos TypeScript con una estructura compartida comprobada
 
 Las fechas se representan mediante años o valores año-mes normalizados. Los helpers localizados utilizan `Intl.DateTimeFormat` e `Intl.NumberFormat` y no interpretan nombres de meses traducidos.
 
-La ruta localizada opcional genera estáticamente solo `/` y `/en`. Las rutas inexistentes muestran contenido traducido. El layout establece `lang="es-AR"` o `lang="en"` durante el renderizado del servidor, y el selector transforma anclas como `/#projects` en `/en#projects`. Las funciones completas de SEO internacional, como `hreflang` y el sitemap bilingüe, quedan reservadas para la fase siguiente.
+La ruta localizada opcional genera estáticamente solo `/` y `/en`. Las rutas inexistentes muestran contenido traducido. El layout establece `lang="es-AR"` o `lang="en"` durante el renderizado del servidor, y el selector transforma anclas como `/#projects` en `/en#projects`.
 
 Cada fase futura que modifique comportamiento visible debe actualizar conjuntamente `README.md` y `README.es.md`.
 
@@ -115,9 +115,11 @@ Las regresiones automatizadas complementan, pero no reemplazan, la validación m
 
 ## SEO y URLs públicas
 
-`SITE_CONFIG.url` es la URL pública canónica utilizada por metadata, Open Graph, Twitter Cards, sitemap y robots. `getSiteUrl()` resuelve por separado el origen operativo que el endpoint de contacto utiliza para validar `Origin`.
+`SITE_CONFIG.url` es el origen público de producción. `CANONICAL_URL_BY_LOCALE` y `LANGUAGE_ALTERNATES` son la fuente de verdad compartida por metadata, sitemap y JSON-LD. `getSiteUrl()` resuelve por separado el origen operativo que el endpoint de contacto utiliza para validar `Origin`.
 
-El layout localizado publica datos estructurados `Person` y `WebSite` para la ruta activa. La metadata básica está traducida, mientras que el sitemap permanece deliberadamente limitado a `/` hasta que la fase de SEO internacional incorpore `hreflang` y las entradas bilingües.
+La página española usa `https://gustavobaranda.com/` como URL canónica y la inglesa usa `https://gustavobaranda.com/en`. Ambas publican alternates recíprocos `es-AR` y `en`, más un alternate `x-default` hacia la raíz española. Open Graph utiliza `es_AR` o `en_US` junto con el `alternateLocale` recíproco; las descripciones y el texto alternativo de la imagen social siguen el idioma activo.
+
+El sitemap contiene únicamente ambas páginas públicas canónicas y repite los alternates lingüísticos recíprocos en cada entrada. `robots.txt` permite el sitio público, incluida `/en`, y excluye `/api/`. No existe redirección automática por idioma. El layout localizado publica JSON-LD `Person` y `WebSite` con la URL canónica, el idioma del documento, la descripción profesional verificada, los datos estables de formación y los perfiles públicos.
 
 ## Desarrollo local
 
@@ -175,9 +177,12 @@ npm run lint
 npx tsc --noEmit
 npm test
 npm run build
+npm run test:seo-build
 ```
 
-La suite cubre validación y seguridad del formulario, aceptación SMTP simulada, renderizado en ambos idiomas, resolución de rutas, cambio de idioma con conservación del hash, idioma del documento, enlaces accesibles mediante teclado, respuestas traducidas del servidor, contratos de error y 404, navegación, expansiones, estilos, accesibilidad, movimiento, paridad de diccionarios, datos independientes del idioma y fechas normalizadas. Las pruebas no envían correo real.
+La suite cubre validación y seguridad del formulario, aceptación SMTP simulada, renderizado en ambos idiomas, resolución de rutas, cambio de idioma con conservación del hash, idioma del documento, enlaces accesibles mediante teclado, respuestas traducidas del servidor, metadata internacional, sitemap, robots, JSON-LD, contratos de error y 404, navegación, expansiones, estilos, accesibilidad, movimiento, paridad de diccionarios, datos independientes del idioma y fechas normalizadas. Las pruebas no envían correo real.
+
+`npm run test:seo-build` debe ejecutarse después de `npm run build`. Esta prueba adicional lee el HTML de producción, `sitemap.xml` y `robots.txt` generados para verificar canonical, `hreflang`, Open Graph, indexabilidad y JSON-LD reales, en lugar de limitarse a los objetos de configuración.
 
 En el sandbox restringido de Windows, `tsx` puede fallar antes de descubrir las pruebas porque `os.userInfo()` devuelve `uv_os_get_passwd/ENOMEM`. El mismo comando `npm test` funciona normalmente fuera de ese sandbox; no se incorpora ningún monkeypatch al proyecto.
 

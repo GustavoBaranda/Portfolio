@@ -27,7 +27,7 @@ An accessible `ES | EN` selector preserves the active section hash when changing
 - Motion and interaction effects with reduced-motion support.
 - Contact form with shared client/server validation and accessible feedback.
 - Origin checks, body-size limits, honeypot protection, and per-process rate limiting.
-- Canonical metadata, Open Graph, Twitter Cards, JSON-LD, sitemap, and robots configuration.
+- Per-language canonicals, reciprocal `hreflang`, localized Open Graph and Twitter Cards, bilingual sitemap, JSON-LD, and robots configuration.
 - Integrated error and not-found pages.
 - Fully localized Spanish and English rendering, including forms, server feedback, errors, ARIA labels, and metadata.
 - Accessible language selector that preserves section anchors.
@@ -87,7 +87,7 @@ The dictionaries are TypeScript objects with a shared compile-time shape. Runtim
 
 Dates use normalized year or year-month values. `Intl.DateTimeFormat` and `Intl.NumberFormat` are used by locale-aware helpers instead of parsing translated month names.
 
-The optional localized route statically generates only `/` and `/en`. Unknown paths render translated not-found content. The root layout sets the server-rendered document language to `es-AR` or `en`, and the language selector maps anchors such as `/#projects` to `/en#projects`. International SEO discovery features such as `hreflang` and a bilingual sitemap remain reserved for the next phase.
+The optional localized route statically generates only `/` and `/en`. Unknown paths render translated not-found content. The root layout sets the server-rendered document language to `es-AR` or `en`, and the language selector maps anchors such as `/#projects` to `/en#projects`.
 
 Whenever a later phase changes user-visible behavior, both `README.md` and `README.es.md` must be updated together.
 
@@ -115,9 +115,11 @@ Automated regression coverage complements, but does not replace, manual testing 
 
 ## SEO and public URLs
 
-`SITE_CONFIG.url` is the canonical public URL used by metadata, Open Graph, Twitter Cards, sitemap, and robots. `getSiteUrl()` separately resolves the operational origin used by the contact endpoint for `Origin` validation.
+`SITE_CONFIG.url` is the public production origin. `CANONICAL_URL_BY_LOCALE` and `LANGUAGE_ALTERNATES` are the shared source of truth used by metadata, sitemap, and JSON-LD. `getSiteUrl()` separately resolves the operational origin used by the contact endpoint for `Origin` validation.
 
-The localized root layout publishes `Person` and `WebSite` structured data for the active route. Basic page metadata is localized, while the sitemap intentionally remains limited to `/` until the international SEO phase adds `hreflang` and bilingual discovery entries.
+The Spanish page uses `https://gustavobaranda.com/` as its canonical URL and the English page uses `https://gustavobaranda.com/en`. Both pages publish reciprocal `es-AR` and `en` alternates plus an `x-default` alternate pointing to the Spanish root. Open Graph uses `es_AR` or `en_US` with the reciprocal `alternateLocale`; descriptions and social image alternative text follow the active language.
+
+The sitemap contains only both canonical public pages and repeats the reciprocal language alternates for each entry. `robots.txt` permits the public site, including `/en`, and excludes `/api/`. There is no automatic language redirect. The localized layout publishes `Person` and `WebSite` JSON-LD with the current canonical URL, document language, verified professional description, stable education facts, and public profile links.
 
 ## Local development
 
@@ -175,9 +177,12 @@ npm run lint
 npx tsc --noEmit
 npm test
 npm run build
+npm run test:seo-build
 ```
 
-The suite covers contact validation and security, SMTP acceptance with mocks, both localized renders, route resolution, language switching with hash preservation, HTML language mapping, keyboard-native links, translated server feedback, not-found/error contracts, navigation and disclosures, styles, accessibility, motion, dictionary parity, locale-independent data, and normalized date formatting. Tests do not send real email.
+The suite covers contact validation and security, SMTP acceptance with mocks, both localized renders, route resolution, language switching with hash preservation, HTML language mapping, keyboard-native links, translated server feedback, international metadata, sitemap, robots, JSON-LD, not-found/error contracts, navigation and disclosures, styles, accessibility, motion, dictionary parity, locale-independent data, and normalized date formatting. Tests do not send real email.
+
+Run `npm run test:seo-build` after `npm run build`. This additional test reads the generated production HTML, `sitemap.xml`, and `robots.txt` to verify the actual canonical, `hreflang`, Open Graph, indexability, and JSON-LD output rather than configuration objects alone.
 
 In the restricted Windows sandbox, `tsx` can fail before test discovery because `os.userInfo()` returns `uv_os_get_passwd/ENOMEM`. The same `npm test` command runs normally outside that sandbox; no project monkeypatch is used.
 
