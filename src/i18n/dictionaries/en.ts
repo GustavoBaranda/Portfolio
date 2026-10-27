@@ -248,7 +248,9 @@ export const enDictionary = {
   recognition: {
     eyebrow: "Open Source Recognition",
     title: "Portfolio Selected by XERJ Corpus Hub",
-    description: "XERJ Corpus Hub selected a contribution from my portfolio as a reference for its coding-agent corpus. The work includes improvements to security, data validation, accessibility, error handling, and the reliability of the contact system.",
+    description: "XERJ Corpus Hub selected a contribution from my portfolio as a reference for its coding-agent corpus. The work focuses on improving the security, accessibility, and reliability of the contact system.",
+    technicalSummaryLabel: "Technical contribution areas",
+    technicalAreas: ["Security", "Data validation", "Accessibility", "Error handling", "Reliability"],
     status: "Selection pending license review.",
     sourceLink: "View recognition",
     commitLink: "View contribution",

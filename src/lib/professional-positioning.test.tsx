@@ -47,17 +47,29 @@ test("XERJ is represented as external recognition of one Portfolio commit", () =
     assert.match(html, /href="https:\/\/github\.com\/GustavoBaranda\/Portfolio\/commit\/0de85332/);
     assert.match(html, /<aside[^>]+aria-labelledby="external-recognition-title"/);
     assert.match(html, /rel="noopener noreferrer"/);
-    assert.doesNotMatch(html, /<dl\b|<section\b/);
+    assert.match(html, /max-w-3xl text-sm leading-relaxed/);
+    assert.match(html, /mt-4 flex flex-wrap gap-2/);
+    assert.match(html, /mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between/);
+    assert.equal((html.match(/rounded-sm border border-soft px-2\.5 py-1 text-xs/g) ?? []).length, 5);
+    assert.doesNotMatch(html, /<dl\b|<section\b|<ul\b|<li\b|grid-cols|border-l/);
     assert.doesNotMatch(html, /employer|empleador|employee|contractor|proyecto propio de XERJ/i);
   }
   assert.match(spanish, /Reconocimiento Open Source/);
   assert.match(spanish, /Portfolio seleccionado por XERJ Corpus Hub/);
-  assert.match(spanish, /mejoras en seguridad, validación de datos, accesibilidad, manejo de errores y confiabilidad del sistema de contacto/);
+  assert.match(spanish, /El trabajo se centra en mejorar la seguridad, accesibilidad y confiabilidad del sistema de contacto/);
+  for (const area of ["Seguridad", "Validación de datos", "Accesibilidad", "Manejo de errores", "Confiabilidad"]) {
+    assert.match(spanish, new RegExp(`>${area}<`));
+  }
   assert.match(spanish, /Selección en revisión de licencia\./);
+  assert.ok(spanish.indexOf("Ver contribución") < spanish.indexOf("Selección en revisión de licencia."));
   assert.match(english, /Open Source Recognition/);
   assert.match(english, /Portfolio Selected by XERJ Corpus Hub/);
-  assert.match(english, /improvements to security, data validation, accessibility, error handling, and the reliability of the contact system/);
+  assert.match(english, /The work focuses on improving the security, accessibility, and reliability of the contact system/);
+  for (const area of ["Security", "Data validation", "Accessibility", "Error handling", "Reliability"]) {
+    assert.match(english, new RegExp(`>${area}<`));
+  }
   assert.match(english, /Selection pending license review\./);
+  assert.ok(english.indexOf("View contribution") < english.indexOf("Selection pending license review."));
 });
 
 test("professional contact paths are equivalent, semantic and responsive", () => {
