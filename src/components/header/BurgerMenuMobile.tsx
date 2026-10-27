@@ -53,7 +53,7 @@ export default function BurgerMenuMobile({ updateMenu }: BurgerMenuMobileProps) 
           ))}
         </nav>
 
-        <motion.div {...slideMotionProps} custom={footerStartIndex} className="footer border-t border-soft pt-5 pb-3 shrink-0 flex flex-col items-center gap-4">
+        <motion.div {...slideMotionProps} custom={footerStartIndex} className="footer border-t border-soft pt-5 pb-3 shrink-0 flex flex-col items-center gap-3">
           <div className="flex items-center gap-2.5">
             <Link href={localizedSectionHref(locale, "home")} onClick={handleLogoClick} className="group flex items-center gap-2 transition-opacity hover:opacity-90 cursor-pointer" aria-label={dictionary.navigation.goHome}>
               <Image src="/images/logo.svg" alt={dictionary.common.logoAlt} width={26} height={26} className="w-6 h-6 object-contain transition-all duration-200 grayscale brightness-0 opacity-40 group-hover:opacity-70 dark:invert" />
@@ -62,8 +62,8 @@ export default function BurgerMenuMobile({ updateMenu }: BurgerMenuMobileProps) 
             <span className="text-slate-400 dark:text-slate-500 text-xs opacity-60 leading-none">·</span>
             <span className="text-xs text-slate-500 dark:text-slate-400 leading-none">&copy; {year}</span>
           </div>
-          <div className="flex items-center gap-4">
-            <LanguageSwitcher />
+          <LanguageSwitcher />
+          <div className="flex items-center justify-center gap-4">
             <ThemeToggle />
             <SocialLinks className="flex items-center gap-4" iconSize={18} includeEmail={false} />
           </div>

@@ -86,8 +86,8 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="min-w-0 w-full rounded-[0.35rem] border border-soft surface-card p-4 sm:p-8 shadow-sm flex flex-col justify-between h-full">
-      <div>
+    <div className="min-w-0 w-full rounded-[0.35rem] border border-soft surface-card p-4 sm:p-8 shadow-sm flex flex-col justify-between lg:h-full">
+      <div className="lg:h-full">
         <p role="status" aria-live="polite" aria-atomic="true" className="sr-only">
           {status === "loading" ? dictionary.contact.feedback.sendingAnnouncement : status === "success" ? dictionary.contact.feedback.acceptedAnnouncement : ""}
         </p>
@@ -133,7 +133,7 @@ export default function ContactForm() {
               }}
               aria-busy={status === "loading"}
               onSubmit={handleSubmit}
-              className="relative flex flex-col gap-4 sm:gap-5"
+              className="relative flex flex-col gap-4 sm:gap-5 lg:h-full lg:justify-between"
               noValidate
             >
               <div className="sr-only" aria-hidden="true">
@@ -242,7 +242,7 @@ export default function ContactForm() {
                   name="mensaje"
                   aria-invalid={Boolean(fieldErrors.mensaje)}
                   aria-describedby={fieldErrors.mensaje ? "mensaje-error" : undefined}
-                  rows={4}
+                  rows={6}
                   required
                   maxLength={2000}
                   value={formData.mensaje}

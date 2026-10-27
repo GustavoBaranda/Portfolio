@@ -537,7 +537,7 @@ test("the five main section headings share hierarchy, copy and highlighted words
   assert.doesNotMatch(page, /¿Tienes una idea o proyecto\?|Envíame un mensaje/);
   assert.match(page, /<form aria-busy="false"/);
   assert.match(page, /baranda\.gustavo@gmail\.com/);
-  assert.match(page, /grid min-w-0 grid-cols-1 gap-6 items-stretch lg:grid-cols-2/);
+  assert.match(page, /grid min-w-0 grid-cols-1 gap-6 items-start lg:grid-cols-2 lg:items-stretch/);
 
   const sources = [
     await readFile("src/components/about/HeroBio.tsx", "utf8"),
@@ -549,18 +549,35 @@ test("the five main section headings share hierarchy, copy and highlighted words
   assert.ok((sources.match(/dark:from-violet-400 dark:via-indigo-400 dark:to-blue-400/g) ?? []).length >= 5);
 });
 
-test("contact cards can shrink within the mobile grid without clipping", async () => {
+test("contact cards keep natural mobile heights and equalize only on desktop", async () => {
   const [page, form, info] = await Promise.all([
     readFile("src/components/PortfolioPage.tsx", "utf8"),
     readFile("src/components/contact/ContactForm.tsx", "utf8"),
     readFile("src/components/contact/ContactInfo.tsx", "utf8"),
   ]);
 
-  assert.match(page, /grid min-w-0 grid-cols-1 gap-6 items-stretch lg:grid-cols-2/);
+  assert.match(page, /grid min-w-0 grid-cols-1 gap-6 items-start lg:grid-cols-2 lg:items-stretch/);
   assert.match(form, /className="min-w-0 w-full rounded-\[0\.35rem\]/);
   assert.match(info, /className="min-w-0 w-full rounded-\[0\.35rem\]/);
+  assert.match(form, /justify-between lg:h-full/);
+  assert.match(form, /lg:h-full lg:justify-between/);
+  assert.match(form, /rows=\{6\}/);
+  assert.match(info, /justify-between lg:h-full/);
+  assert.doesNotMatch(`${form}\n${info}`, /(?<!lg:)h-full/);
   assert.match(info, /inline-flex w-fit max-w-full/);
   assert.match(info, /dictionary\.contact\.availability/);
+});
+
+test("mobile menu footer separates identity, language and controls into centered rows", async () => {
+  const [menu, languageSwitcher] = await Promise.all([
+    readFile("src/components/header/BurgerMenuMobile.tsx", "utf8"),
+    readFile("src/components/common/LanguageSwitcher.tsx", "utf8"),
+  ]);
+
+  assert.match(menu, /flex flex-col items-center gap-3/);
+  assert.match(menu, /<\/div>\s*<LanguageSwitcher \/>\s*<div className="flex items-center justify-center gap-4">/);
+  assert.match(menu, /<ThemeToggle \/>\s*<SocialLinks[^>]+includeEmail=\{false\}/);
+  assert.equal((languageSwitcher.match(/inline-flex min-h-8 min-w-8 items-center justify-center/g) ?? []).length, 2);
 });
 
 test("editable contact controls keep a zoom-safe font size", async () => {

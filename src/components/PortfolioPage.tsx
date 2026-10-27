@@ -88,7 +88,7 @@ export default function PortfolioPage({ locale }: { locale: Locale }) {
             </h2>
             <p className="max-w-2xl text-base sm:text-lg text-muted leading-relaxed">{dictionary.contact.intro}</p>
           </header>
-          <div className="grid min-w-0 grid-cols-1 gap-6 items-stretch lg:grid-cols-2">
+          <div className="grid min-w-0 grid-cols-1 gap-6 items-start lg:grid-cols-2 lg:items-stretch">
             <ContactForm />
             <ContactInfo />
           </div>

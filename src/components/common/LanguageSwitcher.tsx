@@ -30,11 +30,11 @@ export default function LanguageSwitcher() {
 
   return (
     <nav aria-label={dictionary.navigation.languageLabel} className="inline-flex items-center text-xs font-bold tracking-wide">
-      <Link href={languageSwitchHref("es-AR", hash)} onClick={(event) => switchLanguage(event, "es-AR")} hrefLang="es-AR" lang="es" aria-current={locale === "es-AR" ? "page" : undefined} aria-label={dictionary.navigation.switchToSpanish} className={locale === "es-AR" ? "text-link-active" : "text-link-muted hover:text-link-active"}>
+      <Link href={languageSwitchHref("es-AR", hash)} onClick={(event) => switchLanguage(event, "es-AR")} hrefLang="es-AR" lang="es" aria-current={locale === "es-AR" ? "page" : undefined} aria-label={dictionary.navigation.switchToSpanish} className={`inline-flex min-h-8 min-w-8 items-center justify-center ${locale === "es-AR" ? "text-link-active" : "text-link-muted hover:text-link-active"}`}>
         ES
       </Link>
-      <span aria-hidden="true" className="mx-1.5 text-border">|</span>
-      <Link href={languageSwitchHref("en", hash)} onClick={(event) => switchLanguage(event, "en")} hrefLang="en" lang="en" aria-current={locale === "en" ? "page" : undefined} aria-label={dictionary.navigation.switchToEnglish} className={locale === "en" ? "text-link-active" : "text-link-muted hover:text-link-active"}>
+      <span aria-hidden="true" className="mx-0.5 text-border">|</span>
+      <Link href={languageSwitchHref("en", hash)} onClick={(event) => switchLanguage(event, "en")} hrefLang="en" lang="en" aria-current={locale === "en" ? "page" : undefined} aria-label={dictionary.navigation.switchToEnglish} className={`inline-flex min-h-8 min-w-8 items-center justify-center ${locale === "en" ? "text-link-active" : "text-link-muted hover:text-link-active"}`}>
         EN
       </Link>
     </nav>

@@ -19,7 +19,7 @@ export default function ContactInfo() {
   ];
 
   return (
-    <div className="min-w-0 w-full rounded-[0.35rem] border border-soft surface-card p-5 sm:p-8 shadow-sm flex flex-col justify-between h-full">
+    <div className="min-w-0 w-full rounded-[0.35rem] border border-soft surface-card p-5 sm:p-8 shadow-sm flex flex-col justify-between lg:h-full">
       <div className="min-w-0 flex flex-col gap-4 sm:gap-5">
         {/* Availability Badge */}
         <span className="inline-flex w-fit max-w-full items-center gap-2 rounded-[0.35rem] bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
