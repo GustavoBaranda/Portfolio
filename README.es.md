@@ -4,6 +4,8 @@
 
 [English](README.md) · [Español](README.es.md)
 
+[![CI](https://github.com/GustavoBaranda/Portfolio/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/GustavoBaranda/Portfolio/actions/workflows/ci.yml)
+
 Portfolio personal desarrollado con Next.js, React y TypeScript. Presenta mi perfil profesional, experiencia, formación, proyectos de software y trabajo open source.
 
 - [Ver portfolio](https://gustavobaranda.com/)
@@ -188,11 +190,13 @@ Nunca se deben versionar `.env.local`, contraseñas de aplicación ni otras cred
 ## Validación
 
 ```bash
+npm ci
 npm run lint
 npx tsc --noEmit
 npm test
 npm run build
 npm run test:seo-build
+npm audit --omit=dev --audit-level=moderate
 ```
 
 La suite cubre validación y seguridad del formulario, aceptación SMTP simulada, renderizado en ambos idiomas, resolución de rutas, cambio de idioma con conservación del hash, idioma del documento, enlaces accesibles mediante teclado, respuestas traducidas del servidor, posicionamiento profesional, diferenciación entre autoría y reconocimiento externo, vías de contacto, Sponsors deshabilitado, metadata internacional, sitemap, robots, JSON-LD, contratos de error y 404, navegación, expansiones, estilos, accesibilidad, movimiento, paridad de diccionarios, datos independientes del idioma y fechas normalizadas. Las pruebas no envían correo real.
@@ -201,11 +205,19 @@ La suite cubre validación y seguridad del formulario, aceptación SMTP simulada
 
 Tras la actualización de seguridad a Next.js 16.4.6, `npm audit --omit=dev` no informa vulnerabilidades de producción. El audit completo registra siete alertas moderadas, transitivas y exclusivas de desarrollo en la cadena de herramientas de `typescript-eslint`, todas derivadas del aviso de amplificación de patrones glob de `minimatch`. Deben revisarse cuando la dependencia de lint pueda actualizarse sin incorporar cambios transitivos ajenos; no se debe utilizar `npm audit fix --force`.
 
+## Integración continua
+
+El workflow `CI` se ejecuta en cada pull request dirigido a `master`, cada push a `master` y cada ejecución manual. Un único job sobre Ubuntu utiliza Node.js 22 y `npm ci`; luego ejecuta ESLint, TypeScript, la suite completa, la auditoría de dependencias de producción, un build limpio con Turbopack y las pruebas SEO sobre ese build generado. Se reutiliza la caché de descargas de npm, pero nunca se cachean `.next` ni `node_modules`, por lo que un build incompleto no puede propagarse a otra ejecución. La cancelación por concurrencia detiene ejecuciones obsoletas de la misma referencia.
+
+El workflow concede al `GITHUB_TOKEN` acceso de sólo lectura al repositorio, no utiliza secretos de producción y no despliega. La auditoría de producción bloquea el job ante severidad moderada o superior. El audit completo de desarrollo se informa como advertencia no bloqueante porque las siete alertas documentadas actualmente son transitivas, pertenecen a herramientas de lint y no se distribuyen en producción.
+
+Vercel continúa siendo el único mecanismo de despliegue. GitHub Actions valida el commit de forma independiente, mientras Vercel mantiene sus deployments de preview y producción mediante la integración Git existente. Para impedir que un cambio no validado llegue a producción, después de que el workflow se haya ejecutado al menos una vez se puede configurar una regla de protección para `master`, exigir pull requests y el check único `Portfolio CI`, requerir que la rama esté actualizada y deshabilitar pushes directos. El workflow no habilita intencionalmente esta configuración del repositorio.
+
 En el sandbox restringido de Windows, `tsx` puede fallar antes de descubrir las pruebas porque `os.userInfo()` devuelve `uv_os_get_passwd/ENOMEM`. El mismo comando `npm test` funciona normalmente fuera de ese sandbox; no se incorpora ningún monkeypatch al proyecto.
 
 ## Publicación
 
-El proyecto está preparado para Vercel. Se deben configurar las variables de correo y URL operativa, ejecutar el build de producción y verificar metadata, sitemap, robots y el formulario antes de publicar.
+El proyecto está preparado para Vercel. Se deben configurar las variables de correo y URL operativa, ejecutar el build de producción y verificar metadata, sitemap, robots y el formulario antes de publicar. GitHub Actions no recibe tokens de Vercel ni inicia un segundo despliegue.
 
 ## Incidencias
 

@@ -4,6 +4,8 @@
 
 [English](README.md) · [Español](README.es.md)
 
+[![CI](https://github.com/GustavoBaranda/Portfolio/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/GustavoBaranda/Portfolio/actions/workflows/ci.yml)
+
 Personal portfolio built with Next.js, React, and TypeScript. It presents my professional profile, experience, education, software projects, and open-source work.
 
 - [View portfolio](https://gustavobaranda.com/)
@@ -188,11 +190,13 @@ Never commit `.env.local`, application passwords, or other credentials.
 ## Validation
 
 ```bash
+npm ci
 npm run lint
 npx tsc --noEmit
 npm test
 npm run build
 npm run test:seo-build
+npm audit --omit=dev --audit-level=moderate
 ```
 
 The suite covers contact validation and security, SMTP acceptance with mocks, both localized renders, route resolution, language switching with hash preservation, HTML language mapping, keyboard-native links, translated server feedback, professional positioning, authorship versus external recognition, contact paths, disabled Sponsors state, international metadata, sitemap, robots, JSON-LD, not-found/error contracts, navigation and disclosures, styles, accessibility, motion, dictionary parity, locale-independent data, and normalized date formatting. Tests do not send real email.
@@ -201,11 +205,19 @@ Run `npm run test:seo-build` after `npm run build`. This additional test reads t
 
 As of the Next.js 16.4.6 security update, `npm audit --omit=dev` reports no production vulnerabilities. The full audit reports seven moderate, transitive development-only findings from the `typescript-eslint` toolchain, all derived from the `minimatch` glob-amplification advisory. Review them when the upstream lint dependency can be refreshed without unrelated dependency churn; do not use `npm audit fix --force`.
 
+## Continuous integration
+
+The `CI` workflow runs on every pull request targeting `master`, every push to `master`, and manual dispatches. A single Ubuntu job uses Node.js 22 and `npm ci`, then runs ESLint, TypeScript, the complete test suite, the production dependency audit, a clean Turbopack build, and the SEO tests against that generated build. npm's download cache is reused, but `.next` and `node_modules` are never cached, so an incomplete build cannot leak into a later run. Concurrency cancellation stops obsolete runs for the same ref.
+
+The workflow grants the `GITHUB_TOKEN` read-only repository access, does not use production secrets, and does not deploy. The production audit blocks the job at moderate severity or above. The full development audit is reported as a non-blocking warning because the seven currently documented findings are transitive lint-tooling issues and are not shipped to production.
+
+Vercel remains the only deployment mechanism. GitHub Actions validates the commit independently, while Vercel continues to create its own preview and production deployments through the existing Git integration. To prevent an unvalidated change from reaching production, configure a `master` branch protection rule after the workflow has run at least once, require pull requests and the unique `Portfolio CI` status check, require the branch to be up to date, and disable direct pushes. This repository setting is intentionally not enabled by the workflow.
+
 In the restricted Windows sandbox, `tsx` can fail before test discovery because `os.userInfo()` returns `uv_os_get_passwd/ENOMEM`. The same `npm test` command runs normally outside that sandbox; no project monkeypatch is used.
 
 ## Deployment
 
-The project is configured for Vercel. Configure the email variables and operational base URL for the target environment, run the production build, and verify metadata, sitemap, robots, and the contact flow before publishing.
+The project is configured for Vercel. Configure the email variables and operational base URL for the target environment, run the production build, and verify metadata, sitemap, robots, and the contact flow before publishing. GitHub Actions does not receive Vercel tokens or trigger a second deployment.
 
 ## Issues
 
