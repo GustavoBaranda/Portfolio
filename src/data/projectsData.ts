@@ -34,6 +34,10 @@ export interface ProjectItem {
   featured: boolean;
   githubUrl: string | null;
   demoUrl: string | null;
+  packageUrl: string | null;
+  documentationUrl: string | null;
+  imageAlt?: string;
+  demoLabel?: string;
 }
 
 export function getProjectCategories(locale: Locale = DEFAULT_LOCALE): ProjectCategory[] {
@@ -52,10 +56,22 @@ export function getProjects(locale: Locale = DEFAULT_LOCALE): ProjectItem[] {
   const content = dictionary.projects.entries[
     fact.id as keyof typeof dictionary.projects.entries
   ];
+  const localizedDemoUrl = "localizedDemoUrl" in fact
+    ? fact.localizedDemoUrl[locale]
+    : undefined;
+  const packageUrl = "packageUrl" in fact ? fact.packageUrl : null;
+  const documentationUrl = "documentationUrl" in fact
+    ? fact.documentationUrl[locale] ?? null
+    : null;
   return {
     ...fact,
+    demoUrl: localizedDemoUrl ?? fact.demoUrl,
+    packageUrl,
+    documentationUrl,
     tags: resolvePortfolioTerms(fact.tags, dictionary.terms),
     ...content,
+    imageAlt: "imageAlt" in content ? content.imageAlt : undefined,
+    demoLabel: "demoLabel" in content ? content.demoLabel : undefined,
     mediaLabel: content.mediaLabel || undefined,
     dateSort: fact.sortDate ?? "9999-99",
   };

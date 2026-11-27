@@ -23,8 +23,8 @@ El selector accesible `ES | EN` conserva el hash de la sección activa al cambia
 - Diálogo móvil nativo con cierre mediante Escape y restauración del foco.
 - Tarjetas de experiencia, formación y proyectos con detalles accesibles.
 - Filtros de proyectos por categoría y tecnología.
-- Enlaces a repositorios y demos públicas cuando están disponibles.
-- Posicionamiento explícito de chatflow-agent como trabajo open source creado y mantenido por Gustavo Baranda.
+- Enlaces diferenciados a repositorios, plataformas, documentación técnica y PyPI cuando están disponibles.
+- Tarjetas consecutivas y relacionadas para el framework chatflow-agent y su plataforma de documentación técnica.
 - Referencia verificada al reconocimiento externo del commit del Portfolio seleccionado por XERJ Corpus Hub.
 - Vías de contacto profesional para empleo, trabajo freelance y consultoría, y colaboración open source.
 - Animaciones e interacciones adaptadas a movimiento reducido.
@@ -96,7 +96,9 @@ Cada fase futura que modifique comportamiento visible debe actualizar conjuntame
 
 ## Posicionamiento profesional y open source
 
-chatflow-agent se presenta como proyecto open source propio de Gustavo Baranda, con el rol **Creador y mantenedor**. La descripción se limita al alcance verificado ya representado por el repositorio: una librería Python para agentes conversacionales, arquitectura modular y extensible, ejecución asíncrona, documentación, pruebas, revisión de contribuciones y colaboración comunitaria. La tarjeta enlaza al repositorio oficial `https://github.com/GustavoBaranda/chatflow-agent`.
+chatflow-agent se presenta como proyecto open source propio de Gustavo Baranda, con el rol **Creador y mantenedor**. Su tarjeta describe un framework Python async-first para agentes conversacionales y flujos multiagente, incluyendo herramientas, handoffs, proveedores LLM desacoplados, persistencia en memoria o SQLite, integraciones de mensajería, releases, pruebas, seguridad y revisión de contribuciones. Enlaza por separado al repositorio oficial, al paquete en PyPI y a la documentación localizada sin consultar dinámicamente versiones ni métricas de adopción desde el cliente.
+
+**Chatflow-Agent — Plataforma de documentación técnica** aparece inmediatamente después como un proyecto independiente. Su stack verificado incluye Next.js, React, TypeScript, Tailwind CSS, Fumadocs, MDX, next-intl, Framer Motion y Vercel. La tarjeta se concentra en contenido multilingüe versionado, arquitectura de información, búsqueda, ejemplos de código, guías de instalación, integración y migración, temas responsive claro y oscuro, SEO internacional, controles automatizados de paridad y experiencia del desarrollador. Utiliza rutas estables localizadas y enlaza al repositorio público verificado `GustavoBaranda/chatflow-agent-web`.
 
 XERJ Corpus Hub seleccionó el commit [`0de85332b1`](https://github.com/GustavoBaranda/Portfolio/commit/0de85332b1304e04a490b8cd4b6d133be58e28a4), `fix(contact): validate submissions and preserve recovery flow`, de `GustavoBaranda/Portfolio` como referencia para un corpus orientado a agentes de programación. La presentación enlaza al [registro público del reconocimiento](https://hub.xerj.org/contributors/GustavoBaranda) y a la contribución seleccionada. Su estado permanece como **selección en revisión de licencia**.
 
@@ -196,6 +198,8 @@ npm run test:seo-build
 La suite cubre validación y seguridad del formulario, aceptación SMTP simulada, renderizado en ambos idiomas, resolución de rutas, cambio de idioma con conservación del hash, idioma del documento, enlaces accesibles mediante teclado, respuestas traducidas del servidor, posicionamiento profesional, diferenciación entre autoría y reconocimiento externo, vías de contacto, Sponsors deshabilitado, metadata internacional, sitemap, robots, JSON-LD, contratos de error y 404, navegación, expansiones, estilos, accesibilidad, movimiento, paridad de diccionarios, datos independientes del idioma y fechas normalizadas. Las pruebas no envían correo real.
 
 `npm run test:seo-build` debe ejecutarse después de `npm run build`. Esta prueba adicional lee el HTML de producción, `sitemap.xml` y `robots.txt` generados para verificar canonical, `hreflang`, Open Graph, indexabilidad y JSON-LD reales, en lugar de limitarse a los objetos de configuración.
+
+Tras la actualización de seguridad a Next.js 16.4.6, `npm audit --omit=dev` no informa vulnerabilidades de producción. El audit completo registra siete alertas moderadas, transitivas y exclusivas de desarrollo en la cadena de herramientas de `typescript-eslint`, todas derivadas del aviso de amplificación de patrones glob de `minimatch`. Deben revisarse cuando la dependencia de lint pueda actualizarse sin incorporar cambios transitivos ajenos; no se debe utilizar `npm audit fix --force`.
 
 En el sandbox restringido de Windows, `tsx` puede fallar antes de descubrir las pruebas porque `os.userInfo()` devuelve `uv_os_get_passwd/ENOMEM`. El mismo comando `npm test` funciona normalmente fuera de ese sandbox; no se incorpora ningún monkeypatch al proyecto.
 

@@ -30,7 +30,7 @@ import ProjectCard, {
 } from "../components/projects/ProjectCard";
 import { FillButton } from "../components/hero/fill-button";
 import { EDUCATION, EXPERIENCES } from "../data/aboutData";
-import { PROJECTS } from "../data/projectsData";
+import { getProjects, PROJECTS } from "../data/projectsData";
 import { closeNavigationDialogAfterExit } from "./navigation-dialog";
 import {
   createHomeMetadata,
@@ -253,6 +253,8 @@ test("JSON-LD represents one coherent Person and WebSite with safe serialization
   assert.ok(person.knowsAbout.includes("Python"));
   assert.ok(person.knowsAbout.includes("Django"));
   assert.ok(person.knowsAbout.includes("SQL Server"));
+  assert.ok(person.knowsAbout.includes("Conversational AI"));
+  assert.ok(person.knowsAbout.includes("Multi-agent systems"));
 
   const completedInstitutions = EDUCATION
     .filter(({ status }) => status === "Finalizado")
@@ -640,6 +642,17 @@ test("project rows derive closed alignment per block and keep mobile and odd row
     getProjectRowBlockMinHeights([shortCard, longCard], true),
     longCard,
   );
+  const disproportionateNarrativeCard = {
+    ...longCard,
+    challenge: shortCard.challenge + 81,
+  };
+  assert.deepEqual(
+    getProjectRowBlockMinHeights([shortCard, disproportionateNarrativeCard], true),
+    {
+      ...longCard,
+      challenge: shortCard.challenge + 81,
+    },
+  );
   assert.deepEqual(getProjectRowBlockMinHeights([shortCard, longCard], false), {});
   assert.deepEqual(getProjectRowBlockMinHeights([longCard], true), {});
 
@@ -655,7 +668,7 @@ test("project rows derive closed alignment per block and keep mobile and odd row
 
   assert.equal(
     [...grid.matchAll(/grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-start/g)].length,
-    5,
+    Math.ceil(PROJECTS.length / 2),
   );
   assert.deepEqual(PROJECT_CARD_BLOCKS, [
     "meta",
@@ -670,6 +683,7 @@ test("project rows derive closed alignment per block and keep mobile and odd row
   assert.match(gridSource, /--project-row-\$\{block\}/);
   assert.match(gridSource, /window\.matchMedia\("\(min-width: 768px\)"\)/);
   assert.match(gridSource, /useLayoutEffect/);
+  assert.doesNotMatch(gridSource, /NARRATIVE_ALIGNMENT_MAX_DELTA|hasExcessiveNarrativeDelta/);
   assert.match(cardSource, /minHeight: isDesktop \? `var\(--project-row-\$\{block\}\)` : undefined/);
   assert.match(cardSource, /group relative self-start flex flex-col/);
   assert.match(cardSource, /equalizeHeight \? "md:h-full md:self-stretch" : ""/);
@@ -678,7 +692,7 @@ test("project rows derive closed alignment per block and keep mobile and odd row
   assert.doesNotMatch(cardSource, /min-h-20|sm:min-h-22|closedMinHeight/);
 });
 
-test("project rows equalize exterior height only when both cards are expanded", () => {
+test("project rows preserve synchronized closed, independent single-open and synchronized double-open states", () => {
   const pair = [
     { id: "syspro-logistica" },
     { id: "chatflow-agent" },
@@ -687,15 +701,18 @@ test("project rows equalize exterior height only when both cards are expanded", 
   const firstExpanded = updateExpandedProjectIds(empty, "syspro-logistica", true);
   const bothExpanded = updateExpandedProjectIds(firstExpanded, "chatflow-agent", true);
   const secondOnly = updateExpandedProjectIds(bothExpanded, "syspro-logistica", false);
+  const closedAgain = updateExpandedProjectIds(secondOnly, "chatflow-agent", false);
 
   assert.deepEqual([...empty], []);
   assert.deepEqual([...firstExpanded], ["syspro-logistica"]);
   assert.deepEqual([...bothExpanded], ["syspro-logistica", "chatflow-agent"]);
   assert.deepEqual([...secondOnly], ["chatflow-agent"]);
+  assert.deepEqual([...closedAgain], []);
   assert.equal(shouldEqualizeProjectRow(pair, empty), false);
   assert.equal(shouldEqualizeProjectRow(pair, firstExpanded), false);
   assert.equal(shouldEqualizeProjectRow(pair, secondOnly), false);
   assert.equal(shouldEqualizeProjectRow(pair, bothExpanded), true);
+  assert.equal(shouldEqualizeProjectRow(pair, closedAgain), false);
   assert.equal(shouldEqualizeProjectRow(pair.slice(0, 1), bothExpanded), false);
 
   const filteredPair = [
@@ -724,10 +741,41 @@ test("project rows equalize exterior height only when both cards are expanded", 
   assert.match(equalizedCard, /self-start[^\"]*md:h-full md:self-stretch/);
   assert.match(equalizedCard, /<div class="md:flex-1">/);
   assert.match(equalizedCard, /<\/div><section[^>]*class="mt-4 pt-4 border-t border-soft"/);
+
+  const projectWithoutDisclosure = {
+    ...PROJECTS[0],
+    solution: "Solución breve sin contenido adicional.",
+  };
+  const noDisclosureCard = renderToStaticMarkup(
+    <ProjectCard project={projectWithoutDisclosure} index={0} expanded={false} />,
+  );
+  assert.doesNotMatch(noDisclosureCard, /aria-controls="project-solution-/);
+  assert.doesNotMatch(noDisclosureCard, />Leer más<|>Read more</);
+  assert.equal(shouldEqualizeProjectRow(pair, firstExpanded), false);
+});
+
+test("project row measurements recalculate across locale, filters and viewport without depending on theme", async () => {
+  const gridSource = await readFile("src/components/projects/ProjectsGrid.tsx", "utf8");
+  const cardSource = await readFile("src/components/projects/ProjectCard.tsx", "utf8");
+  const spanishIds = getProjects("es-AR").map(({ id }) => id);
+  const englishIds = getProjects("en").map(({ id }) => id);
+
+  assert.deepEqual(englishIds, spanishIds);
+  assert.match(gridSource, /getProjects\(locale\), \[locale\]/);
+  assert.match(gridSource, /\[clearBlockHeights, measureClosedBlocks, scheduleClosedMeasurement\]/);
+  assert.match(gridSource, /window\.addEventListener\("resize", resetMeasurement\)/);
+  assert.match(gridSource, /document\.fonts\?\.ready\.then\(resetMeasurement\)/);
+  assert.match(gridSource, /key=\{row\.map\(\(\{ id \}\) => id\)\.join\("-"\)\}/);
+  assert.match(gridSource, /key=\{`\$\{selectedCategory\}-\$\{activeTechLabel \|\| "all-tech"\}`\}/);
+  assert.deepEqual(getProjectRowBlockMinHeights([{ challenge: 20 }, { challenge: 40 }], false), {});
+  assert.match(cardSource, /minHeight: isDesktop \? `var\(--project-row-\$\{block\}\)` : undefined/);
+  assert.match(cardSource, /surface-card/);
+  assert.match(cardSource, /dark:hover:shadow-indigo-950\/30/);
+  assert.doesNotMatch(gridSource, /resolvedTheme|useTheme|document\.documentElement\.classList/);
 });
 
 test("projects prioritize professional relevance and keep category and technology filters", () => {
-  assert.equal(PROJECTS.length, 10);
+  assert.equal(PROJECTS.length, 11);
   assert.equal(new Set(PROJECTS.map(({ id }) => id)).size, PROJECTS.length);
   const originalProjectIds = [
     "syspro-logistica",
@@ -749,11 +797,11 @@ test("projects prioritize professional relevance and keep category and technolog
   const sorted = sortProjectsByPriority(PROJECTS);
   assert.deepEqual(
     sorted.slice(0, 4).map(({ id }) => id),
-    ["syspro-logistica", "chatflow-agent", "solar-banco-etl", "fundacion-medicina"],
+    ["syspro-logistica", "chatflow-agent", "chatflow-agent-docs", "solar-banco-etl"],
   );
   assert.equal(new Set(PROJECTS.map(({ priority }) => priority)).size, PROJECTS.length);
 
-  assert.ok(filterProjects(sorted, "all", null).length === 10);
+  assert.ok(filterProjects(sorted, "all", null).length === 11);
   assert.ok(filterProjects(sorted, "opensource", null).some(({ id }) => id === "chatflow-agent"));
   assert.ok(
     filterProjects(sorted, "all", {
@@ -769,18 +817,20 @@ test("chatflow-agent uses verified public claims and project labels omit framewo
   const chatflow = PROJECTS.find(({ id }) => id === "chatflow-agent")!;
   assert.equal(chatflow.company, "Open Source · Creador y mantenedor");
   assert.equal(chatflow.githubUrl, "https://github.com/GustavoBaranda/chatflow-agent");
-  assert.equal(chatflow.image, null);
-  assert.match(chatflow.solution, /librería Python open source/);
-  assert.match(chatflow.solution, /arquitectura modular y extensible/);
-  assert.match(chatflow.solution, /ejecución asíncrona/);
-  assert.match(chatflow.solution, /handoffs entre agentes/);
-  assert.match(chatflow.solution, /CLI, webhooks, WhatsApp y Telegram/);
-  assert.match(chatflow.solution, /controles de concurrencia/);
+  assert.equal(chatflow.image, "/images/chatflow-agent-logo.svg");
+  assert.equal(chatflow.packageUrl, "https://pypi.org/project/chatflow-agent/");
+  assert.equal(chatflow.documentationUrl, "https://chatflowagent.org/es/docs");
+  assert.match(chatflow.solution, /framework Python open source y async-first/);
+  assert.match(chatflow.solution, /handoffs/);
+  assert.match(chatflow.solution, /CLI, Telegram y WhatsApp/);
+  assert.match(chatflow.solution, /distribución en PyPI/);
   assert.match(chatflow.solution, /revisión de contribuciones/);
-  assert.match(chatflow.solution, /colaboración comunitaria/);
   assert.doesNotMatch(`${chatflow.challenge} ${chatflow.solution}`, /\bRAG\b|producción|enterprise/i);
   const html = renderToStaticMarkup(<ProjectCard project={chatflow} index={0} />);
   assert.match(html, /href="https:\/\/github\.com\/GustavoBaranda\/chatflow-agent"/);
+  assert.match(html, /href="https:\/\/pypi\.org\/project\/chatflow-agent\/"/);
+  assert.match(html, /href="https:\/\/chatflowagent\.org\/es\/docs"/);
+  assert.match(html, /alt="Logo oficial de chatflow-agent/);
   assert.match(html, /aria-controls="project-solution-chatflow-agent"/);
 
   const publicCopy = PROJECTS.flatMap(({ solution, tags }) => [solution, ...tags]).join("\n");
@@ -802,9 +852,9 @@ test("the three highlighted project narratives are precise and balanced", () => 
   assert.match(syspro.solution, /procesamiento asíncrono y comunicación en tiempo real/);
   assert.doesNotMatch(syspro.solution, /diseñé e implementé la arquitectura|pyHanko|Huawei Cloud|ReportLab/);
 
-  assert.match(chatflow.challenge, /separar la lógica de negocio de los proveedores/);
+  assert.match(chatflow.challenge, /desacoplar modelos, herramientas, canales y estado de sesión/);
   assert.match(chatflow.solution, /creador y mantenedor/);
-  assert.doesNotMatch(`${chatflow.challenge} ${chatflow.solution}`, /\bframework\b/i);
+  assert.match(chatflow.solution, /framework Python open source/);
 
   assert.match(portfolio.challenge, /presencia profesional/);
   assert.match(portfolio.challenge, /clara, accesible y adaptable/);
@@ -827,7 +877,9 @@ test("project media uses responsive reserved ratios and content-safe presentatio
     assert.match(html, /aspect-video sm:aspect-\[2\/1\]/);
     if (project.image) {
       assert.match(html, /object-contain/);
-      assert.match(html, /sizes="\(max-width: 768px\) 100vw, \(max-width: 1200px\) 50vw, 600px"/);
+      if (!project.image.endsWith(".svg")) {
+        assert.match(html, /sizes="\(max-width: 768px\) 100vw, \(max-width: 1200px\) 50vw, 600px"/);
+      }
       if (project.imagePresentation === "interface") assert.match(html, /object-contain object-top/);
       else assert.match(html, /object-contain object-center/);
     } else {
@@ -837,6 +889,15 @@ test("project media uses responsive reserved ratios and content-safe presentatio
       assert.doesNotMatch(html, /<img\b/);
     }
   }
+
+  const [logo, docsScreenshot] = await Promise.all([
+    readFile("public/images/chatflow-agent-logo.svg", "utf8"),
+    readFile("public/images/chatflow-agent-docs.png"),
+  ]);
+  assert.match(logo, /<svg/);
+  assert.equal(docsScreenshot.subarray(0, 8).toString("hex"), "89504e470d0a1a0a");
+  assert.equal(docsScreenshot.readUInt32BE(16), 1440);
+  assert.equal(docsScreenshot.readUInt32BE(20), 900);
 
   const source = await readFile("src/components/projects/ProjectCard.tsx", "utf8");
   assert.doesNotMatch(source, /object-cover/);
@@ -849,7 +910,7 @@ test("project links avoid persistent underlines and retain hover and focus affor
   const html = renderToStaticMarkup(<ProjectCard project={project} index={0} />);
   const source = await readFile("src/components/projects/ProjectCard.tsx", "utf8");
 
-  assert.equal((source.match(/no-underline/g) ?? []).length, 2);
+  assert.ok((source.match(/no-underline/g) ?? []).length >= 4);
   assert.doesNotMatch(source, /hover:underline|underline-offset/);
   assert.match(source, /hover:text-indigo-800 dark:hover:text-indigo-300/);
   assert.match(source, /text-muted hover:text-foreground/);

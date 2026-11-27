@@ -69,6 +69,8 @@ export const createPortfolioStructuredData = (locale: Locale = DEFAULT_LOCALE): 
           "Next.js",
           "TypeScript",
           "Open source software",
+          "Conversational AI",
+          "Multi-agent systems",
         ],
         alumniOf: getEducation(locale).filter(({ statusCode }) => statusCode === "completed").map(
           ({ institution }) => ({

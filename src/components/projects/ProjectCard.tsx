@@ -6,6 +6,8 @@ import Image from "next/image";
 import {
   Github,
   Heart,
+  BookOpen,
+  Package,
   Layers,
   ArrowUpRight,
   ChevronDown,
@@ -99,7 +101,9 @@ export default function ProjectCard({
     "square-logo":
       "object-contain object-center p-5 sm:p-8 transition-transform duration-500 group-hover:scale-105 dark:brightness-95 dark:contrast-105",
   } satisfies Record<ProjectItem["imagePresentation"], string>;
-  const hasLinks = Boolean(project.demoUrl || project.githubUrl);
+  const hasLinks = Boolean(
+    project.demoUrl || project.documentationUrl || project.packageUrl || project.githubUrl,
+  );
   const showSponsor = GITHUB_SPONSORS.enabled && project.id === GITHUB_SPONSORS.projectId;
   const { summary, detail } = splitProjectSolution(project.solution);
   const hasExpandableSolution = detail.length > 0;
@@ -175,7 +179,7 @@ export default function ProjectCard({
           ) : (
             <Image
               src={project.image}
-              alt={`${dictionary.projects.card.projectImage} ${project.title}`}
+              alt={project.imageAlt ?? `${dictionary.projects.card.projectImage} ${project.title}`}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
               onError={() => setImgFailed(true)}
@@ -314,8 +318,30 @@ export default function ProjectCard({
                 rel="noopener noreferrer"
                 className="group/link inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 rounded-sm transition-colors"
               >
-                {dictionary.projects.card.viewDemo}
+                {project.demoLabel ?? dictionary.projects.card.viewDemo}
                 <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-200" />
+              </a>
+            )}
+            {project.documentationUrl && (
+              <a
+                href={project.documentationUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group/docs inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-muted hover:text-foreground no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 rounded-sm transition-colors"
+              >
+                <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/docs:translate-x-0.5 group-hover/docs:-translate-y-0.5 transition-transform duration-200" />
+                {dictionary.projects.card.viewDocumentation}
+              </a>
+            )}
+            {project.packageUrl && (
+              <a
+                href={project.packageUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group/package inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-muted hover:text-foreground no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 rounded-sm transition-colors"
+              >
+                <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/package:translate-x-0.5 group-hover/package:-translate-y-0.5 transition-transform duration-200" />
+                {dictionary.projects.card.viewPackage}
               </a>
             )}
             {project.githubUrl && (

@@ -26,13 +26,49 @@ test("chatflow-agent is clearly presented as owned open-source work in both lang
 
   assert.equal(spanish.githubUrl, "https://github.com/GustavoBaranda/chatflow-agent");
   assert.equal(english.githubUrl, spanish.githubUrl);
+  assert.equal(spanish.packageUrl, "https://pypi.org/project/chatflow-agent/");
+  assert.equal(english.packageUrl, spanish.packageUrl);
+  assert.equal(spanish.documentationUrl, "https://chatflowagent.org/es/docs");
+  assert.equal(english.documentationUrl, "https://chatflowagent.org/en/docs");
   assert.match(spanish.company, /Creador y mantenedor/);
   assert.match(english.company, /Creator and maintainer/);
-  assert.match(spanish.solution, /arquitectura modular y extensible/);
-  assert.match(english.solution, /modular, extensible architecture/);
-  assert.match(spanish.solution, /colaboración comunitaria/);
-  assert.match(english.solution, /community collaboration/);
-  assert.doesNotMatch(`${spanish.solution} ${english.solution}`, /usuarios|downloads|production-ready|enterprise-grade/i);
+  assert.match(spanish.solution, /open source y async-first/);
+  assert.match(english.solution, /open-source, async-first/);
+  assert.match(spanish.solution, /distribución en PyPI, releases, pruebas/);
+  assert.match(english.solution, /PyPI distribution, releases, testing/);
+  assert.doesNotMatch(`${spanish.solution} ${english.solution}`, /\bRAG\b|usuarios|downloads|production-ready|enterprise-grade/i);
+});
+
+test("the documentation platform uses localized routes and its verified public repository", () => {
+  const spanish = getProjects("es-AR").find(({ id }) => id === "chatflow-agent-docs")!;
+  const english = getProjects("en").find(({ id }) => id === "chatflow-agent-docs")!;
+
+  assert.equal(spanish.priority, 3);
+  assert.equal(english.priority, 3);
+  assert.equal(spanish.githubUrl, "https://github.com/GustavoBaranda/chatflow-agent-web");
+  assert.equal(english.githubUrl, spanish.githubUrl);
+  assert.equal(spanish.demoUrl, "https://chatflowagent.org/es");
+  assert.equal(english.demoUrl, "https://chatflowagent.org/en");
+  assert.equal(spanish.documentationUrl, null);
+  assert.equal(english.documentationUrl, null);
+  assert.match(spanish.solution, /castellano, inglés y portugués/);
+  assert.match(english.solution, /Spanish, English, and Brazilian Portuguese/);
+  assert.match(spanish.solution, /Fumadocs y MDX/);
+  assert.match(english.solution, /Fumadocs, and MDX/);
+  assert.match(spanish.imageAlt!, /navegación lateral/);
+  assert.match(english.imageAlt!, /sidebar navigation/);
+
+  const spanishHtml = renderToStaticMarkup(withLocale("es-AR", <ProjectCard project={spanish} index={0} />));
+  const englishHtml = renderToStaticMarkup(withLocale("en", <ProjectCard project={english} index={0} />));
+  assert.match(spanishHtml, /href="https:\/\/chatflowagent\.org\/es"/);
+  assert.match(spanishHtml, /Ver plataforma/);
+  assert.match(englishHtml, /href="https:\/\/chatflowagent\.org\/en"/);
+  assert.match(englishHtml, /View platform/);
+  for (const html of [spanishHtml, englishHtml]) {
+    assert.match(html, /href="https:\/\/github\.com\/GustavoBaranda\/chatflow-agent-web"/);
+    assert.doesNotMatch(html, /chatflowagent\.org\/(?:es|en)\/docs/);
+    assert.doesNotMatch(html, /href="https:\/\/github\.com\/GustavoBaranda\/chatflow-agent"(?:"|\/)/);
+  }
 });
 
 test("XERJ is represented as external recognition of one Portfolio commit", () => {
