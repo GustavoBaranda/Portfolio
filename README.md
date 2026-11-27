@@ -211,9 +211,17 @@ The `CI` workflow runs on every pull request targeting `master`, every push to `
 
 The workflow grants the `GITHUB_TOKEN` read-only repository access, does not use production secrets, and does not deploy. The production audit blocks the job at moderate severity or above. The full development audit is reported as a non-blocking warning because the seven currently documented findings are transitive lint-tooling issues and are not shipped to production.
 
-Vercel remains the only deployment mechanism. GitHub Actions validates the commit independently, while Vercel continues to create its own preview and production deployments through the existing Git integration. To prevent an unvalidated change from reaching production, configure a `master` branch protection rule after the workflow has run at least once, require pull requests and the unique `Portfolio CI` status check, require the branch to be up to date, and disable direct pushes. This repository setting is intentionally not enabled by the workflow.
+Vercel remains the only deployment mechanism. GitHub Actions validates the commit independently, while Vercel continues to create its own preview and production deployments through the existing Git integration. The active `Protect master` ruleset requires every change to use a separate branch and pull request, remain up to date with `master`, and pass the unique `Portfolio CI` status check before merging. Direct pushes, force pushes, and branch deletion are blocked; no external approval is required for this single-maintainer repository.
 
 In the restricted Windows sandbox, `tsx` can fail before test discovery because `os.userInfo()` returns `uv_os_get_passwd/ENOMEM`. The same `npm test` command runs normally outside that sandbox; no project monkeypatch is used.
+
+## Dependency maintenance
+
+Dependabot checks npm packages and pinned GitHub Actions every Monday at 09:00 in the `America/Argentina/Buenos_Aires` time zone. Each ecosystem is limited to three open version-update pull requests. Minor and patch releases are grouped, while major releases remain separate so that breaking changes can be reviewed independently.
+
+Dependabot uses semantic English commit prefixes: `chore(deps)` for npm production dependencies, `chore(deps-dev)` for npm development dependencies, and `ci(deps)` for GitHub Actions. Updates are never merged automatically. Every dependency change must be reviewed through a pull request and pass the protected branch's required `Portfolio CI` check before it can reach `master`.
+
+Security advisories are not ignored or suppressed. Production and development audits remain separate so production exposure blocks CI while development-tool findings stay visible for planned remediation without forced or unrelated upgrades.
 
 ## Deployment
 
