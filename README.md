@@ -203,13 +203,13 @@ The suite covers contact validation and security, SMTP acceptance with mocks, bo
 
 Run `npm run test:seo-build` after `npm run build`. This additional test reads the generated production HTML, `sitemap.xml`, and `robots.txt` to verify the actual canonical, `hreflang`, Open Graph, indexability, and JSON-LD output rather than configuration objects alone.
 
-As of the Next.js 16.4.6 security update, `npm audit --omit=dev` reports no production vulnerabilities. The full audit reports seven moderate, transitive development-only findings from the `typescript-eslint` toolchain, all derived from the `minimatch` glob-amplification advisory. Review them when the upstream lint dependency can be refreshed without unrelated dependency churn; do not use `npm audit fix --force`.
+Following the `minimatch` security update, both the full audit and `npm audit --omit=dev` report no known vulnerabilities. The former seven moderate, transitive development-only findings from the `typescript-eslint` toolchain are resolved; the corresponding GitHub security alert is closed as fixed. Do not use `npm audit fix --force` for future findings.
 
 ## Continuous integration
 
 The `CI` workflow runs on every pull request targeting `master`, every push to `master`, and manual dispatches. A single Ubuntu job uses Node.js 22 and `npm ci`, then runs ESLint, TypeScript, the complete test suite, the production dependency audit, a clean Turbopack build, and the SEO tests against that generated build. npm's download cache is reused, but `.next` and `node_modules` are never cached, so an incomplete build cannot leak into a later run. Concurrency cancellation stops obsolete runs for the same ref.
 
-The workflow grants the `GITHUB_TOKEN` read-only repository access, does not use production secrets, and does not deploy. The production audit blocks the job at moderate severity or above. The full development audit is reported as a non-blocking warning because the seven currently documented findings are transitive lint-tooling issues and are not shipped to production.
+The workflow grants the `GITHUB_TOKEN` read-only repository access, does not use production secrets, and does not deploy. The production audit blocks the job at moderate severity or above. The full development audit remains a non-blocking reporting step so future tooling findings stay visible and can be assessed separately from production exposure.
 
 Vercel remains the only deployment mechanism. GitHub Actions validates the commit independently, while Vercel continues to create its own preview and production deployments through the existing Git integration. The active `Protect master` ruleset requires every change to use a separate branch and pull request, remain up to date with `master`, and pass the unique `Portfolio CI` status check before merging. Direct pushes, force pushes, and branch deletion are blocked; no external approval is required for this single-maintainer repository.
 
