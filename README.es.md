@@ -211,9 +211,17 @@ El workflow `CI` se ejecuta en cada pull request dirigido a `master`, cada push 
 
 El workflow concede al `GITHUB_TOKEN` acceso de sólo lectura al repositorio, no utiliza secretos de producción y no despliega. La auditoría de producción bloquea el job ante severidad moderada o superior. El audit completo de desarrollo se informa como advertencia no bloqueante porque las siete alertas documentadas actualmente son transitivas, pertenecen a herramientas de lint y no se distribuyen en producción.
 
-Vercel continúa siendo el único mecanismo de despliegue. GitHub Actions valida el commit de forma independiente, mientras Vercel mantiene sus deployments de preview y producción mediante la integración Git existente. Para impedir que un cambio no validado llegue a producción, después de que el workflow se haya ejecutado al menos una vez se puede configurar una regla de protección para `master`, exigir pull requests y el check único `Portfolio CI`, requerir que la rama esté actualizada y deshabilitar pushes directos. El workflow no habilita intencionalmente esta configuración del repositorio.
+Vercel continúa siendo el único mecanismo de despliegue. GitHub Actions valida el commit de forma independiente, mientras Vercel mantiene sus deployments de preview y producción mediante la integración Git existente. El ruleset activo `Protect master` exige que todo cambio se realice en una rama independiente y mediante un pull request, esté actualizado con `master` y supere el check obligatorio y único `Portfolio CI` antes del merge. Los pushes directos, force pushes y el borrado de la rama están bloqueados; este repositorio de un único mantenedor no exige aprobaciones externas.
 
 En el sandbox restringido de Windows, `tsx` puede fallar antes de descubrir las pruebas porque `os.userInfo()` devuelve `uv_os_get_passwd/ENOMEM`. El mismo comando `npm test` funciona normalmente fuera de ese sandbox; no se incorpora ningún monkeypatch al proyecto.
+
+## Mantenimiento de dependencias
+
+Dependabot revisa los paquetes npm y las GitHub Actions fijadas cada lunes a las 09:00 en la zona horaria `America/Argentina/Buenos_Aires`. Cada ecosistema admite como máximo tres pull requests abiertos de actualización de versiones. Las versiones minor y patch se agrupan, mientras que las actualizaciones major permanecen separadas para revisar de forma independiente los posibles cambios incompatibles.
+
+Dependabot utiliza prefijos semánticos en inglés: `chore(deps)` para dependencias npm de producción, `chore(deps-dev)` para dependencias npm de desarrollo y `ci(deps)` para GitHub Actions. Las actualizaciones nunca se integran automáticamente. Cada cambio de dependencias debe revisarse mediante un pull request y superar el check obligatorio `Portfolio CI` de la rama protegida antes de llegar a `master`.
+
+Los avisos de seguridad no se ignoran ni se suprimen. Las auditorías de producción y desarrollo permanecen separadas para que una exposición de producción bloquee CI y los hallazgos de herramientas de desarrollo continúen visibles para una corrección planificada, sin actualizaciones forzadas o ajenas al objetivo.
 
 ## Publicación
 
